@@ -1,0 +1,190 @@
+{
+  "faculties": {
+    "general": {
+      "name": "General/All Faculties",
+      "targetDate": "2027-02-01T00:00:00",
+      "activities": [
+        {
+          "month": "2027-01",
+          "items": [
+            "Application submission opens",
+            "Document verification begins",
+            "Early registration period"
+          ]
+        },
+        {
+          "month": "2027-02",
+          "items": [
+            "TCAS70 Round 1 - Portfolio",
+            "Interview scheduling",
+            "Results announcement"
+          ]
+        },
+        {
+          "month": "2027-03",
+          "items": [
+            "TCAS70 Round 2 - Quota",
+            "Final document submission",
+            "Enrollment confirmation"
+          ]
+        }
+      ]
+    },
+    "medicine": {
+      "name": "Faculty of Medicine",
+      "targetDate": "2027-01-15T00:00:00",
+      "activities": [
+        {
+          "month": "2027-01",
+          "items": [
+            "Medical aptitude test registration",
+            "Interview preparation workshops",
+            "Document submission deadline - Jan 15",
+            "Early medical program announcement"
+          ]
+        },
+        {
+          "month": "2027-02",
+          "items": [
+            "Medical school interviews",
+            "Clinical skills assessment",
+            "Health examination required",
+            "First round results"
+          ]
+        },
+        {
+          "month": "2027-03",
+          "items": [
+            "Second round interviews",
+            "Final medical school admission",
+            "Orientation for medical students"
+          ]
+        }
+      ]
+    },
+    "engineering": {
+      "name": "Faculty of Engineering",
+      "targetDate": "2027-02-01T00:00:00",
+      "activities": [
+        {
+          "month": "2027-01",
+          "items": [
+            "Engineering aptitude test",
+            "Portfolio submission for special programs",
+            "Mathematics placement test"
+          ]
+        },
+        {
+          "month": "2027-02",
+          "items": [
+            "TCAS70 Engineering round",
+            "Lab tour and orientation",
+            "Interview for special tracks",
+            "Results announcement - Feb 15"
+          ]
+        },
+        {
+          "month": "2027-03",
+          "items": [
+            "Engineering enrollment day",
+            "Department selection workshop",
+            "Pre-semester preparation course"
+          ]
+        }
+      ]
+    },
+    "science": {
+      "name": "Faculty of Science",
+      "targetDate": "2027-02-05T00:00:00",
+      "activities": [
+        {
+          "month": "2027-01",
+          "items": [
+            "Science program information session",
+            "Lab safety orientation",
+            "Portfolio review period"
+          ]
+        },
+        {
+          "month": "2027-02",
+          "items": [
+            "TCAS70 Science round - Feb 5",
+            "Major selection guidance",
+            "Science project presentations",
+            "Admission results"
+          ]
+        },
+        {
+          "month": "2027-03",
+          "items": [
+            "Science faculty enrollment",
+            "Research lab tours",
+            "Academic advisor meetings"
+          ]
+        }
+      ]
+    },
+    "arts": {
+      "name": "Faculty of Arts",
+      "targetDate": "2027-02-01T00:00:00",
+      "activities": [
+        {
+          "month": "2027-01",
+          "items": [
+            "Arts portfolio submission",
+            "Language proficiency assessment",
+            "Creative work showcase"
+          ]
+        },
+        {
+          "month": "2027-02",
+          "items": [
+            "TCAS70 Arts and Humanities",
+            "Individual interviews",
+            "Group discussion rounds",
+            "Cultural activities fair"
+          ]
+        },
+        {
+          "month": "2027-03",
+          "items": [
+            "Arts faculty enrollment",
+            "Program orientation",
+            "Student community introduction"
+          ]
+        }
+      ]
+    },
+    "business": {
+      "name": "Faculty of Business Administration",
+      "targetDate": "2027-02-10T00:00:00",
+      "activities": [
+        {
+          "month": "2027-01",
+          "items": [
+            "Business aptitude test",
+            "Leadership assessment",
+            "Case study preparation"
+          ]
+        },
+        {
+          "month": "2027-02",
+          "items": [
+            "TCAS70 Business round - Feb 10",
+            "Group case presentations",
+            "Business plan competition",
+            "Interview sessions"
+          ]
+        },
+        {
+          "month": "2027-03",
+          "items": [
+            "Business faculty enrollment",
+            "Entrepreneurship workshop",
+            "Industry networking event"
+          ]
+        }
+      ]
+    }
+  }
+}

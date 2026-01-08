@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCAS70 Countdown 2027</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="main-title">TCAS70 COUNTDOWN</h1>
+            <p class="subtitle">ปีการศึกษา 2570 (2027)</p>
+        </header>
+
+        <div class="faculty-selector">
+            <label for="faculty-dropdown">เลือกคณะ / Select Faculty:</label>
+            <select id="faculty-dropdown">
+                <option value="general">General/All Faculties</option>
+                <option value="medicine">Faculty of Medicine</option>
+                <option value="engineering">Faculty of Engineering</option>
+                <option value="science">Faculty of Science</option>
+                <option value="arts">Faculty of Arts</option>
+                <option value="business">Faculty of Business Administration</option>
+            </select>
+        </div>
+
+        <div class="main-content">
+            <div class="countdown-section">
+                <h2 id="faculty-name" class="faculty-title">General/All Faculties</h2>
+                <div id="countdown-timer" class="timer">
+                    <div class="time-unit">
+                        <span class="time-value" id="days">00</span>
+                        <span class="time-label">DAYS</span>
+                    </div>
+                    <div class="time-separator">:</div>
+                    <div class="time-unit">
+                        <span class="time-value" id="hours">00</span>
+                        <span class="time-label">HOURS</span>
+                    </div>
+                    <div class="time-separator">:</div>
+                    <div class="time-unit">
+                        <span class="time-value" id="minutes">00</span>
+                        <span class="time-label">MINUTES</span>
+                    </div>
+                    <div class="time-separator">:</div>
+                    <div class="time-unit">
+                        <span class="time-value" id="seconds">00</span>
+                        <span class="time-label">SECONDS</span>
+                    </div>
+                </div>
+                <p id="target-date" class="target-date"></p>
+            </div>
+
+            <aside class="activities-sidebar">
+                <h3>กิจกรรมและกำหนดการ</h3>
+                <h4>Timeline & Activities</h4>
+                <div id="activities-list" class="activities-content">
+                    <!-- Activities will be dynamically loaded here -->
+                </div>
+            </aside>
+        </div>
+
+        <footer>
+            <p>🎓 Good luck with your TCAS70 application! 🎓</p>
+            <p>สู้ ๆ นะคะ/ครับ!</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
