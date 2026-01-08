@@ -19,10 +19,7 @@ html {
 
 body {
   font-family: 'Inter', 'Kanit', sans-serif;
-  background: radial-gradient(circle at 20% 20%, rgba(255,63,164,0.12), transparent 40%),
-              radial-gradient(circle at 80% 10%, rgba(51,225,255,0.10), transparent 35%),
-              radial-gradient(circle at 30% 70%, rgba(51,225,255,0.06), transparent 45%),
-              #0b1221;
+  background: linear-gradient(135deg, #05070f, #0b1221);
   color: #e8edf7;
   min-height: 100vh;
   overflow-x: hidden;
@@ -32,27 +29,39 @@ body {
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
 }
-body.reading-mode {
+
+/* Fullscreen reading mode */
+:fullscreen {
   background: #0c0d12;
-  color: #e5e7eb;
-  filter: grayscale(1);
-}
-.reading-mode .gradient-hidden,
-.reading-mode .bg-[radial-gradient(circle_at_50%_-10%,rgba(51,225,255,0.1),transparent_35%),radial-gradient(circle_at_20%_40%,rgba(255,63,164,0.12),transparent_30%)] 
-{
-  display: none !important;
+  width: 100%;
+  height: 100%;
 }
 
+div.fullscreen {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+div.fullscreen::backdrop {
+  background: #000000;
+}
+
+/* Fullscreen countdown section */
+@supports selector(:fullscreen) {
+  div:fullscreen {
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: #0c0d12 !important;
+  }
+}
 .glass {
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.08);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-}
-body.reading-mode .glass {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.15);
-  box-shadow: none;
 }
 .timeline-dot::before {
   content: '';
@@ -62,18 +71,25 @@ body.reading-mode .glass {
   width: 10px;
   height: 10px;
   border-radius: 9999px;
-  background: linear-gradient(135deg, #ff3fa4, #33e1ff);
-  box-shadow: 0 0 12px rgba(255,63,164,0.6);
-}
-body.reading-mode .timeline-dot::before {
-  background: #9ca3af;
+  background: #1f2937;
+  border: 1px solid rgba(255,255,255,0.15);
   box-shadow: none;
 }
-body.reading-mode .shadow-glow,
-body.reading-mode .shadow-glowBlue,
-body.reading-mode [class="drop-shadow-[0_0_24px_rgba(51,225,255,0.35)"] {
-  box-shadow: none;
-  filter: none;
+
+/* Timeline vertical line spanning the list height */
+.timeline-list {
+  position: relative;
+  padding-left: 1.25rem;
+}
+
+.timeline-list::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255,255,255,0.12);
 }
 @media print {
   body { background: #ffffff !important; color: #000 !important; filter: none !important; }

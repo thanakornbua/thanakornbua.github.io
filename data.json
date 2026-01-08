@@ -3,12 +3,20 @@
     {
       "name": "Medicine (กสพท.)",
       "timeline": [
-        { "date": "2027-12-12", "task": "Publish Candidate List", "countdownEligible": false },
-        { "date": "2027-02-01", "task": "Main Application Deadline", "countdownEligible": false },
-        { "date": "2027-02-10", "task": "Download Exam Card", "countdownEligible": false },
-        { "date": "2027-02-14", "task": "TPAT1 Exam", "isTest": true, "testTime": "2027-02-14T08:30:00", "countdownEligible": true },
+        { "date": "2027-10-01", "task": "TPAT1 (COMETS) Application", "countdownEligible": false },
+        { "date": "2027-10-01", "task": "myTCAS Application", "countdownEligible": false },
+        { "date": "2027-10-01", "task": "TGAT / TAT2-5 Application", "countdownEligible": false },
+        { "date": "2027-12-12", "task": "TGAT / TPAT Exam", "isTest": true, "testTime": "2027-12-12T08:30:00", "countdownEligible": true },
         { "date": "2027-02-20", "task": "Interview Announcement", "countdownEligible": false },
         { "date": "2027-02-25", "task": "Interview Day", "isTest": true, "testTime": "2027-02-25T09:00:00", "countdownEligible": true }
+      ]
+    },
+    {
+      "name": "Engineering",
+      "timeline": [
+        { "date": "2027-10-01", "task": "myTCAS Application", "countdownEligible": false },
+        { "date": "2027-10-01", "task": "TGAT / TAT2-5 Application", "countdownEligible": false },
+        { "date": "2027-12-12", "task": "TGAT / TPAT Exam", "isTest": true, "testTime": "2027-12-12T08:30:00", "countdownEligible": true }
       ]
     }
   ]
