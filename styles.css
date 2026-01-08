@@ -14,9 +14,11 @@ body.reading-mode {
   filter: grayscale(1);
 }
 .reading-mode .gradient-hidden,
-.reading-mode .bg-[radial-gradient(circle_at_50%_-10%,rgba(51,225,255,0.1),transparent_35%),radial-gradient(circle_at_20%_40%,rgba(255,63,164,0.12),transparent_30%)] {
+.reading-mode .bg-[radial-gradient(circle_at_50%_-10%,rgba(51,225,255,0.1),transparent_35%),radial-gradient(circle_at_20%_40%,rgba(255,63,164,0.12),transparent_30%)] 
+{
   display: none !important;
 }
+
 .glass {
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.08);
@@ -76,3 +78,15 @@ body.reading-mode [class="drop-shadow-[0_0_24px_rgba(51,225,255,0.35)"] {
   opacity: 0;
   transform: scale(0.9);
 }
+
+/* React sidebar helpers */
+.sidebar {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform: translateX(-100%);
+  opacity: 0;
+}
+.sidebar.open { transform: translateX(0); opacity: 1; }
+.sidebar-fab { position: fixed; top: 16px; left: 16px; z-index: 50; }
+
+/* Countdown digits letter spacing */
+.countdown-digits { letter-spacing: 0.02em; }
