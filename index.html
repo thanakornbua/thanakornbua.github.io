@@ -162,24 +162,24 @@
       const parts = diffParts(activeTarget, now);
 
       return (
-        <div className={`relative min-h-screen ${showSidebar ? 'md:pl-64' : ''}`}>
+        <div className={`relative min-h-screen ${showSidebar ? 'pt-24 md:pt-0 md:pl-20 lg:pl-64' : ''}`}>
           {/* decorative gradients (hidden in reading/print) */}
           <div className={`absolute inset-0 pointer-events-none no-print ${readingMode ? 'hidden' : ''}`} style={{
             background: 'radial-gradient(circle at 50% -10%, rgba(51,225,255,0.1), transparent 35%), radial-gradient(circle at 20% 40%, rgba(255,63,164,0.12), transparent 30%)'
           }} />
 
           {/* Sidebar */}
-          <aside className={`sidebar fixed inset-y-0 left-0 w-20 md:w-64 glass px-3 py-6 border border-slate-800/70 flex flex-col items-center md:items-start gap-3 z-20 ${showSidebar ? 'open' : ''}`}>
+          <aside className={`sidebar fixed glass px-3 py-6 border border-slate-800/70 flex flex-col md:flex-col items-center md:items-start gap-3 z-40 ${showSidebar ? 'open' : ''}`}>
             <div className="w-full flex items-center justify-between gap-2 text-white font-semibold text-sm md:text-base">
               <div className="flex items-center gap-2">
                 <span className="text-neonBlue">//</span>
                 <span className="hidden md:inline">UTILITY</span>
               </div>
-              <button onClick={() => setShowSidebar(false)} className="text-slate-400 hover:text-white text-xl leading-none" aria-label="Close sidebar">X</button>
+              <button onClick={() => setShowSidebar(false)} className="text-slate-400 hover:text-white text-xl leading-none" aria-label="Close sidebar">×</button>
             </div>
-            <nav className="flex flex-col gap-2 w-full">
-              <a href="index.html" className="glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition text-center"><span className="hidden md:inline">Dashboard</span></a>
-              <a href="timer.html" className="glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition text-center"><span className="hidden md:inline">Timer</span></a>
+            <nav className="flex flex-row md:flex-col gap-2 w-full">
+              <a href="index.html" className="glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition text-center">🏠<span className="hidden md:inline ml-1">Dashboard</span></a>
+              <a href="timer.html" className="glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition text-center">⏱<span className="hidden md:inline ml-1">Timer</span></a>
             </nav>
           </aside>
           {!showSidebar && (
@@ -282,6 +282,11 @@
             console.log('ServiceWorker registration failed:', error);
           });
       });
+    }
+    
+    // iOS Safari click fix - ensures buttons work properly
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+      document.addEventListener('touchstart', function() {}, true);
     }
   </script>
 </body>

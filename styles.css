@@ -103,14 +103,98 @@ body.reading-mode [class="drop-shadow-[0_0_24px_rgba(51,225,255,0.35)"] {
   transform: scale(0.9);
 }
 
-/* React sidebar helpers */
+/* React sidebar helpers - iOS Compatible */
 .sidebar {
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  transform: translateX(-100%);
+  position: fixed;
+  z-index: 40;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 0.3s;
   opacity: 0;
+  visibility: hidden;
+  /* iOS Safari hardware acceleration */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
 }
-.sidebar.open { transform: translateX(0); opacity: 1; }
-.sidebar-fab { position: fixed; top: 16px; left: 16px; z-index: 50; }
+
+/* Mobile: Sidebar slides from top */
+@media (max-width: 768px) {
+  .sidebar {
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: auto;
+    max-height: 30vh;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem;
+    transform: translateY(-100%);
+    -webkit-transform: translateY(-100%);
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+  }
+  
+  .sidebar.open {
+    transform: translateY(0);
+    -webkit-transform: translateY(0);
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .sidebar nav {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+  
+  .sidebar nav a {
+    flex: 1;
+    font-size: 0.75rem;
+  }
+}
+
+/* Tablet & Desktop: Sidebar slides from left */
+@media (min-width: 769px) {
+  .sidebar {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 5rem;
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+    -webkit-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+  }
+  
+  .sidebar.open { 
+    transform: translateX(0);
+    -webkit-transform: translateX(0);
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    width: 16rem;
+  }
+}
+
+.sidebar-fab { 
+  position: fixed; 
+  top: 16px; 
+  left: 16px; 
+  z-index: 50;
+  /* iOS tap improvement */
+  -webkit-tap-highlight-color: rgba(255, 63, 164, 0.3);
+  cursor: pointer;
+}
 
 /* Countdown digits letter spacing */
 .countdown-digits { letter-spacing: 0.02em; }
@@ -128,10 +212,27 @@ body.reading-mode [class="drop-shadow-[0_0_24px_rgba(51,225,255,0.35)"] {
     padding: 12px 8px;
   }
   
-  /* Better sidebar on mobile */
+  /* Better sidebar on mobile - top sliding */
   .sidebar {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+    /* Force hardware acceleration on iOS */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    /* Prevent iOS Safari scroll issues */
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    /* Adjust padding for horizontal layout */
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Make buttons more responsive on iOS */
+  button {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(255, 63, 164, 0.3);
   }
 }
 
@@ -166,6 +267,41 @@ body.reading-mode [class="drop-shadow-[0_0_24px_rgba(51,225,255,0.35)"] {
   button, input, select {
     -webkit-appearance: none;
     appearance: none;
+  }
+  
+  /* iOS sidebar fix - ensure proper rendering */
+  @media (max-width: 768px) {
+    .sidebar {
+      /* Use 3D transforms for better iOS performance - top sliding */
+      -webkit-transform: translate3d(0, -100%, 0);
+      transform: translate3d(0, -100%, 0);
+      will-change: transform;
+    }
+    
+    .sidebar.open {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+    }
+  }
+  
+  @media (min-width: 769px) {
+    .sidebar {
+      /* Use 3D transforms for better iOS performance - left sliding */
+      -webkit-transform: translate3d(-100%, 0, 0);
+      transform: translate3d(-100%, 0, 0);
+      will-change: transform;
+    }
+    
+    .sidebar.open {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+    }
+  }
+  
+  /* Prevent iOS click delay */
+  button, a {
+    -webkit-tap-highlight-color: rgba(255, 63, 164, 0.2);
+    touch-action: manipulation;
   }
 }
 
@@ -260,4 +396,9 @@ select {
   will-change: transform;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
+  /* iOS performance boost */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  perspective: 1000;
 }
