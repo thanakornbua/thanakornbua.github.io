@@ -102,6 +102,7 @@
       const [now, setNow] = useState(new Date());
       const [showTimeline, setShowTimeline] = useState(true);
       const [showSidebar, setShowSidebar] = useState(true);
+        const [showCountdownFullscreen, setShowCountdownFullscreen] = useState(false);
       const [userSelectedTarget, setUserSelectedTarget] = useState(false);
 
       useEffect(() => {
@@ -180,6 +181,7 @@
             <nav className="flex flex-row md:flex-col gap-2 w-full">
               <a href="index.html" className="glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition text-center">🏠<span className="hidden md:inline ml-1">Dashboard</span></a>
               <a href="timer.html" className="glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition text-center">⏱<span className="hidden md:inline ml-1">Timer</span></a>
+              <a href="credits.html" className="glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition text-center">📜<span className="hidden md:inline ml-1">Credits</span></a>
             </nav>
           </aside>
           {!showSidebar && (
@@ -212,10 +214,18 @@
                     <p className="text-slate-400 text-sm">Counting down to</p>
                     <h2 className="text-xl md:text-2xl font-semibold text-white">{countdownLabel || 'No eligible upcoming event'}</h2>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xs text-slate-500 uppercase tracking-[0.2em]">Live Sync</p>
-                    <p className="text-base font-semibold text-neonBlue">{formatDateTime(now)}</p>
-                  </div>
+                    <div className="text-right flex flex-col items-end gap-2">
+                      <div>
+                        <p className="text-xs text-slate-500 uppercase tracking-[0.2em]">Live Sync</p>
+                        <p className="text-base font-semibold text-neonBlue">{formatDateTime(now)}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setShowCountdownFullscreen(true)}
+                        className="px-3 py-1 rounded-full border border-slate-700 text-xs text-white hover:border-neonBlue transition"
+                        aria-label="Show countdown fullscreen"
+                      >⛶ Fullscreen</button>
+                    </div>
                 </div>
 
                 <div className="mt-8 flex items-center justify-center">
@@ -261,6 +271,29 @@
                 </aside>
               )}
             </div>
+              {showCountdownFullscreen && (
+                <div className="fixed inset-0 z-50 bg-slate-950/95 flex flex-col items-center justify-center px-4">
+                  <button
+                    type="button"
+                    onClick={() => setShowCountdownFullscreen(false)}
+                    className="absolute top-4 right-4 px-3 py-1 rounded-full border border-slate-700 text-xs text-white hover:border-neonPink transition"
+                    aria-label="Close fullscreen countdown"
+                  >✕</button>
+                  <div className="max-w-3xl w-full text-center space-y-6">
+                    <div>
+                      <p className="text-slate-400 text-sm">Counting down to</p>
+                      <h2 className="text-2xl md:text-3xl font-semibold text-white break-words">{countdownLabel || 'No eligible upcoming event'}</h2>
+                    </div>
+                    <div className="font-[Kanit] font-extrabold countdown-digits select-none">
+                      <div className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[8rem] tracking-tight">
+                        {parts.showDays && (<><span>{parts.d}</span><span className="mx-2">:</span></>)}
+                        <span>{parts.h}</span><span className="mx-2">:</span><span>{parts.m}</span><span className="mx-2">:</span><span>{parts.s}</span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-slate-500 uppercase tracking-[0.2em]">Live Sync {formatDateTime(now)}</p>
+                  </div>
+                </div>
+              )}
           </main>
         </div>
       );
