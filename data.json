@@ -3,20 +3,38 @@
     {
       "name": "Medicine (กสพท.)",
       "timeline": [
-        { "date": "2027-10-01", "task": "TPAT1 (COMETS) Application", "countdownEligible": false },
-        { "date": "2027-10-01", "task": "myTCAS Application", "countdownEligible": false },
-        { "date": "2027-10-01", "task": "TGAT / TAT2-5 Application", "countdownEligible": false },
-        { "date": "2027-12-12", "task": "TGAT / TPAT Exam", "isTest": true, "testTime": "2027-12-12T08:30:00", "countdownEligible": true },
-        { "date": "2027-02-20", "task": "Interview Announcement", "countdownEligible": false },
-        { "date": "2027-02-25", "task": "Interview Day", "isTest": true, "testTime": "2027-02-25T09:00:00", "countdownEligible": true }
+        { "date": "2026-10-01", "task": "TPAT1 (COMETS) Application", "countdownEligible": false },
+        { "date": "2026-10-28", "task": "myTCAS Application", "countdownEligible": false },
+        { "date": "2026-10-30", "task": "TGAT / TAT2-5 Application", "countdownEligible": false },
+        { "date": "2026-12-13", "task": "TGAT / TPAT Exam", "isTest": true, "testTime": "2026-12-12T08:30:00", "countdownEligible": true },
+        { "date": "2026-12-25", "task": "TGAT / TPAT Result Announcement (CBT)", "countdownEligible": false },
+        { "date": "2027-01-13", "task": "TGAT / TPAT Result Announcement (PBT)", "countdownEligible": false },
+        { "date": "2027-01-30", "task": "A-Level Application", "countdownEligible": false },
+        { "date": "2027-03-14", "task": "A-Level Exam", "isTest": true, "testTime": "2027-03-14T08:30:00", "countdownEligible": true },
+        { "date": "2027-04-20", "task": "A-Level Result Announcement", "countdownEligible": false },
+        { "date": "2026-11-03", "task": "TCAS1 Application (Chulalongkorn University)", "countdownEligible": true },
+        { "date": "2026-10-01", "task": "TCAS1 Application (Mahidol University)", "countdownEligible": true },
+        { "date": "2027-02-06", "task": "TCAS1 Announcement", "countdownEligible": false },
+        { "date": "2027-05-06", "task": "TCAS3 Application", "countdownEligible": false },
+        { "date": "2027-05-06", "task": "TCAS3 Announcement", "countdownEligible": true }
       ]
     },
     {
       "name": "Engineering",
       "timeline": [
-        { "date": "2027-10-01", "task": "myTCAS Application", "countdownEligible": false },
-        { "date": "2027-10-01", "task": "TGAT / TAT2-5 Application", "countdownEligible": false },
-        { "date": "2027-12-12", "task": "TGAT / TPAT Exam", "isTest": true, "testTime": "2027-12-12T08:30:00", "countdownEligible": true }
+        { "date": "2026-10-28", "task": "myTCAS Application", "countdownEligible": false },
+        { "date": "2026-10-30", "task": "TGAT / TAT2-5 Application", "countdownEligible": false },
+        { "date": "2026-12-13", "task": "TGAT / TPAT Exam", "isTest": true, "testTime": "2026-12-12T08:30:00", "countdownEligible": true },
+        { "date": "2026-12-25", "task": "TGAT / TPAT Result Announcement (CBT)", "countdownEligible": false },
+        { "date": "2027-01-13", "task": "TGAT / TPAT Result Announcement (PBT)", "countdownEligible": false },
+        { "date": "2027-01-30", "task": "A-Level Application", "countdownEligible": false },
+        { "date": "2027-03-14", "task": "A-Level Exam", "isTest": true, "testTime": "2027-03-14T08:30:00", "countdownEligible": true },
+        { "date": "2027-04-20", "task": "A-Level Result Announcement", "countdownEligible": false },
+        { "date": "2026-11-03", "task": "TCAS1 Application (Chulalongkorn University)", "countdownEligible": true },
+        { "date": "2026-10-01", "task": "TCAS1 Application (Mahidol University)", "countdownEligible": true },
+        { "date": "2027-02-06", "task": "TCAS1 Announcement", "countdownEligible": false },
+        { "date": "2027-05-06", "task": "TCAS3 Application", "countdownEligible": false },
+        { "date": "2027-05-06", "task": "TCAS3 Announcement", "countdownEligible": true }
       ]
     }
   ]

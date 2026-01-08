@@ -204,9 +204,9 @@
 
           {/* Main content */}
           <main className="relative max-w-7xl mx-auto px-4 md:px-8 py-6 space-y-8">
-            <div className={`grid gap-6 items-start ${showTimeline ? 'md:grid-cols-[2fr,1fr]' : 'grid-cols-1'}`}>
+            <div className={`grid gap-6 items-stretch ${showTimeline ? 'md:grid-cols-[2fr,1fr]' : 'grid-cols-1'}`}>
               {/* Countdown card */}
-              <section className="glass rounded-3xl p-6 md:p-10 shadow-glowBlue border border-slate-800/80 md:col-span-2">
+              <section className="glass rounded-3xl p-6 md:p-10 shadow-glowBlue border border-slate-800/80 md:col-span-2 h-full flex flex-col">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div>
                     <p className="text-slate-400 text-sm">Counting down to</p>
@@ -230,12 +230,12 @@
 
               {/* Timeline */}
               {showTimeline && (
-                <aside className="glass rounded-3xl p-6 shadow-glow border border-slate-800/80 order-last md:order-none">
+                <aside className="glass rounded-3xl p-6 shadow-glow border border-slate-800/80 order-last md:order-none h-full flex flex-col">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xl font-semibold text-white">Timeline</h3>
                     <span className="text-xs uppercase tracking-[0.2em] text-neonPink">{selectedFacultyName || '—'}</span>
                   </div>
-                  <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-2 timeline-list">
+                  <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-2 timeline-list flex-1">
                     {upcomingEvents.length === 0 && (
                       <div className="text-white/60">No upcoming events</div>
                     )}
