@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Timer - TCAS70</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Kanit:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-950 text-white flex items-center justify-center px-4 py-6">
+  
+  <div id="app" class="w-full max-w-6xl space-y-6">
+    <div class="glass rounded-3xl p-6 md:p-8 border border-slate-800/80 space-y-6">
+      <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div>
+          <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Live Situation</p>
+          <h1 class="text-3xl font-kanit font-bold">Custom Countdown</h1>
+        </div>
+        <button class="px-4 py-2 rounded-lg bg-gradient-to-r from-neonPink to-neonBlue text-white font-semibold text-sm">← Dashboard</button>
+      </header>
+
+      <section class="grid md:grid-cols-2 gap-4">
+        <div class="space-y-3">
+          <label class="block text-sm text-slate-300">Subject</label>
+          <input v-model="subject" type="text" placeholder="e.g., TPAT1" class="w-full glass border border-slate-700/70 rounded-lg px-3 py-2 bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-neonPink">
+        </div>
+        <div class="space-y-3">
+          <label class="block text-sm text-slate-300">Subject Code</label>
+          <input v-model="code" type="text" placeholder="e.g., 701" class="w-full glass border border-slate-700/70 rounded-lg px-3 py-2 bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-neonPink">
+        </div>
+        <div class="space-y-3 md:col-span-2">
+          <label class="block text-sm text-slate-300">Target Date & Time</label>
+          <input v-model="targetInput" type="datetime-local" class="w-full glass border border-slate-700/70 rounded-lg px-3 py-2 bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-neonPink">
+        </div>
+        <div class="space-y-3 md:col-span-2">
+          <label class="block text-sm text-slate-300">Quick Duration (minutes)</label>
+          <input v-model.number="durationMinutes" type="number" min="1" step="1" placeholder="e.g., 20" class="w-full glass border border-slate-700/70 rounded-lg px-3 py-2 bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-neonPink">
+        </div>
+      </section>
+
+      <div class="flex flex-wrap gap-3">
+        <button @click="applyTarget" class="px-4 py-2 rounded-lg bg-gradient-to-r from-neonPink to-neonBlue text-slate-900 font-semibold text-sm">Start</button>
+        <button @click="applyDuration" class="px-4 py-2 rounded-lg bg-slate-800 text-white border border-slate-700 text-sm">Start Duration</button>
+        <button @click="resetForm" class="px-4 py-2 rounded-lg border border-slate-700 text-white text-sm">Reset</button>
+        <button @click="toggleFullscreen" class="px-4 py-2 rounded-lg border border-slate-700 text-white text-sm" aria-label="Fullscreen">⤢</button>
+      </div>
+    </div>
+
+    <div class="glass rounded-3xl p-6 md:p-10 border border-slate-800/80 text-center h-[70vh] md:h-[75vh]" ref="timerCard">
+      <div class="flex flex-col h-full">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 w-full">
+          <div class="w-full md:w-auto text-center md:text-left">
+            <p class="text-slate-400" :class="isFullscreen ? 'text-base' : 'text-sm'">Counting down to</p>
+            <h2 class="font-semibold text-white" :class="isFullscreen ? 'text-4xl md:text-5xl' : 'text-2xl md:text-3xl'">{{ displayLabel }}</h2>
+            <p class="text-slate-400" :class="isFullscreen ? 'text-base' : 'text-sm'">{{ formattedTarget }}</p>
+          </div>
+          <div class="w-full md:w-auto text-center md:text-right">
+            <p class="uppercase tracking-[0.2em] text-slate-500" :class="isFullscreen ? 'text-sm' : 'text-xs'">Live</p>
+            <p class="font-semibold text-neonBlue" :class="isFullscreen ? 'text-2xl md:text-3xl' : 'text-base'">{{ nowDisplay }}</p>
+          </div>
+        </div>
+        <div class="flex-1 flex items-center justify-center">
+          <div class="flex flex-wrap gap-8 justify-center items-baseline">
+            <div v-for="(value, key) in countdownParts" :key="key" class="flex flex-col items-center px-4">
+              <div class="font-bold leading-none text-white" :class="isFullscreen ? 'text-[11rem] md:text-[13rem]' : 'text-8xl md:text-[11rem]'">{{ value }}</div>
+              <span class="uppercase tracking-[0.25em] text-slate-400" :class="isFullscreen ? 'text-base' : 'text-sm'">{{ key }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        const now = new Date();
+        const defaultTarget = new Date(now.getTime() + 60 * 60 * 1000);
+        return {
+          subject: 'TPAT1',
+          code: '701',
+          targetInput: defaultTarget.toISOString().slice(0,16),
+          durationMinutes: 20,
+          target: defaultTarget,
+          now,
+          tickId: null,
+          isFullscreen: false
+        };
+      },
+      computed: {
+        displayLabel() {
+          return `${this.subject} (${this.code})`;
+        },
+        formattedTarget() {
+          if (!this.target) return '—';
+          return this.formatDateTime(this.target);
+        },
+        nowDisplay() {
+          return this.formatDateTime(this.now);
+        },
+        countdownParts() {
+          if (!this.target) return { Hours: '--', Minutes: '--', Seconds: '--' };
+          const diff = this.target - this.now;
+          if (diff <= 0) return { Hours: '00', Minutes: '00', Seconds: '00' };
+          const totalSeconds = Math.floor(diff / 1000);
+          const hours = Math.floor(totalSeconds / 3600);
+          const minutes = Math.floor((totalSeconds % 3600) / 60);
+          const seconds = totalSeconds % 60;
+          const pad = (n) => String(n).padStart(2, '0');
+          return { Hours: pad(hours), Minutes: pad(minutes), Seconds: pad(seconds) };
+        }
+      },
+      methods: {
+        applyTarget() {
+          if (!this.targetInput) return;
+          const nextTarget = new Date(this.targetInput);
+          if (Number.isNaN(nextTarget.getTime())) return;
+          this.target = nextTarget;
+        },
+        applyDuration() {
+          if (!this.durationMinutes || this.durationMinutes <= 0) return;
+          const now = new Date();
+          const nextTarget = new Date(now.getTime() + this.durationMinutes * 60 * 1000);
+          this.target = nextTarget;
+          this.targetInput = nextTarget.toISOString().slice(0,16);
+        },
+        resetForm() {
+          const now = new Date();
+          const defaultTarget = new Date(now.getTime() + 60 * 60 * 1000);
+          this.subject = 'TPAT1';
+          this.code = '701';
+          this.targetInput = defaultTarget.toISOString().slice(0,16);
+          this.durationMinutes = 20;
+          this.target = defaultTarget;
+        },
+        formatDateTime(value) {
+          const date = new Date(value);
+          return `${date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })} ${date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`;
+        },
+        toggleFullscreen() {
+          const el = this.$refs.timerCard;
+          if (!el) return;
+          if (!document.fullscreenElement && el.requestFullscreen) {
+            el.requestFullscreen();
+          } else if (document.exitFullscreen) {
+            document.exitFullscreen();
+          }
+        },
+        handleFullscreenChange() {
+          this.isFullscreen = !!document.fullscreenElement;
+        },
+        startTicker() {
+          if (this.tickId) clearInterval(this.tickId);
+          this.tickId = setInterval(() => {
+            this.now = new Date();
+          }, 1000);
+        }
+      },
+      mounted() {
+        this.startTicker();
+        document.addEventListener('fullscreenchange', this.handleFullscreenChange);
+      },
+      beforeUnmount() {
+        if (this.tickId) clearInterval(this.tickId);
+        document.removeEventListener('fullscreenchange', this.handleFullscreenChange);
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

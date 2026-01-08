@@ -1,72 +1,308 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TCAS70 Countdown 2027</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TCAS70 Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Kanit:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+            kanit: ['Kanit', 'sans-serif']
+          },
+          colors: {
+            neonPink: '#ff3fa4',
+            neonBlue: '#33e1ff'
+          },
+          boxShadow: {
+            glow: '0 0 30px rgba(255,63,164,0.35)',
+            glowBlue: '0 0 30px rgba(51,225,255,0.35)'
+          }
+        }
+      }
+    }
+  </script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1 class="main-title">TCAS70 COUNTDOWN</h1>
-            <p class="subtitle">ปีการศึกษา 2570 (2027)</p>
-        </header>
-
-        <div class="faculty-selector">
-            <label for="faculty-dropdown">เลือกคณะ / Select Faculty:</label>
-            <select id="faculty-dropdown">
-                <option value="general">General/All Faculties</option>
-                <option value="medicine">Faculty of Medicine</option>
-                <option value="engineering">Faculty of Engineering</option>
-                <option value="science">Faculty of Science</option>
-                <option value="arts">Faculty of Arts</option>
-                <option value="business">Faculty of Business Administration</option>
-            </select>
+  <div id="app" class="relative min-h-screen">
+    <transition name="sidebar-slide" appear>
+      <aside v-if="showSidebar" class="glass fixed inset-y-0 left-0 w-16 lg:w-56 px-3 py-6 border border-slate-800/70 flex flex-col items-center lg:items-start gap-3 z-20">
+        <div class="w-full flex items-center justify-between gap-2 text-white font-semibold text-sm lg:text-base">
+          <div class="flex items-center gap-2">
+            <span class="text-neonBlue">//</span>
+            <span class="hidden lg:inline">UTILITY</span>
+          </div>
+          <button @click="toggleSidebar" class="text-slate-400 hover:text-white text-xl leading-none" aria-label="Close sidebar">X</button>
         </div>
+        <nav class="flex flex-col gap-2 w-full">
+          <a href="index.html" class="glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition text-center"><span class="hidden lg:inline">Dashboard</span></a>
+          <a href="timer.html" class="glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition text-center"><span class="hidden lg:inline">Timer</span></a>
+        </nav>
+      </aside>
+    </transition>
+    <transition name="sidebar-fab" appear>
+      <button v-if="!showSidebar" @click="toggleSidebar" class="fixed top-4 left-4 z-20 glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition" aria-label="Open sidebar">☰</button>
+    </transition>
+    <div :class="['absolute inset-0 bg-[radial-gradient(circle_at_50%_-10%,rgba(51,225,255,0.1),transparent_35%),radial-gradient(circle_at_20%_40%,rgba(255,63,164,0.12),transparent_30%)] pointer-events-none no-print', readingMode ? 'hidden' : '']"></div>
+    <div class="relative max-w-7xl mx-auto px-4 lg:px-8 py-8 space-y-8" :class="showSidebar ? 'pl-20 lg:pl-64' : ''">
+      <header class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 class="text-3xl sm:text-4xl font-kanit font-bold text-white">Time till TCAS70</h1>
+        </div>
+        <div class="flex flex-wrap gap-3 items-center">
+          <label class="text-sm text-slate-300">Faculty</label>
+          <select v-model="selectedFacultyName" @change="setNextEventTarget" class="glass text-white border border-slate-700/60 rounded-lg px-4 py-2 bg-slate-900/60 focus:outline-none focus:ring-2 focus:ring-neonPink focus:border-neonPink">
+            <option v-for="faculty in faculties" :key="faculty.name" :value="faculty.name" class="bg-slate-900">{{ faculty.name }}</option>
+          </select>
+          <button @click="toggleReadingMode" class="px-4 py-2 rounded-lg text-sm font-semibold border border-slate-600 text-white hover:border-neonBlue transition" aria-label="Toggle reading mode">📖</button>
+          <button @click="printTimeline" class="px-4 py-2 rounded-lg text-sm font-semibold bg-slate-800 text-white border border-slate-700 hover:border-neonBlue transition" aria-label="Export timeline">🖨</button>
+          <button @click="toggleTimeline" class="px-4 py-2 rounded-lg text-sm font-semibold border border-slate-700 text-white hover:border-neonBlue transition" aria-label="Toggle timeline">🗂</button>
+        </div>
+      </header>
 
-        <div class="main-content">
-            <div class="countdown-section">
-                <h2 id="faculty-name" class="faculty-title">General/All Faculties</h2>
-                <div id="countdown-timer" class="timer">
-                    <div class="time-unit">
-                        <span class="time-value" id="days">00</span>
-                        <span class="time-label">DAYS</span>
-                    </div>
-                    <div class="time-separator">:</div>
-                    <div class="time-unit">
-                        <span class="time-value" id="hours">00</span>
-                        <span class="time-label">HOURS</span>
-                    </div>
-                    <div class="time-separator">:</div>
-                    <div class="time-unit">
-                        <span class="time-value" id="minutes">00</span>
-                        <span class="time-label">MINUTES</span>
-                    </div>
-                    <div class="time-separator">:</div>
-                    <div class="time-unit">
-                        <span class="time-value" id="seconds">00</span>
-                        <span class="time-label">SECONDS</span>
-                    </div>
-                </div>
-                <p id="target-date" class="target-date"></p>
+      <main :class="['grid gap-6 items-start', showTimeline ? 'lg:grid-cols-[2fr,1fr]' : '']">
+        <section class="glass rounded-3xl p-6 lg:p-10 shadow-glowBlue border border-slate-800/80">
+          <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div>
+              <p class="text-slate-400 text-sm">Counting down to</p>
+              <h2 class="text-xl sm:text-2xl font-semibold text-white">{{ countdownLabel }}</h2>
+              <p class="text-sm text-slate-400 mt-1">Target: {{ formattedTarget }}</p>
             </div>
+            <div class="text-right">
+              <p class="text-xs text-slate-500 uppercase tracking-[0.2em]">Live Sync</p>
+              <p class="text-base font-semibold text-neonBlue">{{ nowDisplay }}</p>
+            </div>
+          </div>
 
-            <aside class="activities-sidebar">
-                <h3>กิจกรรมและกำหนดการ</h3>
-                <h4>Timeline & Activities</h4>
-                <div id="activities-list" class="activities-content">
-                    <!-- Activities will be dynamically loaded here -->
+          <div class="mt-8 flex flex-wrap gap-4 text-center justify-center lg:justify-start">
+            <div v-for="(value, key) in countdownParts" :key="key" class="flex flex-col items-center px-4">
+              <div class="text-6xl sm:text-8xl lg:text-9xl font-bold leading-none text-white drop-shadow-[0_0_24px_rgba(51,225,255,0.35)]">{{ value }}</div>
+              <span class="uppercase tracking-[0.25em] text-slate-400 text-xs mt-3">{{ key }}</span>
+            </div>
+          </div>
+
+          <div class="mt-8">
+            <div class="glass rounded-2xl p-4 border border-slate-800/60">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Next Up</p>
+              <p class="text-lg font-semibold text-white mt-1">{{ upcomingLabel }}</p>
+              <p class="text-sm text-slate-400">{{ upcomingDate }}</p>
+            </div>
+          </div>
+        </section>
+
+        <aside v-if="showTimeline" class="glass rounded-3xl p-6 shadow-glow border border-slate-800/80 order-last lg:order-none">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-semibold text-white">Timeline</h3>
+            <span class="text-xs uppercase tracking-[0.2em] text-neonPink">{{ selectedFacultyName }}</span>
+          </div>
+          <div class="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+            <div v-for="item in selectedTimeline" :key="item.date + item.task" class="relative timeline-dot pl-5">
+              <div v-if="readingMode" class="flex items-center justify-between gap-2">
+                <div>
+                  <p class="text-base font-semibold text-white">{{ item.task }}</p>
+                  <p class="text-sm text-slate-400">{{ formatDate(item.date) }}</p>
                 </div>
-            </aside>
-        </div>
-
-        <footer>
-            <p>🎓 Good luck with your TCAS70 application! 🎓</p>
-            <p>สู้ ๆ นะคะ/ครับ!</p>
-        </footer>
+                <div class="text-sm font-bold text-neonBlue">{{ eventCountdown(item) }}</div>
+              </div>
+              <div v-else class="flex items-start justify-between gap-2">
+                <div>
+                  <p class="text-sm text-slate-400">{{ formatDate(item.date) }}</p>
+                  <p class="text-base font-semibold text-white">{{ item.task }}</p>
+                  <p v-if="item.isTest && item.testTime" class="text-xs text-neonBlue">Test at {{ formatTime(item.testTime) }}</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span :class="item.isPast ? 'text-xs px-2 py-1 rounded-full border border-slate-700 text-slate-400' : 'text-xs px-2 py-1 rounded-full border border-neonBlue text-neonBlue'">{{ item.isPast ? 'Past' : 'Upcoming' }}</span>
+                  <button @click="setEventTarget(item)" :class="readingMode ? 'text-xs px-3 py-1 rounded-full bg-slate-700 text-white border border-slate-500' : 'text-xs px-3 py-1 rounded-full bg-gradient-to-r from-neonPink to-neonBlue text-slate-900 font-semibold hover:shadow-glowBlue transition'">Set as Countdown</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </main>
     </div>
+  </div>
 
-    <script src="script.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          faculties: [],
+          selectedFacultyName: '',
+          activeTarget: null,
+          countdownLabel: 'Next Event',
+          now: new Date(),
+          tickId: null,
+          error: null,
+          readingMode: false,
+          showTimeline: true,
+          showSidebar: true
+        };
+      },
+      computed: {
+        selectedFaculty() {
+          return this.faculties.find(f => f.name === this.selectedFacultyName);
+        },
+        selectedTimeline() {
+          if (!this.selectedFaculty) return [];
+          return this.selectedFaculty.timeline
+            .filter(event => !this.isPast(event))
+            .map(event => ({
+              ...event,
+              isPast: this.isPast(event)
+            }));
+        },
+        countdownParts() {
+          const target = this.activeTarget ? new Date(this.activeTarget) : null;
+          if (!target) return { Days: '--', Hours: '--', Minutes: '--', Seconds: '--' };
+
+          const diff = target - this.now;
+          if (diff <= 0) return { Days: '00', Hours: '00', Minutes: '00', Seconds: '00' };
+
+          const totalSeconds = Math.floor(diff / 1000);
+          const days = Math.floor(totalSeconds / 86400);
+          const hours = Math.floor((totalSeconds % 86400) / 3600);
+          const minutes = Math.floor((totalSeconds % 3600) / 60);
+          const seconds = totalSeconds % 60;
+
+          const pad = (n) => String(n).padStart(2, '0');
+          return {
+            Days: pad(days),
+            Hours: pad(hours),
+            Minutes: pad(minutes),
+            Seconds: pad(seconds)
+          };
+        },
+        formattedTarget() {
+          if (!this.activeTarget) return '—';
+          return this.formatDateTime(this.activeTarget);
+        },
+        nowDisplay() {
+          return this.formatDateTime(this.now);
+        },
+        upcomingEvent() {
+          return this.upcomingEvents()[0] || null;
+        },
+        upcomingLabel() {
+          return this.upcomingEvent ? this.upcomingEvent.task : '—';
+        },
+        upcomingDate() {
+          return this.upcomingEvent ? this.formatDateTime(this.upcomingEvent.value) : '—';
+        }
+      },
+      methods: {
+        async loadData() {
+          try {
+            const res = await fetch('data.json', { cache: 'no-store' });
+            const data = await res.json();
+            this.faculties = data.faculties.map(f => ({
+              ...f,
+              timeline: [...f.timeline].sort((a, b) => new Date(a.date) - new Date(b.date))
+            }));
+            if (this.faculties.length) {
+              this.selectedFacultyName = this.faculties[0].name;
+              this.setNextEventTarget();
+            }
+          } catch (err) {
+            this.error = 'Unable to load data';
+            console.error(err);
+          }
+        },
+        setNextEventTarget() {
+          const next = this.upcomingEvents()[0];
+          if (next) {
+            this.activeTarget = next.value;
+            this.countdownLabel = `${next.task} (${this.selectedFacultyName})`;
+          } else {
+            this.activeTarget = null;
+            this.countdownLabel = 'No upcoming events';
+          }
+        },
+        setEventTarget(event) {
+          const targetString = event.testTime || `${event.date}T00:00:00`;
+          this.activeTarget = new Date(targetString);
+          this.countdownLabel = `${event.task} (${this.selectedFacultyName})`;
+        },
+        isPast(event) {
+          const value = this.eventDateValue(event);
+          return value < this.now;
+        },
+        eventDateValue(event) {
+          const source = event.testTime || `${event.date}T00:00:00`;
+          return new Date(source);
+        },
+        upcomingEvents() {
+          if (!this.selectedFaculty) return [];
+          return this.selectedFaculty.timeline
+            .map(ev => ({ ...ev, value: this.eventDateValue(ev) }))
+            .filter(ev => ev.value >= this.now)
+            .sort((a, b) => a.value - b.value);
+        },
+        formatDate(dateStr) {
+          const date = new Date(dateStr);
+          return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+        },
+        formatTime(dateStr) {
+          const date = new Date(dateStr);
+          return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+        },
+        formatDateTime(value) {
+          const date = new Date(value);
+          return `${date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })} ${date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`;
+        },
+        eventCountdown(event) {
+          const target = this.eventDateValue(event);
+          const diff = target - this.now;
+          if (diff <= 0) return '0d 00h';
+          const totalSeconds = Math.floor(diff / 1000);
+          const days = Math.floor(totalSeconds / 86400);
+          const hours = Math.floor((totalSeconds % 86400) / 3600);
+          return `${days}d ${String(hours).padStart(2, '0')}h`;
+        },
+        toggleReadingMode() {
+          this.readingMode = !this.readingMode;
+          this.applyReadingMode();
+        },
+        applyReadingMode() {
+          document.body.classList.toggle('reading-mode', this.readingMode);
+        },
+        printTimeline() {
+          window.print();
+        },
+        toggleTimeline() {
+          this.showTimeline = !this.showTimeline;
+        },
+        toggleSidebar() {
+          this.showSidebar = !this.showSidebar;
+        },
+        startTicker() {
+          if (this.tickId) clearInterval(this.tickId);
+          this.tickId = setInterval(() => {
+            this.now = new Date();
+            if (!this.activeTarget) {
+              this.setNextEventTarget();
+            }
+          }, 1000);
+        }
+      },
+      mounted() {
+        this.loadData();
+        this.startTicker();
+        this.applyReadingMode();
+      },
+      beforeUnmount() {
+        if (this.tickId) clearInterval(this.tickId);
+      }
+    }).mount('#app');
+  </script>
 </body>
 </html>
