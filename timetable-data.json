@@ -1,0 +1,33 @@
+{
+  "sections": [
+    {
+      "id": "m1",
+      "name": "Mathayom 6 / Room 1",
+      "grade": "M6",
+      "room": "1",
+      "timetable": [
+        { "day": "Monday", "start": "08:00", "end": "08:50", "subject": "Mathematics", "teacher": "Mr. Somchai", "room": "401", "status": "Scheduled" },
+        { "day": "Monday", "start": "09:00", "end": "09:50", "subject": "Physics", "teacher": "Ms. Anong", "room": "402", "status": "Swapped" },
+        { "day": "Monday", "start": "10:00", "end": "10:50", "subject": "English", "teacher": "Mr. John", "room": "403", "status": "Scheduled" },
+        { "day": "Tuesday", "start": "08:00", "end": "08:50", "subject": "Chemistry", "teacher": "Ms. Rung", "room": "401", "status": "Scheduled" },
+        { "day": "Tuesday", "start": "09:00", "end": "09:50", "subject": "Biology", "teacher": "Mr. Kitt", "room": "402", "status": "Scheduled" },
+        { "day": "Wednesday", "start": "08:00", "end": "08:50", "subject": "Thai Language", "teacher": "Ms. Nit", "room": "201", "status": "Scheduled" },
+        { "day": "Wednesday", "start": "09:00", "end": "09:50", "subject": "Social Studies", "teacher": "Mr. Prasarn", "room": "202", "status": "Scheduled" },
+        { "day": "Friday", "start": "08:30", "end": "09:20", "subject": "การงานอาชีพ", "teacher": "Pranom", "room": "6399", "status": "Scheduled" }
+      ]
+    },
+    {
+      "id": "m2",
+      "name": "Mathayom 6 / Room 2",
+      "grade": "M6",
+      "room": "2",
+      "timetable": [
+        { "day": "Monday", "start": "08:00", "end": "08:50", "subject": "English", "teacher": "Mr. John", "room": "404", "status": "Scheduled" },
+        { "day": "Monday", "start": "09:00", "end": "09:50", "subject": "Mathematics", "teacher": "Ms. Orn", "room": "405", "status": "Scheduled" },
+        { "day": "Tuesday", "start": "08:00", "end": "08:50", "subject": "Physics", "teacher": "Ms. Anong", "room": "402", "status": "Swapped" },
+        { "day": "Tuesday", "start": "09:00", "end": "09:50", "subject": "Chemistry", "teacher": "Ms. Rung", "room": "401", "status": "Scheduled" },
+        { "day": "Thursday", "start": "10:00", "end": "10:50", "subject": "Biology", "teacher": "Mr. Kitt", "room": "402", "status": "Scheduled" }
+      ]
+    }
+  ]
+}

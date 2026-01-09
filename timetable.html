@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+  <title>Timetable Viewer - TCAS70</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Kanit:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-950 text-white">
+  <div id="app" class="relative min-h-screen" >
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar fixed glass px-3 py-6 border border-slate-800/70 flex flex-col md:flex-col items-center md:items-start gap-3 z-40 no-print">
+      <div class="w-full flex items-center justify-between gap-2 text-white font-semibold text-sm md:text-base">
+        <div class="flex items-center gap-2">
+          <span class="text-neonBlue">//</span>
+          <span class="hidden md:inline">UTILITY</span>
+        </div>
+        <button id="sidebar-close" class="text-slate-400 hover:text-white text-xl leading-none" aria-label="Close sidebar">×</button>
+      </div>
+      <nav class="flex flex-row md:flex-col gap-2 w-full">
+        <a href="index.html" class="glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition text-center">🏠<span class="hidden md:inline ml-1">Dashboard</span></a>
+        <a href="timer.html" class="glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition text-center">⏱<span class="hidden md:inline ml-1">Timer</span></a>
+        <a href="timetable.html" class="glass px-3 py-2 rounded-lg border border-neonBlue text-white transition text-center">📅<span class="hidden md:inline ml-1">Timetable</span></a>
+        <a href="credits.html" class="glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition text-center">📜<span class="hidden md:inline ml-1">Credits</span></a>
+      </nav>
+    </aside>
+    <!-- Sidebar FAB -->
+    <button id="sidebar-open" class="no-print sidebar-fab glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition" aria-label="Open sidebar">☰</button>
+
+    <main id="main" class="relative max-w-6xl mx-auto px-4 md:px-8 py-8">
+      <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div>
+          <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Schedule</p>
+          <h1 class="text-3xl md:text-4xl font-[Kanit] font-bold">Timetable Viewer</h1>
+          <p class="text-slate-300 text-sm md:text-base max-w-2xl mt-2">
+            Select your section to view the timetable. You can print or export the timetable for offline use.
+          </p>
+        </div>
+        <div class="glass rounded-2xl border border-slate-800/80 p-4 space-y-3 no-print">
+          <div class="space-y-1">
+            <label for="section-select" class="block text-xs font-semibold text-slate-300">Section / Class</label>
+            <select id="section-select" class="w-full glass border border-slate-700/70 rounded-lg px-3 py-2 bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-neonPink">
+              <option value="" disabled selected>Select section…</option>
+            </select>
+          </div>
+          <div class="flex gap-2 flex-wrap">
+            <button id="print-btn" class="px-4 py-2 rounded-lg bg-gradient-to-r from-neonPink to-neonBlue text-slate-900 font-semibold text-sm">Print timetable</button>
+            <button id="export-btn" class="px-4 py-2 rounded-lg border border-slate-700 text-white text-sm">Export as CSV</button>
+          </div>
+        </div>
+      </header>
+
+      <section class="glass rounded-3xl p-6 md:p-8 border border-slate-800/80">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-xl md:text-2xl font-semibold">Current timetable</h2>
+            <p id="section-label" class="text-slate-400 text-sm mt-1">No section selected.</p>
+          </div>
+          <p id="updated-label" class="text-xs text-slate-500 hidden md:block"></p>
+        </div>
+
+        <div id="timetable-container" class="overflow-x-auto">
+          <table class="min-w-full text-sm text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-700 text-slate-300">
+                <th class="py-2 pr-4">Day</th>
+                <th class="py-2 pr-4">Start</th>
+                <th class="py-2 pr-4">End</th>
+                <th class="py-2 pr-4">Subject</th>
+                <th class="py-2 pr-4">Teacher</th>
+                <th class="py-2 pr-4">Room</th>
+                <th class="py-2 pr-4">Status</th>
+              </tr>
+            </thead>
+            <tbody id="timetable-body" class="align-top text-slate-100">
+              <tr>
+                <td colspan="7" class="py-6 text-center text-slate-400">Choose a section to see its timetable.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Sidebar toggle (reuse existing CSS behavior)
+    (function() {
+      const sidebar = document.getElementById('sidebar');
+      const openBtn = document.getElementById('sidebar-open');
+      const closeBtn = document.getElementById('sidebar-close');
+
+      function openSidebar() {
+        sidebar.classList.add('open');
+        openBtn.style.display = 'none';
+      }
+      function closeSidebar() {
+        sidebar.classList.remove('open');
+        openBtn.style.display = '';
+      }
+
+      openBtn.addEventListener('click', openSidebar);
+      closeBtn.addEventListener('click', closeSidebar);
+
+      // Open by default on desktop
+      if (window.innerWidth >= 769) {
+        openSidebar();
+      }
+    })();
+
+    // Timetable logic
+    (function() {
+      const sectionSelect = document.getElementById('section-select');
+      const sectionLabel = document.getElementById('section-label');
+      const updatedLabel = document.getElementById('updated-label');
+      const tbody = document.getElementById('timetable-body');
+      const printBtn = document.getElementById('print-btn');
+      const exportBtn = document.getElementById('export-btn');
+
+      let sections = [];
+      let currentSection = null;
+
+      function groupByDay(entries) {
+        const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+        const map = new Map();
+        entries.forEach(e => {
+          const key = e.day || 'Other';
+          if (!map.has(key)) map.set(key, []);
+          map.get(key).push(e);
+        });
+        days.forEach(d => {
+          if (map.has(d)) {
+            map.set(d, map.get(d).sort((a,b) => a.start.localeCompare(b.start)));
+          }
+        });
+        return { order: days.filter(d => map.has(d)).concat(Array.from(map.keys()).filter(k => !days.includes(k))), map };
+      }
+
+      function getDisplayStatus(entry, now) {
+        const baseStatus = entry.status || '';
+        const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+        try {
+          const entryDayIndex = days.indexOf(entry.day);
+          const nowDayIndex = now.getDay();
+
+          if (entryDayIndex === nowDayIndex && entry.start) {
+            const startParts = (entry.start || '00:00').split(':').map(Number);
+            const endParts = (entry.end || entry.start || '00:00').split(':').map(Number);
+
+            const startDate = new Date(
+              now.getFullYear(),
+              now.getMonth(),
+              now.getDate(),
+              startParts[0] || 0,
+              startParts[1] || 0
+            );
+            const endDate = new Date(
+              now.getFullYear(),
+              now.getMonth(),
+              now.getDate(),
+              endParts[0] || startParts[0] || 0,
+              endParts[1] || startParts[1] || 0
+            );
+
+            if (now > endDate) return 'Passed';
+            if (now >= startDate && now <= endDate) return 'Ongoing';
+          }
+        } catch (e) {
+          // fall back to base status on any error
+        }
+
+        return baseStatus || 'Scheduled';
+      }
+
+      function renderTable(section) {
+        tbody.innerHTML = '';
+        if (!section || !section.timetable || section.timetable.length === 0) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = '<td colspan="7" class="py-6 text-center text-slate-400">No timetable data for this section.</td>';
+          tbody.appendChild(tr);
+          sectionLabel.textContent = 'No section selected.';
+          updatedLabel.textContent = '';
+          updatedLabel.classList.add('hidden');
+          return;
+        }
+
+        sectionLabel.textContent = section.name + (section.grade ? ' (' + section.grade + ')' : '');
+        updatedLabel.textContent = 'Loaded from timetable-data.json';
+        updatedLabel.classList.remove('hidden');
+
+        const { order, map } = groupByDay(section.timetable);
+        const now = new Date();
+
+        order.forEach(day => {
+          const entries = map.get(day) || [];
+          entries.forEach((entry, index) => {
+            const displayStatus = getDisplayStatus(entry, now);
+            const statusClass = displayStatus === 'Swapped' ? 'text-red-400 font-bold' : 'text-slate-200';
+            const tr = document.createElement('tr');
+            tr.className = 'border-b border-slate-800/80';
+            tr.innerHTML = `
+              <td class="py-2 pr-4 align-top ${index === 0 ? 'font-semibold' : ''}">${index === 0 ? day : ''}</td>
+              <td class="py-2 pr-4 align-top">${entry.start || ''}</td>
+              <td class="py-2 pr-4 align-top">${entry.end || ''}</td>
+              <td class="py-2 pr-4 align-top">${entry.subject || ''}</td>
+              <td class="py-2 pr-4 align-top">${entry.teacher || ''}</td>
+              <td class="py-2 pr-4 align-top">${entry.room || ''}</td>
+              <td class="py-2 pr-4 align-top ${statusClass}">${displayStatus}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        });
+      }
+
+      function toCSV(section) {
+        if (!section || !section.timetable || section.timetable.length === 0) return '';
+        const header = ['Section','Day','Start','End','Subject','Teacher','Room','Status'];
+        const rows = section.timetable.map(e => [
+          section.name,
+          e.day || '',
+          e.start || '',
+          e.end || '',
+          e.subject || '',
+          e.teacher || '',
+          e.room || '',
+          e.status || ''
+        ]);
+        const lines = [header].concat(rows).map(cols => cols.map(v => '"' + String(v).replace(/"/g,'""') + '"').join(','));
+        return lines.join('\n');
+      }
+
+      function downloadCSV(filename, content) {
+        const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      fetch('timetable-data.json')
+        .then(r => r.json())
+        .then(data => {
+          sections = data.sections || [];
+          sections.forEach((s, index) => {
+            const opt = document.createElement('option');
+            opt.value = s.id || String(index);
+            opt.textContent = s.name || ('Section #' + (index + 1));
+            sectionSelect.appendChild(opt);
+          });
+          if (sections.length > 0) {
+            const first = sections[0];
+            currentSection = first;
+            sectionSelect.value = first.id || '0';
+            renderTable(first);
+          }
+        })
+        .catch(err => {
+          console.error('Failed to load timetable-data.json', err);
+          tbody.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-red-400">Unable to load timetable data.</td></tr>';
+        });
+
+      sectionSelect.addEventListener('change', function() {
+        const id = this.value;
+        currentSection = sections.find(s => (s.id || '') === id) || null;
+        renderTable(currentSection);
+      });
+
+      printBtn.addEventListener('click', function() {
+        window.print();
+      });
+
+      exportBtn.addEventListener('click', function() {
+        if (!currentSection) return;
+        const csv = toCSV(currentSection);
+        if (!csv) return;
+        const safeName = (currentSection.name || 'timetable').replace(/[^a-z0-9]+/gi, '_').toLowerCase();
+        downloadCSV(safeName + '.csv', csv);
+      });
+    })();
+  </script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then((registration) => {
+            console.log('ServiceWorker registered:', registration.scope);
+          })
+          .catch((error) => {
+            console.log('ServiceWorker registration failed:', error);
+          });
+      });
+    }
+
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+      document.addEventListener('touchstart', function() {}, true);
+    }
+  </script>
+</body>
+</html>
