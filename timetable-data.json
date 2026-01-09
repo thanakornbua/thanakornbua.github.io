@@ -1,32 +1,200 @@
 {
   "sections": [
     {
-      "id": "m1",
-      "name": "Mathayom 6 / Room 1",
-      "grade": "M6",
+      "id": "501",
+      "name": "Mathayom 5 / Room 1",
+      "grade": "M5",
       "room": "1",
       "timetable": [
-        { "day": "Monday", "start": "08:00", "end": "08:50", "subject": "Mathematics", "teacher": "Mr. Somchai", "room": "401", "status": "Scheduled" },
-        { "day": "Monday", "start": "09:00", "end": "09:50", "subject": "Physics", "teacher": "Ms. Anong", "room": "402", "status": "Swapped" },
-        { "day": "Monday", "start": "10:00", "end": "10:50", "subject": "English", "teacher": "Mr. John", "room": "403", "status": "Scheduled" },
-        { "day": "Tuesday", "start": "08:00", "end": "08:50", "subject": "Chemistry", "teacher": "Ms. Rung", "room": "401", "status": "Scheduled" },
-        { "day": "Tuesday", "start": "09:00", "end": "09:50", "subject": "Biology", "teacher": "Mr. Kitt", "room": "402", "status": "Scheduled" },
-        { "day": "Wednesday", "start": "08:00", "end": "08:50", "subject": "Thai Language", "teacher": "Ms. Nit", "room": "201", "status": "Scheduled" },
-        { "day": "Wednesday", "start": "09:00", "end": "09:50", "subject": "Social Studies", "teacher": "Mr. Prasarn", "room": "202", "status": "Scheduled" },
-        { "day": "Friday", "start": "08:30", "end": "09:20", "subject": "การงานอาชีพ", "teacher": "Pranom", "room": "6399", "status": "Scheduled" }
+        { "day": "Monday", "start": "08:30", "end": "09:20", "subject": "Counseling", "teacher": "Warangkana", "room": "4402", "status": "Scheduled" },
+        { "day": "Monday", "start": "09:20", "end": "10:10", "subject": "Creative English 4", "teacher": "Faculty", "room": "4402", "status": "Scheduled" },
+        { "day": "Monday", "start": "10:10", "end": "11:00", "subject": "Intensive Chemistry 3", "teacher": "Piyamas", "room": "4205", "status": "Scheduled" },
+        { "day": "Monday", "start": "11:00", "end": "11:50", "subject": "Intensive Chemistry 3", "teacher": "Piyamas", "room": "4205", "status": "Scheduled" },
+        { "day": "Monday", "start": "12:40", "end": "13:30", "subject": "Intensive Physics 3", "teacher": "Nitet", "room": "4209", "status": "Scheduled" },
+        { "day": "Monday", "start": "13:30", "end": "14:20", "subject": "Intensive Physics 3", "teacher": "Nitet", "room": "4209", "status": "Scheduled" },
+        { "day": "Monday", "start": "14:20", "end": "15:10", "subject": "Thai Language 4", "teacher": "Suphawut", "room": "4402", "status": "Scheduled" },
+        { "day": "Tuesday", "start": "08:30", "end": "09:20", "subject": "ก32934 (M.5 Meeting)", "teacher": "Faculty", "room": "4402", "status": "Scheduled" },
+        { "day": "Tuesday", "start": "09:20", "end": "10:10", "subject": "สังคมศึกษา", "teacher": "Angkinan", "room": "4402", "status": "Scheduled" },
+        { "day": "Tuesday", "start": "10:10", "end": "11:00", "subject": "Intensive Chemistry 3", "teacher": "Piyamas", "room": "4402", "status": "Scheduled" },
+        { "day": "Tuesday", "start": "11:00", "end": "11:50", "subject": "Intensive Chemistry 3", "teacher": "Piyamas", "room": "4402", "status": "Scheduled" },
+        { "day": "Tuesday", "start": "12:40", "end": "13:30", "subject": "Arts 4", "teacher": "Dares", "room": "3205", "status": "Scheduled" },
+        { "day": "Tuesday", "start": "13:30", "end": "14:20", "subject": "Intensive Biology 3", "teacher": "Banchaporn", "room": "4402", "status": "Scheduled" },
+        { "day": "Tuesday", "start": "14:20", "end": "15:10", "subject": "Intensive Biology 3", "teacher": "Banchaporn", "room": "4402", "status": "Scheduled" },
+        { "day": "Wednesday", "start": "08:30", "end": "09:20", "subject": "ตะกร้อ", "teacher": "Kukrit", "room": "7005", "status": "Scheduled" },
+        { "day": "Wednesday", "start": "09:20", "end": "10:10", "subject": "Advanced Mathematics 2", "teacher": "Thanadol", "room": "4402", "status": "Scheduled" },
+        { "day": "Wednesday", "start": "10:10", "end": "11:00", "subject": "Advanced Mathematics 2", "teacher": "Thanadol", "room": "4402", "status": "Scheduled" },
+        { "day": "Wednesday", "start": "11:00", "end": "11:50", "subject": "Thai Language 4", "teacher": "Suphawut", "room": "4402", "status": "Scheduled" },
+        { "day": "Wednesday", "start": "12:40", "end": "13:30", "subject": "Creative English 4", "teacher": "Faculty", "room": "4402", "status": "Scheduled" },
+        { "day": "Wednesday", "start": "13:30", "end": "14:20", "subject": "Creative Science Project 1", "teacher": "Faculty", "room": "4213", "status": "Scheduled" },
+        { "day": "Wednesday", "start": "14:20", "end": "15:10", "subject": "Creative Science Project 1", "teacher": "Faculty", "room": "4213", "status": "Scheduled" },
+        { "day": "Thursday", "start": "08:30", "end": "09:20", "subject": "English 4", "teacher": "Atipol", "room": "4402", "status": "Scheduled" },
+        { "day": "Thursday", "start": "09:20", "end": "10:10", "subject": "Intensive Physics 3", "teacher": "Nitet", "room": "4402", "status": "Scheduled" },
+        { "day": "Thursday", "start": "10:10", "end": "11:00", "subject": "Intensive Physics 3", "teacher": "Nitet", "room": "4402", "status": "Scheduled" },
+        { "day": "Thursday", "start": "11:00", "end": "11:50", "subject": "Advanced Mathematics 2", "teacher": "Thanadol", "room": "4402", "status": "Scheduled" },
+        { "day": "Thursday", "start": "12:40", "end": "13:30", "subject": "Technology", "teacher": "Phopnipit", "room": "4402", "status": "Scheduled" },
+        { "day": "Thursday", "start": "13:30", "end": "14:20", "subject": "Creative English 4", "teacher": "Faculty", "room": "4402", "status": "Scheduled" },
+        { "day": "Thursday", "start": "14:20", "end": "15:10", "subject": "สังคมศึกษา", "teacher": "Angkinan", "room": "4402", "status": "Scheduled" },
+        { "day": "Friday", "start": "08:30", "end": "09:20", "subject": "การงานอาชีพ", "teacher": "Pranom", "room": "4215", "status": "Scheduled" },
+        { "day": "Friday", "start": "09:20", "end": "10:10", "subject": "English 4", "teacher": "Atipol", "room": "4402", "status": "Scheduled" },
+        { "day": "Friday", "start": "10:10", "end": "11:00", "subject": "Intensive Biology 3", "teacher": "Banchaporn", "room": "4309", "status": "Scheduled" },
+        { "day": "Friday", "start": "11:00", "end": "11:50", "subject": "Intensive Biology 3", "teacher": "Banchaporn", "room": "4309", "status": "Scheduled" },
+        { "day": "Friday", "start": "12:40", "end": "13:30", "subject": "Health and Physical Education 4", "teacher": "Suthinan", "room": "4402", "status": "Scheduled" },
+        { "day": "Friday", "start": "13:30", "end": "14:20", "subject": "Advanced Mathematics 2", "teacher": "Thanadol and Arachaporn", "room": "4402", "status": "Scheduled" },
+        { "day": "Friday", "start": "14:20", "end": "15:10", "subject": "Advanced Mathematics 2", "teacher": "Thanadol and Arachaporn", "room": "4402", "status": "Scheduled" }
       ]
     },
-    {
-      "id": "m2",
-      "name": "Mathayom 6 / Room 2",
-      "grade": "M6",
+        {
+      "id": "502",
+      "name": "Mathayom 5 / Room 2",
+      "grade": "M5",
       "room": "2",
       "timetable": [
-        { "day": "Monday", "start": "08:00", "end": "08:50", "subject": "English", "teacher": "Mr. John", "room": "404", "status": "Scheduled" },
-        { "day": "Monday", "start": "09:00", "end": "09:50", "subject": "Mathematics", "teacher": "Ms. Orn", "room": "405", "status": "Scheduled" },
-        { "day": "Tuesday", "start": "08:00", "end": "08:50", "subject": "Physics", "teacher": "Ms. Anong", "room": "402", "status": "Swapped" },
-        { "day": "Tuesday", "start": "09:00", "end": "09:50", "subject": "Chemistry", "teacher": "Ms. Rung", "room": "401", "status": "Scheduled" },
-        { "day": "Thursday", "start": "10:00", "end": "10:50", "subject": "Biology", "teacher": "Mr. Kitt", "room": "402", "status": "Scheduled" }
+        { "day": "Monday", "start": "08:30", "end": "09:20", "subject": "อ30216 Creative English 4", "teacher": "Faculty", "room": "4403", "status": "Scheduled" },
+        { "day": "Monday", "start": "09:20", "end": "10:10", "subject": "ว30181 Technology", "teacher": "Phopnipit", "room": "4403", "status": "Scheduled" },
+        { "day": "Monday", "start": "10:10", "end": "11:00", "subject": "ว30253 Intensive Biology 3", "teacher": "Banchaporn", "room": "4309", "status": "Scheduled" },
+        { "day": "Monday", "start": "11:00", "end": "11:50", "subject": "ว30253 Intensive Biology 3", "teacher": "Banchaporn", "room": "4309", "status": "Scheduled" },
+        { "day": "Monday", "start": "12:40", "end": "13:30", "subject": "ง30113 การงานอาชีพ", "teacher": "Suphanni", "room": "4215", "status": "Scheduled" },
+        { "day": "Monday", "start": "13:30", "end": "14:20", "subject": "ว30233 Intensive Chemistry 3", "teacher": "Piyamas", "room": "4205", "status": "Scheduled" },
+        { "day": "Monday", "start": "14:20", "end": "15:10", "subject": "ว30233 Intensive Chemistry 3", "teacher": "Piyamas", "room": "4205", "status": "Scheduled" },
+        
+        { "day": "Tuesday", "start": "08:30", "end": "09:20", "subject": "ก32934 (M.5 Meeting)", "teacher": "Faculty", "room": "4403", "status": "Scheduled" },
+        { "day": "Tuesday", "start": "09:20", "end": "10:10", "subject": "ศ32102 Arts 4", "teacher": "Dares", "room": "3205", "status": "Scheduled" },
+        { "day": "Tuesday", "start": "10:10", "end": "11:00", "subject": "ว30213 Intensive Physics 3", "teacher": "Nitet", "room": "4209", "status": "Scheduled" },
+        { "day": "Tuesday", "start": "11:00", "end": "11:50", "subject": "ว30213 Intensive Physics 3", "teacher": "Nitet", "room": "4209", "status": "Scheduled" },
+        { "day": "Tuesday", "start": "12:40", "end": "13:30", "subject": "ค32224 Advanced Mathematics 2", "teacher": "Thanadol", "room": "4403", "status": "Scheduled" },
+        { "day": "Tuesday", "start": "13:30", "end": "14:20", "subject": "ค32224 Advanced Mathematics 2", "teacher": "Thanadol", "room": "4403", "status": "Scheduled" },
+        { "day": "Tuesday", "start": "14:20", "end": "15:10", "subject": "อ30216 Creative English 4", "teacher": "Faculty", "room": "4403", "status": "Scheduled" },
+
+        { "day": "Wednesday", "start": "08:30", "end": "09:20", "subject": "ส32107 สังคมศึกษา", "teacher": "Angkinan", "room": "4403", "status": "Scheduled" },
+        { "day": "Wednesday", "start": "09:20", "end": "10:10", "subject": "อ32102 English 4", "teacher": "Atipol", "room": "4403", "status": "Scheduled" },
+        { "day": "Wednesday", "start": "10:10", "end": "11:00", "subject": "ว30294 Creative Science Project 1", "teacher": "Faculty", "room": "4213", "status": "Scheduled" },
+        { "day": "Wednesday", "start": "11:00", "end": "11:50", "subject": "ว30294 Creative Science Project 1", "teacher": "Faculty", "room": "4213", "status": "Scheduled" },
+        { "day": "Wednesday", "start": "12:40", "end": "13:30", "subject": "ว30253 Intensive Biology 3", "teacher": "Banchaporn", "room": "4403", "status": "Scheduled" },
+        { "day": "Wednesday", "start": "13:30", "end": "14:20", "subject": "ว30253 Intensive Biology 3", "teacher": "Banchaporn", "room": "4403", "status": "Scheduled" },
+        { "day": "Wednesday", "start": "14:20", "end": "15:10", "subject": "พ32102 Health & PE 4", "teacher": "Suthinan", "room": "4403", "status": "Scheduled" },
+
+        { "day": "Thursday", "start": "08:30", "end": "09:20", "subject": "ค32224 Advanced Mathematics 2", "teacher": "Thanadol", "room": "4403", "status": "Scheduled" },
+        { "day": "Thursday", "start": "09:20", "end": "10:10", "subject": "ก32904 Counseling", "teacher": "Warangkana", "room": "4403", "status": "Scheduled" },
+        { "day": "Thursday", "start": "10:10", "end": "11:00", "subject": "ว30233 Intensive Chemistry 3", "teacher": "Piyamas", "room": "4403", "status": "Scheduled" },
+        { "day": "Thursday", "start": "11:00", "end": "11:50", "subject": "ว30233 Intensive Chemistry 3", "teacher": "Piyamas", "room": "4403", "status": "Scheduled" },
+        { "day": "Thursday", "start": "12:40", "end": "13:30", "subject": "พ30216 ตะกร้อ", "teacher": "Kukrit", "room": "7005", "status": "Scheduled" },
+        { "day": "Thursday", "start": "13:30", "end": "14:20", "subject": "ท32102 Thai Language 4", "teacher": "Suphawut", "room": "4403", "status": "Scheduled" },
+        { "day": "Thursday", "start": "14:20", "end": "15:10", "subject": "อ30216 Creative English 4", "teacher": "Faculty", "room": "4403", "status": "Scheduled" },
+
+        { "day": "Friday", "start": "08:30", "end": "09:20", "subject": "ค32224 Advanced Mathematics 2", "teacher": "Thanadol", "room": "4403", "status": "Scheduled" },
+        { "day": "Friday", "start": "09:20", "end": "10:10", "subject": "ค32224 Advanced Mathematics 2", "teacher": "Thanadol", "room": "4403", "status": "Scheduled" },
+        { "day": "Friday", "start": "10:10", "end": "11:00", "subject": "ว30213 Intensive Physics 3", "teacher": "Nitet", "room": "4403", "status": "Scheduled" },
+        { "day": "Friday", "start": "11:00", "end": "11:50", "subject": "ว30213 Intensive Physics 3", "teacher": "Nitet", "room": "4403", "status": "Scheduled" },
+        { "day": "Friday", "start": "12:40", "end": "13:30", "subject": "ท32102 Thai Language 4", "teacher": "Suphawut", "room": "4403", "status": "Scheduled" },
+        { "day": "Friday", "start": "13:30", "end": "14:20", "subject": "อ32102 English 4", "teacher": "Atipol", "room": "4403", "status": "Scheduled" },
+        { "day": "Friday", "start": "14:20", "end": "15:10", "subject": "ส32107 สังคมศึกษา", "teacher": "Angkinan", "room": "4403", "status": "Scheduled" }
+      ]
+    }
+  ],
+  "overrides": [
+    {
+      "sectionId": "501",
+      "label": "Switch",
+      "entries": [
+        {
+          "date": "2026-01-14",
+          "day": "Wednesday",
+          "start": "09:20",
+          "subject": "Creative Science Project 1 (swapped)",
+          "teacher": "Faculty",
+          "room": "4213",
+          "status": "Swapped",
+          "overrideTag": "Swap period",
+          "reason": "Swapped with Mathematics; Science Project moved from 13:30-15:10 slot."
+        },
+        {
+          "date": "2026-01-14",
+          "day": "Wednesday",
+          "start": "10:10",
+          "subject": "Creative Science Project 1 (swapped)",
+          "teacher": "Faculty",
+          "room": "4213",
+          "status": "Swapped",
+          "overrideTag": "Swap period",
+          "reason": "Swapped with Mathematics; Science Project moved from 13:30-15:10 slot."
+        },
+        {
+          "date": "2026-01-21",
+          "day": "Wednesday",
+          "start": "13:30",
+          "subject": "Advanced Mathematics 2 (swapped)",
+          "teacher": "Thanadol",
+          "room": "4402",
+          "status": "Swapped",
+          "overrideTag": "Swap period",
+          "reason": "Swapped with Science Project; Math moved from Jan 14 morning slot."
+        },
+        {
+          "date": "2026-01-21",
+          "day": "Wednesday",
+          "start": "14:20",
+          "subject": "Advanced Mathematics 2 (swapped)",
+          "teacher": "Thanadol",
+          "room": "4402",
+          "status": "Swapped",
+          "overrideTag": "Swap period",
+          "reason": "Swapped with Science Project; Math moved from Jan 14 morning slot."
+        },
+        {
+          "date": "2026-01-14",
+          "day": "Wednesday",
+          "start": "11:00",
+          "subject": "Intensive Chemistry 3 (swapped)",
+          "teacher": "Piyamas",
+          "room": "4402",
+          "status": "Swapped",
+          "overrideTag": "Swap period",
+          "reason": "Thai Language moved to Jan 20, Chemistry moved here."
+        },
+        {
+          "date": "2026-01-20",
+          "day": "Tuesday",
+          "start": "10:10",
+          "subject": "Thai Language 4 (swapped)",
+          "teacher": "Suphawut",
+          "room": "4402",
+          "status": "Swapped",
+          "overrideTag": "Swap period",
+          "reason": "Thai Language moved from Jan 14."
+        },
+        {
+          "date": "2026-01-14",
+          "day": "Wednesday",
+          "start": "12:40",
+          "subject": "Intensive Chemistry 3 (swapped)",
+          "teacher": "Piyamas",
+          "room": "4402",
+          "status": "Swapped",
+          "overrideTag": "Swap period",
+          "reason": "Creative English moved to Jan 20, Chemistry moved here."
+        },
+        {
+          "date": "2026-01-20",
+          "day": "Tuesday",
+          "start": "11:00",
+          "subject": "Creative English 4 (swapped)",
+          "teacher": "Faculty",
+          "room": "4402",
+          "status": "Swapped",
+          "overrideTag": "Swap period",
+          "reason": "Creative English moved from Jan 14."
+        },
+                {
+          "date": "2026-01-14",
+          "day": "Wednesday",
+          "start": "08:30",
+          "subject": "Creative Science Project 1 (Swapped)",
+          "teacher": "Faculty",
+          "room": "4402",
+          "status": "Swapped",
+          "overrideTag": "Given period",
+          "reason": "Project day."
+        }
       ]
     }
   ]

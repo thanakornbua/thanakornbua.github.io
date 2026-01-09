@@ -37,18 +37,31 @@
           <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Schedule</p>
           <h1 class="text-3xl md:text-4xl font-[Kanit] font-bold">Timetable Viewer</h1>
           <p class="text-slate-300 text-sm md:text-base max-w-2xl mt-2">
-            Select your section to view the timetable. You can print or export the timetable for offline use.
+            Select your section to view the timetable. You can export the timetable for offline use.
           </p>
         </div>
         <div class="glass rounded-2xl border border-slate-800/80 p-4 space-y-3 no-print">
-          <div class="space-y-1">
-            <label for="section-select" class="block text-xs font-semibold text-slate-300">Section / Class</label>
-            <select id="section-select" class="w-full glass border border-slate-700/70 rounded-lg px-3 py-2 bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-neonPink">
-              <option value="" disabled selected>Select section…</option>
-            </select>
+          <div class="space-y-3">
+            <div class="space-y-1">
+              <label for="section-select" class="block text-xs font-semibold text-slate-300">Section / Class</label>
+              <select id="section-select" class="w-full glass border border-slate-700/70 rounded-lg px-3 py-2 bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-neonPink">
+                <option value="" disabled selected>Select section…</option>
+              </select>
+            </div>
+            <div class="space-y-1">
+              <label for="date-select" class="block text-xs font-semibold text-slate-300">Override date (optional)</label>
+              <input id="date-select" type="date" class="w-full glass border border-slate-700/70 rounded-lg px-3 py-2 bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-neonBlue" />
+              <p class="text-[10px] text-slate-500">Pick a date to apply any date-specific swaps or events.</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between gap-2 text-xs text-slate-400">
+            <span class="uppercase tracking-[0.16em]">View</span>
+            <div class="inline-flex rounded-full border border-slate-700/70 bg-slate-900/70 overflow-hidden">
+              <button id="view-daily" type="button" class="px-3 py-1 text-xs font-medium bg-slate-100 text-slate-900">Daily</button>
+              <button id="view-weekly" type="button" class="px-3 py-1 text-xs font-medium text-slate-300 hover:bg-slate-800/70">Weekly</button>
+            </div>
           </div>
           <div class="flex gap-2 flex-wrap">
-            <button id="print-btn" class="px-4 py-2 rounded-lg bg-gradient-to-r from-neonPink to-neonBlue text-slate-900 font-semibold text-sm">Print timetable</button>
             <button id="export-btn" class="px-4 py-2 rounded-lg border border-slate-700 text-white text-sm">Export as CSV</button>
           </div>
         </div>
@@ -118,11 +131,31 @@
       const sectionLabel = document.getElementById('section-label');
       const updatedLabel = document.getElementById('updated-label');
       const tbody = document.getElementById('timetable-body');
-      const printBtn = document.getElementById('print-btn');
       const exportBtn = document.getElementById('export-btn');
+      const dateSelect = document.getElementById('date-select');
+      const viewDailyBtn = document.getElementById('view-daily');
+      const viewWeeklyBtn = document.getElementById('view-weekly');
 
       let sections = [];
       let currentSection = null;
+      let overrides = [];
+      let currentDate = '';
+      let viewMode = 'daily'; // 'daily' | 'weekly'
+
+      function updateViewToggleButtons() {
+        if (!viewDailyBtn || !viewWeeklyBtn) return;
+        if (viewMode === 'daily') {
+          viewDailyBtn.classList.add('bg-slate-100', 'text-slate-900');
+          viewDailyBtn.classList.remove('bg-transparent', 'text-slate-300');
+          viewWeeklyBtn.classList.remove('bg-slate-100', 'text-slate-900');
+          viewWeeklyBtn.classList.add('bg-transparent', 'text-slate-300');
+        } else {
+          viewWeeklyBtn.classList.add('bg-slate-100', 'text-slate-900');
+          viewWeeklyBtn.classList.remove('bg-transparent', 'text-slate-300');
+          viewDailyBtn.classList.remove('bg-slate-100', 'text-slate-900');
+          viewDailyBtn.classList.add('bg-transparent', 'text-slate-300');
+        }
+      }
 
       function groupByDay(entries) {
         const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
@@ -140,44 +173,118 @@
         return { order: days.filter(d => map.has(d)).concat(Array.from(map.keys()).filter(k => !days.includes(k))), map };
       }
 
-      function getDisplayStatus(entry, now) {
-        const baseStatus = entry.status || '';
-        const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-
-        try {
-          const entryDayIndex = days.indexOf(entry.day);
-          const nowDayIndex = now.getDay();
-
-          if (entryDayIndex === nowDayIndex && entry.start) {
-            const startParts = (entry.start || '00:00').split(':').map(Number);
-            const endParts = (entry.end || entry.start || '00:00').split(':').map(Number);
-
-            const startDate = new Date(
-              now.getFullYear(),
-              now.getMonth(),
-              now.getDate(),
-              startParts[0] || 0,
-              startParts[1] || 0
-            );
-            const endDate = new Date(
-              now.getFullYear(),
-              now.getMonth(),
-              now.getDate(),
-              endParts[0] || startParts[0] || 0,
-              endParts[1] || startParts[1] || 0
-            );
-
-            if (now > endDate) return 'Passed';
-            if (now >= startDate && now <= endDate) return 'Ongoing';
-          }
-        } catch (e) {
-          // fall back to base status on any error
-        }
-
-        return baseStatus || 'Scheduled';
+      function parseISODateOnly(dateStr) {
+        if (!dateStr) return null;
+        const d = new Date(dateStr + 'T00:00:00');
+        return isNaN(d.getTime()) ? null : d;
       }
 
-      function renderTable(section) {
+      function toISODateOnly(d) {
+        if (!d || isNaN(d.getTime())) return '';
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+      }
+
+      function startOfWeekMonday(anchorDate) {
+        const d = new Date(anchorDate);
+        d.setHours(0, 0, 0, 0);
+        const day = d.getDay();
+        // JS: 0=Sun..6=Sat. We want Monday as start.
+        const diff = day === 0 ? -6 : 1 - day;
+        d.setDate(d.getDate() + diff);
+        return d;
+      }
+
+      function dateForDayName(weekStartMonday, dayName) {
+        const offsets = {
+          Monday: 0,
+          Tuesday: 1,
+          Wednesday: 2,
+          Thursday: 3,
+          Friday: 4,
+          Saturday: 5,
+          Sunday: 6
+        };
+        if (!weekStartMonday || !offsets.hasOwnProperty(dayName)) return null;
+        const d = new Date(weekStartMonday);
+        d.setDate(d.getDate() + offsets[dayName]);
+        return d;
+      }
+
+      function applyOverridesToTimetable(baseTimetable, activeOverrides, allowedDatesSet) {
+        const base = (baseTimetable || []).map(e => Object.assign({}, e));
+        if (!activeOverrides || activeOverrides.length === 0) return base;
+
+        activeOverrides.forEach(o => {
+          (o.entries || []).forEach(ovEntry => {
+            const entryDateStr = (ovEntry && ovEntry.date) ? String(ovEntry.date) : ((o && o.date) ? String(o.date) : '');
+            if (allowedDatesSet && allowedDatesSet.size > 0 && entryDateStr && !allowedDatesSet.has(entryDateStr)) {
+              return;
+            }
+
+            const idx = base.findIndex(b => (b.day || '') === (ovEntry.day || '') && (b.start || '') === (ovEntry.start || ''));
+            if (idx >= 0) {
+              const merged = Object.assign({}, base[idx], ovEntry);
+              if (!merged.overrideTag) merged.overrideTag = o.label || 'Override';
+              if (!merged.date && entryDateStr) merged.date = entryDateStr;
+              base[idx] = merged;
+            } else {
+              const added = Object.assign({}, ovEntry);
+              if (!added.overrideTag) added.overrideTag = o.label || 'Override';
+              if (!added.date && entryDateStr) added.date = entryDateStr;
+              base.push(added);
+            }
+          });
+        });
+
+        return base;
+      }
+
+      function getDisplayStatus(entry, now, entryDate) {
+        const baseStatus = (entry && entry.status) ? String(entry.status) : '';
+        const normalizedBase = baseStatus.trim().toLowerCase();
+
+        // Preserve explicit non-default statuses (e.g. Swapped) as-is.
+        if (normalizedBase && normalizedBase !== 'scheduled') {
+          return baseStatus;
+        }
+
+        try {
+          if (!entry || !entry.start || !entryDate) {
+            return 'Scheduled';
+          }
+
+          const startParts = (entry.start || '00:00').split(':').map(Number);
+          const endParts = (entry.end || entry.start || '00:00').split(':').map(Number);
+
+          const startDate = new Date(
+            entryDate.getFullYear(),
+            entryDate.getMonth(),
+            entryDate.getDate(),
+            startParts[0] || 0,
+            startParts[1] || 0
+          );
+
+          const endDate = new Date(
+            entryDate.getFullYear(),
+            entryDate.getMonth(),
+            entryDate.getDate(),
+            endParts[0] || startParts[0] || 0,
+            endParts[1] || startParts[1] || 0
+          );
+
+          if (now > endDate) return 'Passed';
+          if (now >= startDate && now <= endDate) return 'Ongoing';
+        } catch (e) {
+          // fall back to scheduled on any error
+        }
+
+        return 'Scheduled';
+      }
+
+      function renderTable(section, dateStr) {
         tbody.innerHTML = '';
         if (!section || !section.timetable || section.timetable.length === 0) {
           const tr = document.createElement('tr');
@@ -189,28 +296,106 @@
           return;
         }
 
-        sectionLabel.textContent = section.name + (section.grade ? ' (' + section.grade + ')' : '');
-        updatedLabel.textContent = 'Loaded from timetable-data.json';
+        sectionLabel.textContent = section.name + (section.grade ? ' (' + section.grade + ')' : '') + (dateStr ? ' • ' + dateStr : '');
+
+        const anchorDate = parseISODateOnly(dateStr) || new Date();
+        const weekStart = startOfWeekMonday(anchorDate);
+
+        const allowedDates = new Set();
+        if (viewMode === 'weekly') {
+          ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].forEach(dn => {
+            const dd = dateForDayName(weekStart, dn);
+            const iso = toISODateOnly(dd);
+            if (iso) allowedDates.add(iso);
+          });
+        } else {
+          const iso = toISODateOnly(anchorDate);
+          if (iso) allowedDates.add(iso);
+        }
+
+        const activeOverrides = section
+          ? (overrides || []).filter(o => {
+              if ((o.sectionId || o.id) !== section.id) return false;
+              // Support both formats:
+              // - override-level date (o.date)
+              // - entry-level date (ovEntry.date)
+              if (o.date && allowedDates.has(String(o.date))) return true;
+              return (o.entries || []).some(ovEntry => {
+                const d = (ovEntry && ovEntry.date) ? String(ovEntry.date) : (o.date ? String(o.date) : '');
+                return d ? allowedDates.has(d) : false;
+              });
+            })
+          : [];
+
+        if (activeOverrides.length > 0) {
+          const labels = activeOverrides.map(o => o.label || 'Override');
+          updatedLabel.textContent = 'Template from timetable-data.json with overrides: ' + labels.join(', ');
+        } else if (dateStr) {
+          updatedLabel.textContent = 'Template from timetable-data.json (no overrides for this date).';
+        } else {
+          updatedLabel.textContent = 'Loaded from timetable-data.json';
+        }
         updatedLabel.classList.remove('hidden');
 
-        const { order, map } = groupByDay(section.timetable);
+        const effectiveTimetable = applyOverridesToTimetable(section.timetable, activeOverrides, allowedDates);
+        const { order, map } = groupByDay(effectiveTimetable);
         const now = new Date();
 
-        order.forEach(day => {
+        let daysToRender = order;
+        let targetDay = null;
+        if (viewMode === 'daily') {
+          const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+          targetDay = dayNames[anchorDate.getDay()];
+          daysToRender = [targetDay];
+        }
+
+        daysToRender.forEach(day => {
           const entries = map.get(day) || [];
+
+          const dayDate = viewMode === 'weekly'
+            ? dateForDayName(weekStart, day)
+            : anchorDate;
+
+          if (entries.length === 0) {
+            const tr = document.createElement('tr');
+            tr.className = 'border-b border-slate-800/80';
+            tr.innerHTML = `
+              <td class="py-2 pr-4 align-top font-semibold">${day}</td>
+              <td colspan="6" class="py-2 pr-4 align-top text-slate-400">No classes for this day.</td>
+            `;
+            tbody.appendChild(tr);
+            return;
+          }
+
           entries.forEach((entry, index) => {
-            const displayStatus = getDisplayStatus(entry, now);
-            const statusClass = displayStatus === 'Swapped' ? 'text-red-400 font-bold' : 'text-slate-200';
+            let effectiveEntry = entry;
+            let effectiveOverrideTag = entry.overrideTag || (entry.override ? 'Override' : '');
+
+            // If an override entry provided an explicit date, prefer it for status calculations.
+            const entryDateForStatus = effectiveEntry && effectiveEntry.date
+              ? (parseISODateOnly(effectiveEntry.date) || dayDate)
+              : dayDate;
+
+            const displayStatus = getDisplayStatus(effectiveEntry, now, entryDateForStatus);
+            const statusKey = (displayStatus || 'Scheduled').toLowerCase().replace(/\s+/g, '-');
+            const reasonText = (effectiveEntry.swapReason || effectiveEntry.reason || effectiveEntry.notes || '').trim();
+            const safeReason = reasonText.replace(/"/g, '&quot;');
+            const safeOverrideTag = (effectiveOverrideTag || '').replace(/"/g, '&quot;');
+            const statusTitleAttr = safeReason ? ` title="${safeReason}"` : (safeOverrideTag ? ` title="${safeOverrideTag}"` : '');
+            const overrideTitleAttr = safeReason ? ` title="${safeReason}"` : (safeOverrideTag ? ` title="${safeOverrideTag}"` : '');
             const tr = document.createElement('tr');
             tr.className = 'border-b border-slate-800/80';
             tr.innerHTML = `
               <td class="py-2 pr-4 align-top ${index === 0 ? 'font-semibold' : ''}">${index === 0 ? day : ''}</td>
-              <td class="py-2 pr-4 align-top">${entry.start || ''}</td>
-              <td class="py-2 pr-4 align-top">${entry.end || ''}</td>
-              <td class="py-2 pr-4 align-top">${entry.subject || ''}</td>
-              <td class="py-2 pr-4 align-top">${entry.teacher || ''}</td>
-              <td class="py-2 pr-4 align-top">${entry.room || ''}</td>
-              <td class="py-2 pr-4 align-top ${statusClass}">${displayStatus}</td>
+              <td class="py-2 pr-4 align-top">${effectiveEntry.start || ''}</td>
+              <td class="py-2 pr-4 align-top">${effectiveEntry.end || ''}</td>
+              <td class="py-2 pr-4 align-top">${effectiveEntry.subject || ''}</td>
+              <td class="py-2 pr-4 align-top">${effectiveEntry.teacher || ''}</td>
+              <td class="py-2 pr-4 align-top">${effectiveEntry.room || ''}</td>
+              <td class="py-2 pr-4 align-top">
+                <span class="status-chip status-chip--${statusKey}"${statusTitleAttr}>${displayStatus}</span>
+                ${effectiveOverrideTag ? `<span class="status-chip status-chip--override ml-1"${overrideTitleAttr}>${effectiveOverrideTag}</span>` : ''}
+              </td>
             `;
             tbody.appendChild(tr);
           });
@@ -250,6 +435,7 @@
         .then(r => r.json())
         .then(data => {
           sections = data.sections || [];
+          overrides = data.overrides || [];
           sections.forEach((s, index) => {
             const opt = document.createElement('option');
             opt.value = s.id || String(index);
@@ -260,7 +446,7 @@
             const first = sections[0];
             currentSection = first;
             sectionSelect.value = first.id || '0';
-            renderTable(first);
+            renderTable(first, currentDate);
           }
         })
         .catch(err => {
@@ -271,12 +457,29 @@
       sectionSelect.addEventListener('change', function() {
         const id = this.value;
         currentSection = sections.find(s => (s.id || '') === id) || null;
-        renderTable(currentSection);
+        renderTable(currentSection, currentDate);
       });
 
-      printBtn.addEventListener('click', function() {
-        window.print();
+      dateSelect.addEventListener('change', function() {
+        currentDate = this.value || '';
+        renderTable(currentSection, currentDate);
       });
+
+      if (viewDailyBtn && viewWeeklyBtn) {
+        viewDailyBtn.addEventListener('click', function() {
+          viewMode = 'daily';
+          updateViewToggleButtons();
+          renderTable(currentSection, currentDate);
+        });
+
+        viewWeeklyBtn.addEventListener('click', function() {
+          viewMode = 'weekly';
+          updateViewToggleButtons();
+          renderTable(currentSection, currentDate);
+        });
+
+        updateViewToggleButtons();
+      }
 
       exportBtn.addEventListener('click', function() {
         if (!currentSection) return;

@@ -398,6 +398,59 @@ img {
   height: auto;
 }
 
+/* Timetable status chips */
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background: rgba(15, 23, 42, 0.85);
+  color: #e5e7eb;
+  white-space: nowrap;
+}
+
+.status-chip--scheduled {
+  border-color: rgba(148, 163, 184, 0.7);
+  background: rgba(15, 23, 42, 0.9);
+}
+
+.status-chip--ongoing {
+  border-color: rgba(56, 189, 248, 0.85);
+  background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.3), rgba(15, 23, 42, 0.95));
+  color: #f9fafb;
+}
+
+.status-chip--passed {
+  border-color: rgba(107, 114, 128, 0.9);
+  background: rgba(17, 24, 39, 0.9);
+  color: #9ca3af;
+}
+
+.status-chip--swapped {
+  border-color: rgba(248, 113, 113, 0.95);
+  background: radial-gradient(circle at 0 0, rgba(248, 113, 113, 0.35), rgba(15, 23, 42, 0.96));
+  color: #fee2e2;
+}
+
+.status-chip--override {
+  border-color: rgba(244, 114, 182, 0.95);
+  background: radial-gradient(circle at 0 0, rgba(244, 114, 182, 0.35), rgba(15, 23, 42, 0.96));
+  color: #fdf2ff;
+}
+
+@media print {
+  .status-chip {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border-color: rgba(0, 0, 0, 0.25) !important;
+  }
+}
+
 /* Better select styling across platforms */
 select {
   cursor: pointer;
