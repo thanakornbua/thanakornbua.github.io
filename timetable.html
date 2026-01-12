@@ -37,7 +37,7 @@
           <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Schedule</p>
           <h1 class="text-3xl md:text-4xl font-[Kanit] font-bold">Timetable Viewer</h1>
           <p class="text-slate-300 text-sm md:text-base max-w-2xl mt-2">
-            Select your section to view the timetable. You can export the timetable for offline use.
+            Select your section to view the timetable.
           </p>
         </div>
         <div class="glass rounded-2xl border border-slate-800/80 p-4 space-y-3 no-print">
@@ -60,9 +60,6 @@
               <button id="view-daily" type="button" class="px-3 py-1 text-xs font-medium bg-slate-100 text-slate-900">Daily</button>
               <button id="view-weekly" type="button" class="px-3 py-1 text-xs font-medium text-slate-300 hover:bg-slate-800/70">Weekly</button>
             </div>
-          </div>
-          <div class="flex gap-2 flex-wrap">
-            <button id="export-btn" class="px-4 py-2 rounded-lg border border-slate-700 text-white text-sm">Export as CSV</button>
           </div>
         </div>
       </header>
@@ -156,7 +153,6 @@
       const sectionLabel = document.getElementById('section-label');
       const updatedLabel = document.getElementById('updated-label');
       const tbody = document.getElementById('timetable-body');
-      const exportBtn = document.getElementById('export-btn');
       const dateSelect = document.getElementById('date-select');
       const viewDailyBtn = document.getElementById('view-daily');
       const viewWeeklyBtn = document.getElementById('view-weekly');
@@ -546,35 +542,6 @@
         });
       }
 
-      function toCSV(section) {
-        if (!section || !section.timetable || section.timetable.length === 0) return '';
-        const header = ['Section','Day','Start','End','Subject','Teacher','Room','Status'];
-        const rows = section.timetable.map(e => [
-          section.name,
-          e.day || '',
-          e.start || '',
-          e.end || '',
-          e.subject || '',
-          e.teacher || '',
-          e.room || '',
-          e.status || ''
-        ]);
-        const lines = [header].concat(rows).map(cols => cols.map(v => '"' + String(v).replace(/"/g,'""') + '"').join(','));
-        return lines.join('\n');
-      }
-
-      function downloadCSV(filename, content) {
-        const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }
-
       fetch('timetable-data.json')
         .then(r => r.json())
         .then(data => {
@@ -633,14 +600,6 @@
 
         updateViewToggleButtons();
       }
-
-      exportBtn.addEventListener('click', function() {
-        if (!currentSection) return;
-        const csv = toCSV(currentSection);
-        if (!csv) return;
-        const safeName = (currentSection.name || 'timetable').replace(/[^a-z0-9]+/gi, '_').toLowerCase();
-        downloadCSV(safeName + '.csv', csv);
-      });
     })();
   </script>
 
