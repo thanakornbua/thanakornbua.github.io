@@ -67,6 +67,31 @@
         </div>
       </header>
 
+      <section class="glass rounded-3xl p-6 md:p-8 border border-slate-800/80 mb-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div class="min-w-0">
+            <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Studying now</p>
+            <h2 id="current-period-title" class="text-xl md:text-2xl font-semibold truncate">Choose a section to start.</h2>
+            <p id="current-period-meta" class="text-slate-400 text-sm mt-1">—</p>
+          </div>
+          <div class="text-left md:text-right">
+            <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Time left</p>
+            <div id="current-period-countdown" class="text-3xl md:text-4xl font-[Kanit] font-bold">—</div>
+            <p id="current-period-countdown-sub" class="text-[10px] text-slate-500">minutes : seconds</p>
+          </div>
+        </div>
+
+        <div class="mt-5">
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span id="current-period-start">—</span>
+            <span id="current-period-end">—</span>
+          </div>
+          <div class="mt-2 h-2 rounded-full bg-slate-800/70 overflow-hidden border border-slate-700/60">
+            <div id="current-period-progress" class="h-full w-0" style="background: linear-gradient(90deg, rgba(56, 189, 248, 0.95), rgba(244, 114, 182, 0.85));"></div>
+          </div>
+        </div>
+      </section>
+
       <section class="glass rounded-3xl p-6 md:p-8 border border-slate-800/80">
         <div class="flex items-center justify-between mb-4">
           <div>
@@ -136,11 +161,125 @@
       const viewDailyBtn = document.getElementById('view-daily');
       const viewWeeklyBtn = document.getElementById('view-weekly');
 
+      const currentPeriodTitle = document.getElementById('current-period-title');
+      const currentPeriodMeta = document.getElementById('current-period-meta');
+      const currentPeriodCountdown = document.getElementById('current-period-countdown');
+      const currentPeriodStart = document.getElementById('current-period-start');
+      const currentPeriodEnd = document.getElementById('current-period-end');
+      const currentPeriodProgress = document.getElementById('current-period-progress');
+
       let sections = [];
       let currentSection = null;
       let overrides = [];
       let currentDate = '';
       let viewMode = 'daily'; // 'daily' | 'weekly'
+
+      let currentPeriodIntervalId = null;
+
+      function parseTimeOnDate(dateOnly, hhmm) {
+        if (!dateOnly || !hhmm) return null;
+        const parts = String(hhmm).split(':').map(Number);
+        const h = parts[0] || 0;
+        const m = parts[1] || 0;
+        const d = new Date(dateOnly.getFullYear(), dateOnly.getMonth(), dateOnly.getDate(), h, m, 0, 0);
+        return isNaN(d.getTime()) ? null : d;
+      }
+
+      function formatMinSec(ms) {
+        if (ms <= 0) return { mm: '00', ss: '00' };
+        const totalSec = Math.floor(ms / 1000);
+        const mm = Math.floor(totalSec / 60);
+        const ss = totalSec % 60;
+        return {
+          mm: String(mm).padStart(2, '0'),
+          ss: String(ss).padStart(2, '0')
+        };
+      }
+
+      function updateCurrentPeriodCard() {
+        if (!currentPeriodTitle || !currentPeriodCountdown || !currentPeriodProgress) return;
+
+        if (!currentSection) {
+          currentPeriodTitle.textContent = 'Choose a section to start.';
+          currentPeriodMeta.textContent = '—';
+          currentPeriodCountdown.textContent = '—';
+          currentPeriodStart.textContent = '—';
+          currentPeriodEnd.textContent = '—';
+          currentPeriodProgress.style.width = '0%';
+          currentPeriodProgress.style.background = 'linear-gradient(90deg, rgba(56, 189, 248, 0.95), rgba(244, 114, 182, 0.85))';
+          return;
+        }
+
+        const anchorDate = parseISODateOnly(currentDate) || new Date();
+        const now = new Date();
+        const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        const targetDay = dayNames[anchorDate.getDay()];
+
+        const allowedDates = new Set();
+        const iso = toISODateOnly(anchorDate);
+        if (iso) allowedDates.add(iso);
+
+        const activeOverrides = (overrides || []).filter(o => {
+          if ((o.sectionId || o.id) !== currentSection.id) return false;
+          if (o.date && allowedDates.has(String(o.date))) return true;
+          return (o.entries || []).some(ovEntry => {
+            const d = (ovEntry && ovEntry.date) ? String(ovEntry.date) : (o.date ? String(o.date) : '');
+            return d ? allowedDates.has(d) : false;
+          });
+        });
+
+        const effectiveTimetable = applyOverridesToTimetable(currentSection.timetable || [], activeOverrides, allowedDates);
+        const todaysEntries = (effectiveTimetable || [])
+          .filter(e => (e.day || '') === targetDay)
+          .slice()
+          .sort((a, b) => String(a.start || '').localeCompare(String(b.start || '')));
+
+        let active = null;
+        for (const entry of todaysEntries) {
+          const entryDateForStatus = entry && entry.date
+            ? (parseISODateOnly(entry.date) || anchorDate)
+            : anchorDate;
+
+          const startDate = parseTimeOnDate(entryDateForStatus, entry.start || '00:00');
+          const endDate = parseTimeOnDate(entryDateForStatus, entry.end || entry.start || '00:00');
+          if (!startDate || !endDate) continue;
+
+          if (now >= startDate && now <= endDate) {
+            active = { entry, startDate, endDate };
+            break;
+          }
+        }
+
+        if (!active) {
+          currentPeriodTitle.textContent = 'No active period right now.';
+          currentPeriodMeta.textContent = `${targetDay}${currentDate ? ` • ${currentDate}` : ''}`;
+          currentPeriodCountdown.textContent = '—';
+          currentPeriodStart.textContent = '—';
+          currentPeriodEnd.textContent = '—';
+          currentPeriodProgress.style.width = '0%';
+          currentPeriodProgress.style.background = 'linear-gradient(90deg, rgba(56, 189, 248, 0.95), rgba(244, 114, 182, 0.85))';
+          return;
+        }
+
+        const { entry, startDate, endDate } = active;
+        const remainingMs = endDate - now;
+        const totalMs = Math.max(1, endDate - startDate);
+        const elapsedMs = Math.min(totalMs, Math.max(0, now - startDate));
+        const progressPct = Math.max(0, Math.min(100, (elapsedMs / totalMs) * 100));
+        const parts = formatMinSec(remainingMs);
+
+        currentPeriodTitle.textContent = entry.subject || 'Current period';
+        currentPeriodMeta.textContent = [entry.teacher, entry.room].filter(Boolean).join(' • ') || targetDay;
+        currentPeriodCountdown.textContent = `${parts.mm}:${parts.ss}`;
+        currentPeriodStart.textContent = `${entry.start || ''}`;
+        currentPeriodEnd.textContent = `${entry.end || ''}`;
+        currentPeriodProgress.style.width = `${progressPct}%`;
+
+        const isActivities = String(entry.status || '').trim().toLowerCase() === 'activities';
+        currentPeriodProgress.style.background = isActivities
+          ? 'linear-gradient(90deg, rgba(34, 197, 94, 0.95), rgba(16, 185, 129, 0.85))'
+          : 'linear-gradient(90deg, rgba(56, 189, 248, 0.95), rgba(244, 114, 182, 0.85))';
+      }
 
       function updateViewToggleButtons() {
         if (!viewDailyBtn || !viewWeeklyBtn) return;
@@ -341,6 +480,9 @@
         const { order, map } = groupByDay(effectiveTimetable);
         const now = new Date();
 
+        // Keep the top "Studying now" card in sync.
+        updateCurrentPeriodCard();
+
         let daysToRender = order;
         let targetDay = null;
         if (viewMode === 'daily') {
@@ -448,6 +590,11 @@
             sectionSelect.value = first.id || '0';
             renderTable(first, currentDate);
           }
+
+          // Start a live ticker for the current-period card.
+          if (currentPeriodIntervalId) clearInterval(currentPeriodIntervalId);
+          currentPeriodIntervalId = setInterval(updateCurrentPeriodCard, 1000);
+          updateCurrentPeriodCard();
         })
         .catch(err => {
           console.error('Failed to load timetable-data.json', err);
@@ -458,11 +605,13 @@
         const id = this.value;
         currentSection = sections.find(s => (s.id || '') === id) || null;
         renderTable(currentSection, currentDate);
+        updateCurrentPeriodCard();
       });
 
       dateSelect.addEventListener('change', function() {
         currentDate = this.value || '';
         renderTable(currentSection, currentDate);
+        updateCurrentPeriodCard();
       });
 
       if (viewDailyBtn && viewWeeklyBtn) {
@@ -470,12 +619,14 @@
           viewMode = 'daily';
           updateViewToggleButtons();
           renderTable(currentSection, currentDate);
+          updateCurrentPeriodCard();
         });
 
         viewWeeklyBtn.addEventListener('click', function() {
           viewMode = 'weekly';
           updateViewToggleButtons();
           renderTable(currentSection, currentDate);
+          updateCurrentPeriodCard();
         });
 
         updateViewToggleButtons();

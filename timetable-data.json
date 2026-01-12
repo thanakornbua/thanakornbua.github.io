@@ -94,8 +94,30 @@
   "overrides": [
     {
       "sectionId": "501",
-      "label": "Switch",
+      "label": "Main Swap Overrides",
       "entries": [
+        {
+          "date": "2026-01-13",
+          "day": "Tuesday",
+          "start": "08:30",
+          "subject": "Activities: Lecture from external speaker",
+          "teacher": "S. Assavavimol",
+          "room": "Suankularb Memorial Hall",
+          "status": "Activities",
+          "overrideTag": "Activities",
+          "reason": "Lecture on university admissions."
+        },
+        {
+          "date": "2026-01-13",
+          "day": "Tuesday",
+          "start": "09:20",
+          "subject": "Activities: Lecture from external speaker",
+          "teacher": "S. Assavavimol",
+          "room": "Suankularb Memorial Hall",
+          "status": "Activities",
+          "overrideTag": "Activities",
+          "reason": "Lecture on university admissions."
+        },
         {
           "date": "2026-01-14",
           "day": "Wednesday",
