@@ -449,6 +449,12 @@ img {
   color: #fdf2ff;
 }
 
+.status-chip--quiz-period {
+  border-color: rgba(168, 85, 247, 0.95);
+  background: radial-gradient(circle at 0 0, rgba(168, 85, 247, 0.35), rgba(15, 23, 42, 0.96));
+  color: #f3e8ff;
+}
+
 @media print {
   .status-chip {
     background: #ffffff !important;

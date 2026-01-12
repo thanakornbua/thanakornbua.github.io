@@ -525,6 +525,8 @@
             const safeOverrideTag = (effectiveOverrideTag || '').replace(/"/g, '&quot;');
             const statusTitleAttr = safeReason ? ` title="${safeReason}"` : (safeOverrideTag ? ` title="${safeOverrideTag}"` : '');
             const overrideTitleAttr = safeReason ? ` title="${safeReason}"` : (safeOverrideTag ? ` title="${safeOverrideTag}"` : '');
+            const overrideKey = (effectiveOverrideTag || '').trim().toLowerCase().replace(/\s+/g, '-');
+            const overrideChipClass = overrideKey === 'quiz-period' ? 'status-chip--quiz-period' : 'status-chip--override';
             const tr = document.createElement('tr');
             tr.className = 'border-b border-slate-800/80';
             tr.innerHTML = `
@@ -536,7 +538,7 @@
               <td class="py-2 pr-4 align-top">${effectiveEntry.room || ''}</td>
               <td class="py-2 pr-4 align-top">
                 <span class="status-chip status-chip--${statusKey}"${statusTitleAttr}>${displayStatus}</span>
-                ${effectiveOverrideTag ? `<span class="status-chip status-chip--override ml-1"${overrideTitleAttr}>${effectiveOverrideTag}</span>` : ''}
+                ${effectiveOverrideTag ? `<span class="status-chip ${overrideChipClass} ml-1"${overrideTitleAttr}>${effectiveOverrideTag}</span>` : ''}
               </td>
             `;
             tbody.appendChild(tr);

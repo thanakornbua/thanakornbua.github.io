@@ -206,7 +206,7 @@
           "overrideTag": "Swap period",
           "reason": "Creative English moved from Jan 14."
         },
-                {
+        {
           "date": "2026-01-14",
           "day": "Wednesday",
           "start": "08:30",
@@ -215,6 +215,17 @@
           "room": "4402",
           "status": "Swapped",
           "overrideTag": "Given period",
+          "reason": "Project day."
+        },
+        {
+          "date": "2026-01-14",
+          "day": "Wednesday",
+          "start": "15:10",
+          "subject": "Intensive Biology 3 (Quiz)",
+          "teacher": "Banshaporn",
+          "room": "Innovation Conference Room",
+          "status": "Activities",
+          "overrideTag": "Quiz period",
           "reason": "Project day."
         }
       ]
