@@ -1,0 +1,19 @@
+<!-- Shared Sidebar (injected by sidebar-loader.js) -->
+<aside id="sidebar" class="sidebar fixed glass px-3 py-6 border border-slate-800/70 flex flex-col md:flex-col items-center md:items-start gap-3 z-40 no-print">
+  <div class="w-full flex items-center justify-between gap-2 text-white font-semibold text-sm md:text-base">
+    <div class="flex items-center gap-2">
+      <span class="text-neonBlue">//</span>
+      <span class="hidden md:inline">UTILITY</span>
+    </div>
+    <button id="sidebar-close" class="text-slate-400 hover:text-white text-xl leading-none" aria-label="Close sidebar">×</button>
+  </div>
+  <nav class="flex flex-row md:flex-col gap-2 w-full">
+    <a data-sidebar-link href="index.html" class="glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition text-center">🏠<span class="hidden md:inline ml-1">Dashboard</span></a>
+    <a data-sidebar-link href="timer.html" class="glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition text-center">⏱<span class="hidden md:inline ml-1">Timer</span></a>
+    <a data-sidebar-link href="timetable.html" class="glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition text-center">📅<span class="hidden md:inline ml-1">Timetable</span></a>
+    <a data-sidebar-link href="admission.html" class="glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition text-center">🎓<span class="hidden md:inline ml-1">Admissions</span></a>
+    <a data-sidebar-link href="mockexam.html" class="glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition text-center">📝<span class="hidden md:inline ml-1">Mock Exam</span></a>
+    <a data-sidebar-link href="credits.html" class="glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition text-center">📜<span class="hidden md:inline ml-1">Credits</span></a>
+  </nav>
+</aside>
+<button id="sidebar-open" class="no-print sidebar-fab glass px-3 py-2 rounded-lg border border-slate-700/70 text-white hover:border-neonBlue transition" aria-label="Open sidebar">☰</button>

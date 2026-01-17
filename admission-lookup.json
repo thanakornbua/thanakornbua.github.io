@@ -1,0 +1,41 @@
+{
+  "tagColors": {
+    "portfolio": "#33e1ff",
+    "quota": "#a855f7",
+    "scholarship": "#22c55e",
+    "admission": "#f59e0b",
+    "important": "red"
+  },
+  "items": [
+    {
+      "date": "2026-01-18",
+      "topic": "Example: TCAS announcement",
+      "url": "https://example.com/tcas",
+      "tag": "Portfolio"
+    },
+    {
+      "date": "2026-02-01",
+      "topic": "Example: University admissions page",
+      "url": "https://example.com/admissions",
+      "tag": "quota"
+    },
+    {
+        "date": "2026-03-15",
+        "topic": "Example: Scholarship applications open",
+        "url": "https://example.com/scholarships",
+        "tag": "scholarship"
+    },
+        {
+        "date": "2026-03-15",
+        "topic": "Example: admission applications open",
+        "url": "https://example.com/scholarships",
+        "tag": "admission"
+    },
+    {
+        "date": "2026-03-15",
+        "topic": "Example: Important applications open",
+        "url": "https://example.com/scholarships",
+        "tag": "important"
+    }
+  ]
+}

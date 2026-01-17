@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+	<title>Mock Exam Lookup - TCAS70</title>
+	<link rel="manifest" href="manifest.json" />
+	<meta name="theme-color" content="#0b1221" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Kanit:wght@500;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="styles.css" />
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script>
+		tailwind.config = {
+			theme: {
+				extend: {
+					fontFamily: {
+						sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+						display: ['Kanit', 'Inter', 'ui-sans-serif'],
+					},
+					colors: {
+						neonBlue: '#33e1ff',
+						neonPink: '#ff3fa4',
+					}
+				}
+			}
+		}
+	</script>
+	<script src="sidebar-loader.js" defer></script>
+</head>
+
+<body class="min-h-screen bg-slate-950 text-white">
+	<div id="app" class="relative min-h-screen">
+		<main class="relative max-w-6xl mx-auto px-4 md:px-8 py-8">
+			<header class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
+				<div>
+					<p class="text-xs uppercase tracking-[0.2em] text-slate-400">Lookup</p>
+					<h1 class="text-3xl md:text-4xl font-[Kanit] font-bold">Mock Exams</h1>
+					<p class="text-slate-300 text-sm md:text-base max-w-2xl mt-2">
+						Find mock exams fast. Search by subject/topic, filter by tags, then open the PDF.
+					</p>
+				</div>
+				<div class="no-print flex flex-wrap items-center justify-start md:justify-end gap-2">
+					<button id="chip-search" type="button" class="px-3 py-1 rounded-full border border-slate-700 text-xs text-white hover:border-neonBlue transition">Search</button>
+					<button id="chip-advanced" type="button" class="px-3 py-1 rounded-full border border-slate-700 text-xs text-white hover:border-neonPink transition">Advanced</button>
+					<button id="refresh-btn" type="button" class="px-3 py-1 rounded-full border border-slate-700 text-xs text-white hover:border-neonPink transition" aria-label="Force refresh from origin">↻</button>
+				</div>
+			</header>
+
+			<section class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+				<div class="glass rounded-2xl border border-slate-800/80 p-4">
+					<p class="text-xs uppercase tracking-[0.18em] text-slate-400">Total</p>
+					<p id="stat-total" class="text-2xl font-semibold mt-1">—</p>
+					<p class="text-[11px] text-slate-500 mt-1">mock exam items</p>
+				</div>
+				<div class="glass rounded-2xl border border-slate-800/80 p-4">
+					<p class="text-xs uppercase tracking-[0.18em] text-slate-400">Subjects</p>
+					<p id="stat-subjects" class="text-2xl font-semibold mt-1">—</p>
+					<p class="text-[11px] text-slate-500 mt-1">unique subjects</p>
+				</div>
+				<div class="glass rounded-2xl border border-slate-800/80 p-4">
+					<p class="text-xs uppercase tracking-[0.18em] text-slate-400">Filters</p>
+					<p id="stat-filters" class="text-sm text-slate-200 mt-2">—</p>
+					<p class="text-[11px] text-slate-500 mt-1">query / date / tags</p>
+				</div>
+			</section>
+
+			<!-- Quick search (small footprint) -->
+			<section id="panel-search" class="hidden glass rounded-2xl border border-slate-800/80 p-4 mb-6 no-print">
+				<div class="flex flex-col sm:flex-row sm:items-center gap-3">
+					<div class="flex-1">
+						<label for="quick-q" class="block text-xs font-semibold text-slate-300">Search</label>
+						<input id="quick-q" type="search" placeholder="Search subject, topic, tag…" class="w-full glass border border-slate-700/70 rounded-lg px-3 py-2 bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-neonBlue" />
+						<p class="text-[10px] text-slate-500 mt-1">Tip: click a tag chip in results to filter.</p>
+					</div>
+					<div class="flex items-center justify-between sm:justify-end gap-3">
+						<p id="result-count" class="text-xs text-slate-400">—</p>
+						<button id="quick-clear" type="button" class="px-3 py-1 rounded-full border border-slate-700 text-xs text-white hover:border-neonBlue transition">Clear</button>
+					</div>
+				</div>
+			</section>
+
+			<!-- Advanced search -->
+			<section id="panel-advanced" class="hidden glass rounded-2xl border border-slate-800/80 p-4 mb-6 no-print">
+				<div class="grid gap-3">
+					<div class="space-y-1">
+						<label for="adv-q" class="block text-xs font-semibold text-slate-300">Advanced search</label>
+						<input id="adv-q" type="search" placeholder="e.g., TGAT, reading, mock 1" class="w-full glass border border-slate-700/70 rounded-lg px-3 py-2 bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-neonPink" />
+					</div>
+					<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+						<div class="space-y-1">
+							<label for="adv-date" class="block text-xs font-semibold text-slate-300">Date (optional)</label>
+							<input id="adv-date" type="date" class="w-full glass border border-slate-700/70 rounded-lg px-3 py-2 bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-neonBlue" />
+						</div>
+						<div class="space-y-1">
+							<label for="adv-sort" class="block text-xs font-semibold text-slate-300">Sort</label>
+							<select id="adv-sort" class="w-full glass border border-slate-700/70 rounded-lg px-3 py-2 bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-neonBlue">
+								<option value="date_desc">Newest first</option>
+								<option value="date_asc">Oldest first</option>
+								<option value="subject_asc">Subject A → Z</option>
+								<option value="topic_asc">Topic A → Z</option>
+							</select>
+						</div>
+						<div class="space-y-1">
+							<label class="block text-xs font-semibold text-slate-300">Actions</label>
+							<div class="flex flex-wrap items-center gap-2">
+								<button id="clear-all" type="button" class="px-3 py-1 rounded-full border border-slate-700 text-xs text-white hover:border-neonBlue transition">Clear all</button>
+								<button id="tag-clear" type="button" class="px-3 py-1 rounded-full border border-slate-700 text-xs text-white hover:border-neonBlue transition">Clear tags</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="space-y-2">
+						<div class="flex items-center justify-between gap-3">
+							<label class="block text-xs font-semibold text-slate-300">Tags</label>
+							<span class="text-[10px] text-slate-500">multi-select</span>
+						</div>
+						<div id="tag-chips" class="flex flex-wrap gap-2"></div>
+					</div>
+				</div>
+			</section>
+
+			<section class="glass rounded-3xl p-6 md:p-8 border border-slate-800/80">
+				<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+					<div>
+						<h2 class="text-lg font-semibold">Results</h2>
+						<p id="subtext" class="text-xs text-slate-400 mt-1">—</p>
+					</div>
+					<div class="text-xs text-slate-400">
+						<span class="uppercase tracking-[0.16em]">Tip</span>
+						<span class="ml-2">Cards on mobile, table on desktop</span>
+					</div>
+				</div>
+
+				<div id="loading" class="hidden">
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+						<div class="glass rounded-2xl border border-slate-800/80 p-4 animate-pulse">
+							<div class="h-4 bg-slate-700/40 rounded w-2/3"></div>
+							<div class="h-3 bg-slate-700/30 rounded w-1/2 mt-3"></div>
+							<div class="h-9 bg-slate-700/20 rounded w-full mt-4"></div>
+						</div>
+						<div class="glass rounded-2xl border border-slate-800/80 p-4 animate-pulse">
+							<div class="h-4 bg-slate-700/40 rounded w-2/3"></div>
+							<div class="h-3 bg-slate-700/30 rounded w-1/2 mt-3"></div>
+							<div class="h-9 bg-slate-700/20 rounded w-full mt-4"></div>
+						</div>
+					</div>
+				</div>
+
+				<div id="empty" class="hidden px-4 py-10 rounded-2xl border border-slate-800/80 bg-slate-900/30 text-center">
+					<p class="text-slate-200 font-semibold">No results</p>
+					<p class="text-slate-400 text-sm mt-1">Try a different search or clear filters.</p>
+				</div>
+
+				<!-- Mobile: cards -->
+				<div id="cards" class="grid grid-cols-1 md:hidden gap-3"></div>
+
+				<!-- Desktop: table -->
+				<div class="hidden md:block overflow-x-auto">
+					<table class="min-w-full text-sm text-left border-collapse">
+						<thead>
+							<tr class="border-b border-slate-700 text-slate-300">
+								<th class="py-2 pr-4">Date</th>
+								<th class="py-2 pr-4">Subject</th>
+								<th class="py-2 pr-4">Topic</th>
+								<th class="py-2 pr-4">PDF</th>
+								<th class="py-2 pr-4">Tag</th>
+							</tr>
+						</thead>
+						<tbody id="rows" class="align-top text-slate-100">
+							<tr>
+								<td colspan="5" class="py-6 text-center text-slate-400">Loading…</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+		</main>
+	</div>
+
+	<script>
+		(function () {
+			const DATA_URL = 'mockexam.json';
+
+			/** @type {Array<any>} */
+			let allItems = [];
+			/** @type {Record<string,string>} */
+			let tagColorMap = {};
+			const selectedTags = new Set();
+
+			const chipSearch = document.getElementById('chip-search');
+			const chipAdvanced = document.getElementById('chip-advanced');
+			const panelSearch = document.getElementById('panel-search');
+			const panelAdvanced = document.getElementById('panel-advanced');
+
+			const quickQ = document.getElementById('quick-q');
+			const quickClear = document.getElementById('quick-clear');
+
+			const advQ = document.getElementById('adv-q');
+			const advDate = document.getElementById('adv-date');
+			const advSort = document.getElementById('adv-sort');
+
+			const tagChips = document.getElementById('tag-chips');
+			const tagClear = document.getElementById('tag-clear');
+			const clearAll = document.getElementById('clear-all');
+
+			const rows = document.getElementById('rows');
+			const cards = document.getElementById('cards');
+			const empty = document.getElementById('empty');
+			const loading = document.getElementById('loading');
+			const resultCount = document.getElementById('result-count');
+			const subtext = document.getElementById('subtext');
+
+			const statTotal = document.getElementById('stat-total');
+			const statSubjects = document.getElementById('stat-subjects');
+			const statFilters = document.getElementById('stat-filters');
+
+			function normalizeTag(tag) {
+				return String(tag || '').trim();
+			}
+
+			function parseTags(item) {
+				const raw = item?.tag;
+				if (!raw) return [];
+				if (Array.isArray(raw)) return raw.map(normalizeTag).filter(Boolean);
+				return String(raw).split(',').map(s => normalizeTag(s)).filter(Boolean);
+			}
+
+			function getTagColor(tag) {
+				const key = normalizeTag(tag);
+				return tagColorMap[key] || '';
+			}
+
+			function applyChipStyle(el, tag, active) {
+				const color = getTagColor(tag);
+				if (color) {
+					el.style.borderColor = color;
+					el.style.color = active ? '#0b1221' : color;
+					el.style.background = active ? color : 'transparent';
+				} else {
+					el.style.borderColor = active ? '#33e1ff' : '';
+					el.style.color = '';
+					el.style.background = '';
+				}
+			}
+
+			function setPanels(which) {
+				const isSearch = which === 'search';
+				panelSearch.classList.toggle('hidden', !isSearch);
+				panelAdvanced.classList.toggle('hidden', isSearch);
+
+				chipSearch.style.borderColor = isSearch ? '#33e1ff' : '';
+				chipAdvanced.style.borderColor = !isSearch ? '#ff3fa4' : '';
+			}
+
+			function buildPdfLinks(item) {
+				const links = [];
+				if (item.pdf) links.push({ label: 'PDF', href: item.pdf });
+				if (item.pdf2) links.push({ label: 'Answers', href: item.pdf2 });
+				// Back-compat fields
+				if (item.url) links.push({ label: links.length ? 'Link' : 'PDF', href: item.url });
+				if (item.url2) links.push({ label: links.length ? 'Link 2' : 'PDF 2', href: item.url2 });
+				const seen = new Set();
+				return links.filter(l => {
+					const h = String(l.href || '').trim();
+					if (!h || seen.has(h)) return false;
+					seen.add(h);
+					return true;
+				});
+			}
+
+			function matchesQuery(item, q) {
+				if (!q) return true;
+				const tags = parseTags(item);
+				const hay = [item.subject, item.topic, item.title, ...tags].filter(Boolean).join(' ').toLowerCase();
+				return hay.includes(q.toLowerCase());
+			}
+
+			function matchesDate(item, dateStr) {
+				if (!dateStr) return true;
+				const d = String(item.date || '').slice(0, 10);
+				return d === dateStr;
+			}
+
+			function matchesTags(item) {
+				if (selectedTags.size === 0) return true;
+				const tags = new Set(parseTags(item).map(t => t.toLowerCase()));
+				for (const t of selectedTags) {
+					if (!tags.has(String(t).toLowerCase())) return false;
+				}
+				return true;
+			}
+
+			function sortItems(items, mode) {
+				const arr = items.slice();
+				if (mode === 'date_asc') {
+					arr.sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')));
+				} else if (mode === 'subject_asc') {
+					arr.sort((a, b) => String(a.subject || '').localeCompare(String(b.subject || '')));
+				} else if (mode === 'topic_asc') {
+					arr.sort((a, b) => String(a.topic || a.title || '').localeCompare(String(b.topic || b.title || '')));
+				} else {
+					arr.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+				}
+				return arr;
+			}
+
+			function updateStats(filtered, q, dateStr) {
+				statTotal.textContent = String(allItems.length);
+				const subjects = new Set(allItems.map(it => String(it.subject || '').trim()).filter(Boolean));
+				statSubjects.textContent = String(subjects.size);
+
+				const tags = Array.from(selectedTags);
+				const bits = [];
+				if (q) bits.push(`q: “${q}”`);
+				if (dateStr) bits.push(`date: ${dateStr}`);
+				if (tags.length) bits.push(`tags: ${tags.join(', ')}`);
+				statFilters.textContent = bits.length ? bits.join(' • ') : 'No filters';
+
+				subtext.textContent = `${filtered.length} result${filtered.length === 1 ? '' : 's'} from ${allItems.length}`;
+				resultCount.textContent = `${filtered.length} results`;
+			}
+
+			function renderTagFilters() {
+				const tagSet = new Map();
+				for (const it of allItems) {
+					for (const t of parseTags(it)) {
+						if (!tagSet.has(t)) tagSet.set(t, 0);
+						tagSet.set(t, tagSet.get(t) + 1);
+					}
+				}
+				const tags = Array.from(tagSet.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+				tagChips.innerHTML = '';
+
+				if (tags.length === 0) {
+					const p = document.createElement('p');
+					p.className = 'text-xs text-slate-500';
+					p.textContent = 'No tags in data.';
+					tagChips.appendChild(p);
+					return;
+				}
+
+				for (const [t, count] of tags) {
+					const btn = document.createElement('button');
+					btn.className = 'px-3 py-1 rounded-full border border-slate-700 text-[11px] text-white hover:border-neonBlue transition';
+					btn.textContent = `${t} (${count})`;
+					const active = selectedTags.has(t);
+					applyChipStyle(btn, t, active);
+					if (active) btn.style.fontWeight = '700';
+					btn.addEventListener('click', () => {
+						if (selectedTags.has(t)) selectedTags.delete(t); else selectedTags.add(t);
+						renderTagFilters();
+						render();
+					});
+					tagChips.appendChild(btn);
+				}
+			}
+
+			function render() {
+				const isAdvanced = !panelAdvanced.classList.contains('hidden');
+				const q = (isAdvanced ? advQ.value : quickQ.value).trim();
+				const dateStr = isAdvanced ? advDate.value : '';
+				const sortMode = isAdvanced ? advSort.value : 'date_desc';
+
+				let filtered = allItems.filter(it => matchesQuery(it, q) && matchesDate(it, dateStr) && matchesTags(it));
+				filtered = sortItems(filtered, sortMode);
+
+				updateStats(filtered, q, dateStr);
+
+				rows.innerHTML = '';
+				cards.innerHTML = '';
+
+				if (filtered.length === 0) {
+					empty.classList.remove('hidden');
+					return;
+				}
+				empty.classList.add('hidden');
+
+				// Cards (mobile)
+				for (const it of filtered) {
+					const card = document.createElement('div');
+					card.className = 'glass rounded-2xl border border-slate-800/80 p-4';
+
+					const top = document.createElement('div');
+					top.className = 'flex items-start justify-between gap-3';
+
+					const left = document.createElement('div');
+					const subject = document.createElement('p');
+					subject.className = 'font-semibold text-slate-100';
+					subject.textContent = it.subject || '—';
+					const topic = document.createElement('p');
+					topic.className = 'text-sm text-slate-300 mt-1';
+					topic.textContent = it.topic || it.title || '—';
+					left.appendChild(subject);
+					left.appendChild(topic);
+
+					const date = document.createElement('p');
+					date.className = 'text-xs text-slate-400 whitespace-nowrap';
+					date.textContent = it.date ? String(it.date) : '—';
+
+					top.appendChild(left);
+					top.appendChild(date);
+
+					const links = buildPdfLinks(it);
+					const linkWrap = document.createElement('div');
+					linkWrap.className = 'flex flex-wrap gap-2 mt-3';
+					if (links.length === 0) {
+						const no = document.createElement('p');
+						no.className = 'text-xs text-slate-500';
+						no.textContent = 'No PDF link.';
+						linkWrap.appendChild(no);
+					} else {
+						for (const l of links) {
+							const a = document.createElement('a');
+							a.href = l.href;
+							a.target = '_blank';
+							a.rel = 'noopener';
+							a.className = 'px-3 py-2 rounded-lg border border-slate-700 text-xs text-white hover:border-neonBlue transition';
+							a.textContent = l.label;
+							linkWrap.appendChild(a);
+						}
+					}
+
+					const tags = parseTags(it);
+					const tagWrap = document.createElement('div');
+					tagWrap.className = 'flex flex-wrap gap-2 mt-3';
+					if (tags.length) {
+						for (const t of tags) {
+							const btn = document.createElement('button');
+							btn.className = 'px-3 py-1 rounded-full border border-slate-700 text-[11px] text-white hover:border-neonBlue transition';
+							btn.textContent = t;
+							const active = selectedTags.has(t);
+							applyChipStyle(btn, t, active);
+							if (active) btn.style.fontWeight = '700';
+							btn.addEventListener('click', () => {
+								setPanels('advanced');
+								if (selectedTags.has(t)) selectedTags.delete(t); else selectedTags.add(t);
+								renderTagFilters();
+								render();
+							});
+							tagWrap.appendChild(btn);
+						}
+					}
+
+					card.appendChild(top);
+					card.appendChild(linkWrap);
+					if (tags.length) card.appendChild(tagWrap);
+					cards.appendChild(card);
+				}
+
+				// Table (desktop)
+				for (const it of filtered) {
+					const tr = document.createElement('tr');
+					tr.className = 'border-t border-slate-800/70';
+
+					const dateTd = document.createElement('td');
+					dateTd.className = 'py-3 pr-4 text-slate-200 whitespace-nowrap';
+					dateTd.textContent = it.date ? String(it.date) : '—';
+
+					const subjectTd = document.createElement('td');
+					subjectTd.className = 'py-3 pr-4 text-white font-medium';
+					subjectTd.textContent = it.subject || '—';
+
+					const topicTd = document.createElement('td');
+					topicTd.className = 'py-3 pr-4 text-slate-200';
+					topicTd.textContent = it.topic || it.title || '—';
+
+					const pdfTd = document.createElement('td');
+					pdfTd.className = 'py-3 pr-4';
+					const links = buildPdfLinks(it);
+					if (links.length === 0) {
+						pdfTd.className += ' text-slate-500';
+						pdfTd.textContent = '—';
+					} else {
+						const wrap = document.createElement('div');
+						wrap.className = 'flex flex-wrap gap-2';
+						for (const l of links) {
+							const a = document.createElement('a');
+							a.href = l.href;
+							a.target = '_blank';
+							a.rel = 'noopener';
+							a.className = 'px-3 py-1.5 rounded-lg border border-slate-700 text-xs text-white hover:border-neonBlue transition';
+							a.textContent = l.label;
+							wrap.appendChild(a);
+						}
+						pdfTd.appendChild(wrap);
+					}
+
+					const tagTd = document.createElement('td');
+					tagTd.className = 'py-3 pr-4';
+					const tags = parseTags(it);
+					if (tags.length === 0) {
+						tagTd.className += ' text-slate-500';
+						tagTd.textContent = '—';
+					} else {
+						const wrap = document.createElement('div');
+						wrap.className = 'flex flex-wrap gap-2';
+						for (const t of tags) {
+							const btn = document.createElement('button');
+							btn.className = 'px-3 py-1 rounded-full border border-slate-700 text-[11px] text-white hover:border-neonBlue transition';
+							btn.textContent = t;
+							const active = selectedTags.has(t);
+							applyChipStyle(btn, t, active);
+							if (active) btn.style.fontWeight = '700';
+							btn.addEventListener('click', () => {
+								setPanels('advanced');
+								if (selectedTags.has(t)) selectedTags.delete(t); else selectedTags.add(t);
+								renderTagFilters();
+								render();
+							});
+							wrap.appendChild(btn);
+						}
+						tagTd.appendChild(wrap);
+					}
+
+					tr.appendChild(dateTd);
+					tr.appendChild(subjectTd);
+					tr.appendChild(topicTd);
+					tr.appendChild(pdfTd);
+					tr.appendChild(tagTd);
+					rows.appendChild(tr);
+				}
+			}
+
+			async function loadData() {
+				loading.classList.remove('hidden');
+				empty.classList.add('hidden');
+				try {
+					const res = await fetch(DATA_URL, { cache: 'no-store' });
+					if (!res.ok) throw new Error(`Failed to load ${DATA_URL}: ${res.status}`);
+					const json = await res.json();
+					allItems = Array.isArray(json.items) ? json.items : [];
+					tagColorMap = (json.tagColors && typeof json.tagColors === 'object') ? json.tagColors : {};
+
+					allItems = allItems.map(it => ({
+						date: it.date || it.examDate || '',
+						subject: it.subject || it.course || '',
+						topic: it.topic || it.title || '',
+						pdf: it.pdf || '',
+						pdf2: it.pdf2 || '',
+						url: it.url || '',
+						url2: it.url2 || '',
+						tag: it.tag || ''
+					}));
+				} finally {
+					loading.classList.add('hidden');
+				}
+			}
+
+			// Force refresh from origin (works with the current service worker)
+			async function forceReloadFromOrigin() {
+				try {
+					if ('serviceWorker' in navigator) {
+						const reg = await navigator.serviceWorker.getRegistration();
+						if (reg) {
+							await reg.update();
+							if (navigator.serviceWorker.controller) {
+								await new Promise((resolve) => {
+									const channel = new MessageChannel();
+									channel.port1.onmessage = () => resolve();
+									navigator.serviceWorker.controller.postMessage({ type: 'FORCE_REFRESH' }, [channel.port2]);
+									setTimeout(resolve, 2500);
+								});
+							}
+						}
+					}
+				} catch (e) {
+					console.log('forceReloadFromOrigin failed:', e);
+				}
+				const u = new URL(location.href);
+				u.searchParams.set('_cb', String(Date.now()));
+				location.replace(u.toString());
+			}
+			window.forceReloadFromOrigin = forceReloadFromOrigin;
+
+			function scheduleTopOfHourRefresh() {
+				const now = new Date();
+				const next = new Date(now);
+				next.setMinutes(0, 0, 0);
+				next.setHours(now.getHours() + 1);
+				const ms = next - now;
+				setTimeout(() => forceReloadFromOrigin(), Math.max(1000, ms));
+			}
+
+			// Wire UI
+			chipSearch.addEventListener('click', () => setPanels('search'));
+			chipAdvanced.addEventListener('click', () => setPanels('advanced'));
+
+			quickQ.addEventListener('input', render);
+			advQ.addEventListener('input', render);
+			advDate.addEventListener('change', render);
+			advSort.addEventListener('change', render);
+
+			quickClear.addEventListener('click', () => {
+				quickQ.value = '';
+				render();
+			});
+
+			tagClear.addEventListener('click', () => {
+				selectedTags.clear();
+				renderTagFilters();
+				render();
+			});
+
+			clearAll.addEventListener('click', () => {
+				quickQ.value = '';
+				advQ.value = '';
+				advDate.value = '';
+				advSort.value = 'date_desc';
+				selectedTags.clear();
+				renderTagFilters();
+				render();
+			});
+
+			document.getElementById('refresh-btn').addEventListener('click', forceReloadFromOrigin);
+
+			// Init
+			setPanels('search');
+			resultCount.textContent = 'Loading…';
+			subtext.textContent = 'Loading…';
+			statTotal.textContent = '—';
+			statSubjects.textContent = '—';
+			statFilters.textContent = '—';
+
+			loadData()
+				.then(() => {
+					renderTagFilters();
+					render();
+				})
+				.catch((e) => {
+					console.log(e);
+					empty.classList.remove('hidden');
+					empty.querySelector('p').textContent = 'Failed to load data';
+					empty.querySelectorAll('p')[1].textContent = e.message;
+					rows.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-slate-400">Failed to load</td></tr>';
+				});
+
+			scheduleTopOfHourRefresh();
+		})();
+	</script>
+
+	<script>
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.register('service-worker.js').catch(() => {});
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+	<title>Admissions Lookup - TCAS70</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Kanit:wght@500;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="styles.css" />
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="sidebar-loader.js" defer></script>
+</head>
+<body class="min-h-screen bg-slate-950 text-white">
+	<div id="app" class="relative min-h-screen">
+		<main id="main" class="relative max-w-6xl mx-auto px-4 md:px-8 py-8">
+			<header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+				<div>
+					<p class="text-xs uppercase tracking-[0.2em] text-slate-400">Lookup</p>
+					<h1 class="text-3xl md:text-4xl font-[Kanit] font-bold">Admissions Links</h1>
+					<p class="text-slate-300 text-sm md:text-base max-w-2xl mt-2">
+						Search by date, topic, or domain. Data loads from <span class="text-slate-200">latest database available</span>.
+					</p>
+				</div>
+				<div class="no-print flex flex-wrap items-center justify-start md:justify-end gap-2">
+					<button id="chip-search" type="button" class="px-3 py-1 rounded-full border border-slate-700 text-xs text-white hover:border-neonBlue transition">Search</button>
+					<button id="chip-advanced" type="button" class="px-3 py-1 rounded-full border border-slate-700 text-xs text-white hover:border-neonPink transition">Advanced search</button>
+					<button id="force-refresh-nav" type="button" class="px-3 py-1 rounded-full border border-slate-700 text-xs text-white hover:border-neonPink transition" aria-label="Force refresh from origin">↻</button>
+				</div>
+			</header>
+
+			<!-- Quick search (small footprint) -->
+			<section id="quick-search-panel" class="hidden glass rounded-2xl border border-slate-800/80 p-4 mb-6 no-print">
+				<div class="flex flex-col sm:flex-row sm:items-center gap-3">
+					<div class="flex-1">
+						<label for="quick-search" class="block text-xs font-semibold text-slate-300">Search</label>
+						<input id="quick-search" type="search" placeholder="Type to search…" class="w-full glass border border-slate-700/70 rounded-lg px-3 py-2 bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-neonBlue" />
+					</div>
+					<div class="flex items-center justify-between sm:justify-end gap-3">
+						<p id="quick-count" class="text-xs text-slate-400">—</p>
+						<button id="quick-clear" type="button" class="px-3 py-1 rounded-full border border-slate-700 text-xs text-white hover:border-neonBlue transition">Clear</button>
+					</div>
+				</div>
+			</section>
+
+			<!-- Advanced search (existing full controls) -->
+			<section id="advanced-search-panel" class="hidden glass rounded-2xl border border-slate-800/80 p-4 mb-6 no-print">
+				<div class="grid gap-3">
+					<div class="space-y-1">
+						<label for="search" class="block text-xs font-semibold text-slate-300">Advanced search</label>
+						<input id="search" type="search" placeholder="e.g., TCAS, round 1, https://..." class="w-full glass border border-slate-700/70 rounded-lg px-3 py-2 bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-neonPink" />
+					</div>
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+						<div class="space-y-1">
+							<label for="date" class="block text-xs font-semibold text-slate-300">Date (optional)</label>
+							<input id="date" type="date" class="w-full glass border border-slate-700/70 rounded-lg px-3 py-2 bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-neonBlue" />
+						</div>
+						<div class="space-y-1">
+							<label for="sort" class="block text-xs font-semibold text-slate-300">Sort</label>
+							<select id="sort" class="w-full glass border border-slate-700/70 rounded-lg px-3 py-2 bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-neonBlue">
+								<option value="date-desc">Newest first</option>
+								<option value="date-asc">Oldest first</option>
+								<option value="topic-asc">Topic A → Z</option>
+							</select>
+						</div>
+					</div>
+					<div class="space-y-2">
+						<div class="flex items-center justify-between gap-3">
+							<label class="block text-xs font-semibold text-slate-300">Tags</label>
+							<button id="tag-clear" type="button" class="px-3 py-1 rounded-full border border-slate-700 text-[11px] text-white hover:border-neonBlue transition">Clear tags</button>
+						</div>
+						<div id="tag-chips" class="flex flex-wrap gap-2"></div>
+						<p class="text-[10px] text-slate-500">Tags come from <span class="text-slate-300">tag</span> in the JSON. Click chips to filter.</p>
+					</div>
+				</div>
+				<div class="flex flex-wrap items-center justify-between gap-3 mt-3">
+					<p id="count" class="text-xs text-slate-400">Loading…</p>
+					<div class="flex items-center gap-2">
+						<button id="clear" type="button" class="px-3 py-1 rounded-full border border-slate-700 text-xs text-white hover:border-neonBlue transition">Clear</button>
+						<button id="force-refresh" type="button" class="px-3 py-1 rounded-full border border-slate-700 text-xs text-white hover:border-neonPink transition" aria-label="Force refresh from origin">↻ Refresh</button>
+					</div>
+				</div>
+			</section>
+
+			<!-- Important window (tag: important) -->
+			<section id="important-panel" class="hidden glass rounded-3xl p-6 md:p-8 border border-red-500/40 bg-red-500/10 mb-6">
+				<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+					<div>
+						<p class="text-xs uppercase tracking-[0.2em] text-red-200">Important</p>
+						<h2 class="text-xl md:text-2xl font-semibold">Pinned updates</h2>
+						<p id="important-count" class="text-xs text-red-200/80 mt-1">—</p>
+					</div>
+					<button id="important-filter" type="button" class="px-3 py-1 rounded-full border border-red-400/60 text-xs text-white hover:border-red-300 transition">Filter: important</button>
+				</div>
+				<div id="important-list" class="mt-4 space-y-2"></div>
+			</section>
+
+			<section class="glass rounded-3xl p-6 md:p-8 border border-slate-800/80">
+				<div id="error" class="hidden mb-4 px-4 py-3 rounded-xl border border-red-500/40 bg-red-500/10 text-red-200 text-sm"></div>
+
+				<div class="overflow-x-auto">
+					<table class="min-w-full text-sm text-left border-collapse">
+						<thead>
+							<tr class="border-b border-slate-700 text-slate-300">
+								<th class="py-2 pr-4">Date</th>
+								<th class="py-2 pr-4">Topic</th>
+								<th class="py-2 pr-4">Tag</th>
+								<th class="py-2 pr-4">Website</th>
+							</tr>
+						</thead>
+						<tbody id="results" class="align-top text-slate-100">
+							<tr>
+								<td colspan="4" class="py-6 text-center text-slate-400">Loading…</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+		</main>
+	</div>
+
+	<script>
+		// Admissions lookup logic
+		(function() {
+				const chipSearchEl = document.getElementById('chip-search');
+				const chipAdvancedEl = document.getElementById('chip-advanced');
+				const quickPanelEl = document.getElementById('quick-search-panel');
+				const advancedPanelEl = document.getElementById('advanced-search-panel');
+				const quickSearchEl = document.getElementById('quick-search');
+				const quickClearEl = document.getElementById('quick-clear');
+				const quickCountEl = document.getElementById('quick-count');
+				const tagChipsEl = document.getElementById('tag-chips');
+				const tagClearEl = document.getElementById('tag-clear');
+				const importantPanelEl = document.getElementById('important-panel');
+				const importantListEl = document.getElementById('important-list');
+				const importantCountEl = document.getElementById('important-count');
+				const importantFilterEl = document.getElementById('important-filter');
+
+			const searchEl = document.getElementById('search');
+			const dateEl = document.getElementById('date');
+			const sortEl = document.getElementById('sort');
+			const clearEl = document.getElementById('clear');
+			const countEl = document.getElementById('count');
+			const resultsEl = document.getElementById('results');
+			const errorEl = document.getElementById('error');
+
+			let items = [];
+				let allTags = [];
+				const selectedTags = new Set();
+				let tagColorMap = {};
+
+			function normalize(s) {
+				return String(s || '').toLowerCase().trim();
+			}
+
+				function normalizeTagKey(tag) {
+					return normalize(tag);
+				}
+
+				function escapeHtml(s) {
+					return String(s || '')
+						.replace(/&/g, '&amp;')
+						.replace(/</g, '&lt;')
+						.replace(/>/g, '&gt;')
+						.replace(/"/g, '&quot;')
+						.replace(/'/g, '&#39;');
+				}
+
+				function getItemTags(it) {
+					if (!it) return [];
+					// Support either `tag` (string) or `tag` (array) for future-proofing.
+					const raw = it.tag;
+					if (Array.isArray(raw)) {
+						return raw.map(t => String(t || '').trim()).filter(Boolean);
+					}
+					if (raw == null) return [];
+					const s = String(raw).trim();
+					return s ? [s] : [];
+				}
+
+				function isImportantTag(tag) {
+					return normalizeTagKey(tag) === 'important';
+				}
+
+				function getTagColor(tag, it) {
+					if (!tag) return '';
+					if (isImportantTag(tag)) return 'red';
+					if (it && typeof it.tagColor === 'string') {
+						// When `tag` is a single string, `tagColor` can be a single color.
+						const itemTags = getItemTags(it);
+						if (itemTags.length === 1 && itemTags[0] === tag) {
+							return String(it.tagColor).trim();
+						}
+					}
+					if (it && it.tagColor && typeof it.tagColor === 'object' && it.tagColor !== null) {
+						const key = normalizeTagKey(tag);
+						for (const k of Object.keys(it.tagColor)) {
+							if (normalizeTagKey(k) === key) return String(it.tagColor[k]).trim();
+						}
+					}
+					const key = normalizeTagKey(tag);
+					for (const k of Object.keys(tagColorMap || {})) {
+						if (normalizeTagKey(k) === key) return String(tagColorMap[k]).trim();
+					}
+					return '';
+				}
+
+				function applyTagVisual(el, tag, active, color) {
+					if (!el) return;
+					const isImportant = isImportantTag(tag) || normalize(color) === 'red';
+					el.style.borderColor = '';
+					el.style.color = '';
+					el.style.backgroundColor = '';
+					if (isImportant) {
+						el.className = active
+							? 'px-3 py-1 rounded-full border border-red-400 bg-red-500/20 text-[11px] text-white'
+							: 'px-3 py-1 rounded-full border border-red-400/60 text-[11px] text-white hover:border-red-300 transition';
+						return;
+					}
+					el.className = active
+						? 'px-3 py-1 rounded-full border border-neonBlue text-[11px] text-white bg-slate-900/60'
+						: 'px-3 py-1 rounded-full border border-slate-700 text-[11px] text-white hover:border-neonBlue transition';
+					if (color && normalize(color) !== 'red') {
+						// Accept CSS colors like '#33e1ff', 'rgb(...)', or named colors.
+						el.style.borderColor = color;
+						el.style.color = color;
+						if (active) {
+							el.style.backgroundColor = 'rgba(15, 23, 42, 0.5)';
+						}
+					}
+				}
+
+				function rebuildAllTags() {
+					const set = new Set();
+					(items || []).forEach((it) => {
+						getItemTags(it).forEach((t) => set.add(t));
+					});
+					allTags = Array.from(set).sort((a, b) => normalize(a).localeCompare(normalize(b)));
+				}
+
+				function renderTagFilterChips() {
+					if (!tagChipsEl) return;
+					tagChipsEl.innerHTML = '';
+					if (!allTags || allTags.length === 0) {
+						const span = document.createElement('span');
+						span.className = 'text-xs text-slate-500';
+						span.textContent = 'No tags found.';
+						tagChipsEl.appendChild(span);
+						return;
+					}
+					allTags.forEach((tag) => {
+						const active = selectedTags.has(tag);
+						const color = getTagColor(tag);
+						const btn = document.createElement('button');
+						btn.type = 'button';
+						btn.dataset.tag = tag;
+						applyTagVisual(btn, tag, active, color);
+						btn.textContent = tag;
+						tagChipsEl.appendChild(btn);
+					});
+				}
+
+				function renderImportantPanel() {
+					if (!importantPanelEl || !importantListEl || !importantCountEl) return;
+					const importantItems = (items || [])
+						.filter((it) => getItemTags(it).some((t) => isImportantTag(t)))
+						.slice()
+						.sort((a, b) => {
+							const ad = parseDateOnly(a.date);
+							const bd = parseDateOnly(b.date);
+							return (bd ? bd.getTime() : -Infinity) - (ad ? ad.getTime() : -Infinity);
+						});
+
+					if (importantItems.length === 0) {
+						importantPanelEl.classList.add('hidden');
+						importantListEl.innerHTML = '';
+						importantCountEl.textContent = '';
+						return;
+					}
+
+					importantPanelEl.classList.remove('hidden');
+					importantCountEl.textContent = `${importantItems.length} item${importantItems.length === 1 ? '' : 's'}`;
+					importantListEl.innerHTML = '';
+
+					importantItems.slice(0, 6).forEach((it) => {
+						const dateStr = String(it.date || '').trim();
+						const topic = String(it.topic || '').trim() || '—';
+						const url = String(it.url || '').trim();
+
+						const row = document.createElement('div');
+						row.className = 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-3 rounded-2xl border border-red-500/20 bg-black/10';
+						row.innerHTML = `
+							<div class="min-w-0">
+								<p class="text-xs text-red-200/80">${escapeHtml(formatDateDisplay(dateStr))}</p>
+								<p class="font-semibold break-words">${escapeHtml(topic)}</p>
+							</div>
+							<div class="flex items-center gap-2">
+								<button type="button" class="px-3 py-1 rounded-full border border-red-400/60 text-[11px] text-white hover:border-red-300 transition" data-tag="important">important</button>
+								${url ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="px-3 py-1 rounded-full border border-red-400/60 text-[11px] text-white hover:border-red-300 transition">Open</a>` : ''}
+							</div>
+						`;
+						importantListEl.appendChild(row);
+					});
+				}
+
+				function toggleTag(tag) {
+					if (!tag) return;
+					if (selectedTags.has(tag)) selectedTags.delete(tag);
+					else selectedTags.add(tag);
+					renderTagFilterChips();
+					render();
+				}
+
+			function parseDateOnly(dateStr) {
+				if (!dateStr) return null;
+				const d = new Date(String(dateStr) + 'T00:00:00');
+				return isNaN(d.getTime()) ? null : d;
+			}
+
+			function formatDateDisplay(dateStr) {
+				const d = parseDateOnly(dateStr);
+				if (!d) return String(dateStr || '—');
+				return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+			}
+
+			function getFilteredAndSorted() {
+					const advancedEnabled = advancedPanelEl && !advancedPanelEl.classList.contains('hidden');
+					const q = normalize(advancedEnabled ? (searchEl && searchEl.value) : (quickSearchEl && quickSearchEl.value));
+					const dateFilter = advancedEnabled ? String((dateEl && dateEl.value) || '').trim() : '';
+					const sort = advancedEnabled ? String((sortEl && sortEl.value) || 'date-desc') : 'date-desc';
+
+				let out = (items || []).filter((it) => {
+					const dateStr = String(it.date || '').trim();
+					const topic = String(it.topic || '').trim();
+					const url = String(it.url || '').trim();
+						const tags = getItemTags(it);
+					if (dateFilter && dateStr !== dateFilter) return false;
+						if (selectedTags.size > 0) {
+							const hasAny = tags.some(t => selectedTags.has(t));
+							if (!hasAny) return false;
+						}
+					if (!q) return true;
+						const hay = normalize(dateStr + ' ' + topic + ' ' + url + ' ' + tags.join(' '));
+					return hay.includes(q);
+				});
+
+				out.sort((a, b) => {
+					const ad = parseDateOnly(a.date);
+					const bd = parseDateOnly(b.date);
+					if (sort === 'topic-asc') {
+						return normalize(a.topic).localeCompare(normalize(b.topic));
+					}
+					if (sort === 'date-asc') {
+						return (ad ? ad.getTime() : -Infinity) - (bd ? bd.getTime() : -Infinity);
+					}
+					// date-desc
+					return (bd ? bd.getTime() : -Infinity) - (ad ? ad.getTime() : -Infinity);
+				});
+
+				return out;
+			}
+
+			function setError(message) {
+				if (!message) {
+					errorEl.classList.add('hidden');
+					errorEl.textContent = '';
+					return;
+				}
+				errorEl.textContent = message;
+				errorEl.classList.remove('hidden');
+			}
+
+			function render() {
+				const out = getFilteredAndSorted();
+					const label = `${out.length} result${out.length === 1 ? '' : 's'}`;
+					if (countEl) countEl.textContent = label;
+					if (quickCountEl) quickCountEl.textContent = label;
+
+				resultsEl.innerHTML = '';
+				if (out.length === 0) {
+					const tr = document.createElement('tr');
+						tr.innerHTML = '<td colspan="4" class="py-6 text-center text-slate-400">No matches.</td>';
+					resultsEl.appendChild(tr);
+					return;
+				}
+
+				out.forEach((it) => {
+					const dateStr = String(it.date || '').trim();
+					const topic = String(it.topic || '').trim();
+					const url = String(it.url || '').trim();
+						const tags = getItemTags(it);
+
+					const safeTopic = topic || '—';
+					const safeUrl = url || '';
+						const tagsHtml = tags.length
+							? tags.map(t => {
+								const esc = escapeHtml(t);
+								const active = selectedTags.has(t);
+								const color = getTagColor(t, it);
+								const important = isImportantTag(t) || normalize(color) === 'red';
+								let cls = active
+									? 'inline-flex items-center px-2 py-0.5 rounded-full border bg-slate-900/60 text-[11px] text-white'
+									: 'inline-flex items-center px-2 py-0.5 rounded-full border text-[11px] text-white transition';
+								if (important) {
+									cls += active ? ' border-red-400 bg-red-500/20' : ' border-red-400/60 hover:border-red-300';
+									return `<button type="button" class="${cls}" data-tag="${esc}">${esc}</button>`;
+								}
+								cls += active ? ' border-neonBlue' : ' border-slate-700 hover:border-neonBlue';
+								const style = color && normalize(color) !== 'red' ? ` style="border-color:${escapeHtml(color)};color:${escapeHtml(color)}"` : '';
+								return `<button type="button" class="${cls}" data-tag="${esc}"${style}>${esc}</button>`;
+							}).join(' ')
+							: '<span class="text-slate-500">—</span>';
+
+					const tr = document.createElement('tr');
+					tr.className = 'border-b border-slate-800/80';
+					tr.innerHTML = `
+						<td class="py-3 pr-4 text-slate-300 whitespace-nowrap">${formatDateDisplay(dateStr)}</td>
+							<td class="py-3 pr-4 font-semibold">${escapeHtml(safeTopic)}</td>
+							<td class="py-3 pr-4"><div class="flex flex-wrap gap-2">${tagsHtml}</div></td>
+						<td class="py-3 pr-4">
+								${safeUrl ? `<a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer" class="text-neonBlue hover:underline break-all">${escapeHtml(safeUrl)}</a>` : '<span class="text-slate-500">—</span>'}
+						</td>
+					`;
+					resultsEl.appendChild(tr);
+				});
+			}
+
+			function wireEvents() {
+				const onChange = () => render();
+					if (quickSearchEl) quickSearchEl.addEventListener('input', onChange);
+					if (searchEl) searchEl.addEventListener('input', onChange);
+					if (dateEl) dateEl.addEventListener('change', onChange);
+					if (sortEl) sortEl.addEventListener('change', onChange);
+					if (tagClearEl) {
+						tagClearEl.addEventListener('click', () => {
+							selectedTags.clear();
+							renderTagFilterChips();
+							render();
+						});
+					}
+					if (quickClearEl) {
+						quickClearEl.addEventListener('click', () => {
+							if (quickSearchEl) quickSearchEl.value = '';
+							render();
+						});
+					}
+					if (clearEl) {
+						clearEl.addEventListener('click', () => {
+							if (searchEl) searchEl.value = '';
+							if (dateEl) dateEl.value = '';
+							if (sortEl) sortEl.value = 'date-desc';
+							selectedTags.clear();
+							renderTagFilterChips();
+							render();
+						});
+					}
+
+					if (tagChipsEl) {
+						tagChipsEl.addEventListener('click', (e) => {
+							const btn = e.target && e.target.closest ? e.target.closest('button[data-tag]') : null;
+							if (!btn) return;
+							toggleTag(String(btn.dataset.tag || '').trim());
+						});
+					}
+
+					if (resultsEl) {
+						resultsEl.addEventListener('click', (e) => {
+							const btn = e.target && e.target.closest ? e.target.closest('button[data-tag]') : null;
+							if (!btn) return;
+							// ensure Advanced is visible so the user sees the active filters
+							if (advancedPanelEl && advancedPanelEl.classList.contains('hidden')) {
+								if (quickPanelEl) quickPanelEl.classList.add('hidden');
+								advancedPanelEl.classList.remove('hidden');
+							}
+							toggleTag(String(btn.dataset.tag || '').trim());
+						});
+					}
+
+					if (importantListEl) {
+						importantListEl.addEventListener('click', (e) => {
+							const btn = e.target && e.target.closest ? e.target.closest('button[data-tag]') : null;
+							if (!btn) return;
+							if (advancedPanelEl && advancedPanelEl.classList.contains('hidden')) {
+								if (quickPanelEl) quickPanelEl.classList.add('hidden');
+								advancedPanelEl.classList.remove('hidden');
+							}
+							toggleTag(String(btn.dataset.tag || '').trim());
+						});
+					}
+
+					if (importantFilterEl) {
+						importantFilterEl.addEventListener('click', () => {
+							if (advancedPanelEl && advancedPanelEl.classList.contains('hidden')) {
+								if (quickPanelEl) quickPanelEl.classList.add('hidden');
+								advancedPanelEl.classList.remove('hidden');
+							}
+							toggleTag('important');
+						});
+					}
+
+					function closeBothPanels() {
+						if (quickPanelEl) quickPanelEl.classList.add('hidden');
+						if (advancedPanelEl) advancedPanelEl.classList.add('hidden');
+					}
+
+					if (chipSearchEl) {
+						chipSearchEl.addEventListener('click', () => {
+							const willOpen = quickPanelEl && quickPanelEl.classList.contains('hidden');
+							closeBothPanels();
+							if (willOpen && quickPanelEl) {
+								quickPanelEl.classList.remove('hidden');
+								setTimeout(() => quickSearchEl && quickSearchEl.focus(), 0);
+							}
+							render();
+						});
+					}
+
+					if (chipAdvancedEl) {
+						chipAdvancedEl.addEventListener('click', () => {
+							const willOpen = advancedPanelEl && advancedPanelEl.classList.contains('hidden');
+							closeBothPanels();
+							if (willOpen && advancedPanelEl) {
+								advancedPanelEl.classList.remove('hidden');
+								setTimeout(() => searchEl && searchEl.focus(), 0);
+							}
+							render();
+						});
+					}
+			}
+
+			function loadData() {
+				setError('');
+				fetch('admission-lookup.json', { cache: 'no-store' })
+					.then((r) => {
+						if (!r.ok) throw new Error('HTTP ' + r.status);
+						return r.json();
+					})
+					.then((data) => {
+						tagColorMap = (data && data.tagColors && typeof data.tagColors === 'object') ? data.tagColors : {};
+						items = Array.isArray(data) ? data : (data.items || []);
+						rebuildAllTags();
+						renderTagFilterChips();
+						renderImportantPanel();
+						render();
+					})
+					.catch((e) => {
+						items = [];
+						allTags = [];
+						selectedTags.clear();
+						tagColorMap = {};
+						renderTagFilterChips();
+						renderImportantPanel();
+						if (countEl) countEl.textContent = '0 results';
+						if (quickCountEl) quickCountEl.textContent = '0 results';
+						resultsEl.innerHTML = '<tr><td colspan="4" class="py-6 text-center text-red-300">Failed to load admission-lookup.json</td></tr>';
+						setError('Failed to load admission-lookup.json. Check the file exists and is valid JSON.');
+						console.error(e);
+					});
+			}
+
+			wireEvents();
+			loadData();
+		})();
+	</script>
+
+	<script>
+		// Force reload all components from site origin.
+		window.forceReloadFromOrigin = async function forceReloadFromOrigin() {
+			try {
+				if ('serviceWorker' in navigator) {
+					const registration = await navigator.serviceWorker.getRegistration();
+					if (registration) {
+						await registration.update();
+					}
+
+					const target = (registration && (registration.waiting || registration.active)) || navigator.serviceWorker.controller;
+					if (target) {
+						const channel = new MessageChannel();
+						const done = new Promise((resolve) => {
+							channel.port1.onmessage = () => resolve();
+							setTimeout(resolve, 2500);
+						});
+						target.postMessage({ type: 'FORCE_REFRESH' }, [channel.port2]);
+						await done;
+					}
+				}
+			} catch (e) {
+				// best-effort
+			}
+
+			const base = location.pathname || '/';
+			const qs = new URLSearchParams(location.search);
+			qs.set('_cb', String(Date.now()));
+			location.replace(base + '?' + qs.toString());
+		};
+
+		const refreshBtn = document.getElementById('force-refresh');
+		if (refreshBtn) {
+			refreshBtn.addEventListener('click', () => {
+				if (window.forceReloadFromOrigin) window.forceReloadFromOrigin();
+			});
+		}
+
+		const refreshNavBtn = document.getElementById('force-refresh-nav');
+		if (refreshNavBtn) {
+			refreshNavBtn.addEventListener('click', () => {
+				if (window.forceReloadFromOrigin) window.forceReloadFromOrigin();
+			});
+		}
+
+		// Auto-update at the top of every hour.
+		(function scheduleTopOfHourRefresh() {
+			const now = new Date();
+			const next = new Date(now);
+			next.setMinutes(0, 0, 0);
+			next.setHours(now.getHours() + 1);
+			const ms = Math.max(1000, next.getTime() - now.getTime());
+			setTimeout(() => {
+				if (window.forceReloadFromOrigin) {
+					window.forceReloadFromOrigin();
+				}
+			}, ms);
+		})();
+	</script>
+
+	<!-- Service Worker Registration -->
+	<script>
+		if ('serviceWorker' in navigator) {
+			window.addEventListener('load', () => {
+				navigator.serviceWorker.register('/service-worker.js')
+					.then((registration) => {
+						console.log('ServiceWorker registered:', registration.scope);
+					})
+					.catch((error) => {
+						console.log('ServiceWorker registration failed:', error);
+					});
+			});
+		}
+
+		if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+			document.addEventListener('touchstart', function() {}, true);
+		}
+	</script>
+</body>
+</html>

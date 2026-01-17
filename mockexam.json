@@ -1,0 +1,26 @@
+{
+  "tagColors": {
+    "English": "#33e1ff",
+    "Math": "#a78bfa",
+    "Science": "#34d399",
+    "TGAT": "#fbbf24",
+    "TPAT": "#fb7185"
+  },
+  "items": [
+    {
+      "date": "2026-01-10",
+      "subject": "English",
+      "topic": "Mock Exam Set 1",
+      "pdf": "https://example.com/english-mock-1.pdf",
+      "tag": "English"
+    },
+    {
+      "date": "2026-01-12",
+      "subject": "TGAT",
+      "topic": "Reading & Thinking Skills",
+      "pdf": "https://example.com/tgat-reading.pdf",
+      "pdf2": "https://example.com/tgat-reading-answers.pdf",
+      "tag": "TGAT"
+    }
+  ]
+}
