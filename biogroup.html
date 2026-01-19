@@ -28,15 +28,16 @@
         <!-- Search Box -->
         <div class="glass-morphism rounded-2xl p-6 shadow-xl mb-8">
             <label for="searchInput" class="block text-sm font-semibold text-gray-700 mb-2">ค้นหาด้วยเลขประจำตัว, ชื่อ หรือห้อง/เลขที่</label>
-            <div class="relative">
+            <div class="relative flex gap-2">
                 <input type="text" id="searchInput" 
                     placeholder="เช่น 58290 หรือ ณัฐยุทธ์ หรือ 501/32" 
-                    class="w-full px-5 py-4 rounded-xl border-2 border-gray-100 focus:border-blue-500 focus:outline-none text-lg transition-all shadow-inner">
-                <div class="absolute right-4 top-4 text-gray-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    class="flex-1 px-5 py-4 rounded-xl border-2 border-gray-100 focus:border-blue-500 focus:outline-none text-lg transition-all shadow-inner">
+                <button id="searchBtn" type="button" class="px-6 py-4 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                </div>
+                    <span class="hidden sm:inline">ค้นหา</span>
+                </button>
             </div>
             <p class="mt-3 text-xs text-gray-500 text-center">* ค้นหาแบบระบุห้องได้ เช่น 501/32 หรือ 502/1</p>
         </div>
@@ -83,46 +84,11 @@
 
     <script>
         const students = [
-            // ห้อง 502
-            {room: "502", group: 1, no: "5", name: "ณัฐยุทธ์ เจริญพงษ์สกุล", id: "58290"},
-            {room: "502", group: 1, no: "7", name: "วณัฏฐ์ จิวสุวรรณ", id: "58298"},
-            {room: "502", group: 1, no: "11", name: "กานต์ วงศ์ศิริสีหรา", id: "58313"},
-            {room: "502", group: 1, no: "14", name: "ปาณัช โชติวิทยารัตน์", id: "58338"},
-            {room: "502", group: 1, no: "16", name: "ชินกิจ จิตบุญทวีสุข", id: "58353"},
-            {room: "502", group: 1, no: "19", name: "เสาเอก ข้อนสวัสดิ์", id: "58357"},
-            {room: "502", group: 1, no: "24", name: "คณัชนันต์ ธนาพิบูลพงศา", id: "58375"},
-            {room: "502", group: 1, no: "29", name: "ชนุตร์ ทิพย์สถาพรชัย", id: "58391"},
-            {room: "502", group: 1, no: "30", name: "วรดร ธรรมโชติ", id: "58395"},
-            {room: "502", group: 1, no: "33", name: "ธีริทธิ์ บูชากรณ์", id: "58409"},
-            {room: "502", group: 2, no: "2", name: "อธิภัทร สถิตย์วงศ์", id: "58277"},
-            {room: "502", group: 2, no: "4", name: "ลวัท นาคสุขเปาน", id: "58279"},
-            {room: "502", group: 2, no: "8", name: "จิรา ปรินทราภิบาล", id: "58303"},
-            {room: "502", group: 2, no: "9", name: "พุทธินันท์ ลือประเสริฐ", id: "58307"},
-            {room: "502", group: 2, no: "10", name: "ปุณณเมธ สันติปิตานนท์", id: "58309"},
-            {room: "502", group: 2, no: "15", name: "พลภัทร เปรมศิลป์", id: "58340"},
-            {room: "502", group: 2, no: "18", name: "ศุภทิน โอฟ้า", id: "58355"},
-            {room: "502", group: 2, no: "21", name: "สรัล เลิศเจริญศิลป์", id: "58371"},
-            {room: "502", group: 2, no: "26", name: "ยุทธภูมิ ชัยสวัสดิ์", id: "58379"},
-            {room: "502", group: 2, no: "28", name: "ณพงศ์ ตรีพลอักษร", id: "58384"},
-            {room: "502", group: 2, no: "34", name: "กฤตภาส อุดมกิจโสภณ", id: "58410"},
-            {room: "502", group: 3, no: "1", name: "ธนา สัจจะธนาพร", id: "58268"},
-            {room: "502", group: 3, no: "3", name: "พัชรพงศ์ พุ่มเจริญ", id: "58278"},
-            {room: "502", group: 3, no: "6", name: "ธรรมาธิปัตย์ ตุลยพงศ์รักษ์", id: "58295"},
-            {room: "502", group: 3, no: "12", name: "กฤตณ์พัทธ์ เหลืองขมิ้น", id: "58317"},
-            {room: "502", group: 3, no: "13", name: "ชยานนท์ เกิดผล", id: "58332"},
-            {room: "502", group: 3, no: "17", name: "ณฐกร เหมพรรณไพเราะ", id: "58354"},
-            {room: "502", group: 3, no: "20", name: "ภวิทธิ์ พิพัฒน์ธนวงศ์", id: "58370"},
-            {room: "502", group: 3, no: "22", name: "ฐานัส ศรีดามา", id: "58373"},
-            {room: "502", group: 3, no: "23", name: "ณยศ นุชฉัยยา", id: "58374"},
-            {room: "502", group: 3, no: "25", name: "กรณ์ กองแก้ว", id: "58378"},
-            {room: "502", group: 3, no: "27", name: "เดวิด ปาร์ค", id: "58382"},
-            {room: "502", group: 3, no: "31", name: "วรเชฏฐ์ เหมือนดาว", id: "58396"},
-
             // ห้อง 501
             {room: "501", group: 1, no: "8", name: "ชยพล นนทสูติ", id: "58315"},
             {room: "501", group: 1, no: "9", name: "ชิตวัน เธียรเอี่ยมอนันต์", id: "58318"},
             {room: "501", group: 1, no: "12", name: "ปราชญ์ วัฒนสุทธิพงศ์", id: "58323"},
-            {room: "501", group: 1, no: "15", name: "กฤชณัท", id: "58330"},
+            {room: "501", group: 1, no: "15", name: "กฤชณัท หวู", id: "58330"},
             {room: "501", group: 1, no: "16", name: "ตรัย กิวานนท์", id: "58333"},
             {room: "501", group: 1, no: "18", name: "รุจิภาส หมั่นอาษา", id: "58342"},
             {room: "501", group: 1, no: "20", name: "สรวิชญ์ เกียรติไพบูลย์", id: "58349"},
@@ -151,17 +117,51 @@
             {room: "501", group: 3, no: "14", name: "ชยกร สุวรรณเทน", id: "58329"},
             {room: "501", group: 3, no: "21", name: "ธฤต เรื่องสังข์", id: "58351"},
             {room: "501", group: 3, no: "22", name: "คุณเจต พรหมหิตาทร", id: "58352"},
-            {room: "501", group: 3, no: "28", name: "ณชพล คูโณปการ", id: "58380"}
+            {room: "501", group: 3, no: "28", name: "ณชพล คูโณปการ", id: "58380"},
+            {room: "502", group: 1, no: "5", name: "ณัฐยุทธ์ เจริญพงษ์สกุล", id: "58290"},
+            {room: "502", group: 1, no: "7", name: "วณัฏฐ์ จิวสุวรรณ", id: "58298"},
+            {room: "502", group: 1, no: "11", name: "กานต์ วงศ์ศิริสีหรา", id: "58313"},
+            {room: "502", group: 1, no: "14", name: "ปาณัช โชติวิทยารัตน์", id: "58338"},
+            {room: "502", group: 1, no: "16", name: "ชินกิจ จิตบุญทวีสุข", id: "58353"},
+            {room: "502", group: 1, no: "19", name: "เสาเอก ข้อนสวัสดิ์", id: "58357"},
+            {room: "502", group: 1, no: "24", name: "คณัชนันต์ ธนาพิบูลพงศา", id: "58375"},
+            {room: "502", group: 1, no: "29", name: "ชนุตร์ ทิพย์สถาพรชัย", id: "58391"},
+            {room: "502", group: 1, no: "30", name: "วรดร ธรรมโชติ", id: "58395"},
+            {room: "502", group: 1, no: "33", name: "ธีริทธิ์ บูชากรณ์", id: "58409"},
+            {room: "502", group: 2, no: "2", name: "อธิภัทร สถิตย์วงศ์", id: "58277"},
+            {room: "502", group: 2, no: "4", name: "ลวัท นาคสุขเปาน", id: "58279"},
+            {room: "502", group: 2, no: "8", name: "จิรา ปรินทราภิบาล", id: "58303"},
+            {room: "502", group: 2, no: "9", name: "พุทธินันท์ ลือประเสริฐ", id: "58307"},
+            {room: "502", group: 2, no: "10", name: "ปุณณเมธ สันติปิตานนท์", id: "58309"},
+            {room: "502", group: 2, no: "15", name: "พลภัทร เปรมศิลป์", id: "58340"},
+            {room: "502", group: 2, no: "18", name: "ศุภทิน โอฬา", id: "58355"},
+            {room: "502", group: 2, no: "21", name: "สรัล เลิศเจริญศิลป์", id: "58371"},
+            {room: "502", group: 2, no: "26", name: "ยุทธภูมิ ชัยสวัสดิ์", id: "58379"},
+            {room: "502", group: 2, no: "28", name: "ณพงศ์ ตรีพลอักษร", id: "58384"},
+            {room: "502", group: 2, no: "34", name: "กฤตภาส อุดมกิจโสภณ", id: "58410"},
+            {room: "502", group: 3, no: "1", name: "ธนา สัจจะธนาพร", id: "58268"},
+            {room: "502", group: 3, no: "3", name: "พัชรพงศ์ พุ่มเจริญ", id: "58278"},
+            {room: "502", group: 3, no: "6", name: "ธรรมาธิปัตย์ ตุลยพงศ์รักษ์", id: "58295"},
+            {room: "502", group: 3, no: "12", name: "กฤตณ์พัทธ์ เหลืองขมิ้น", id: "58317"},
+            {room: "502", group: 3, no: "13", name: "ชยานนท์ เกิดผล", id: "58332"},
+            {room: "502", group: 3, no: "17", name: "ณฐกร เหมพรรณไพเราะ", id: "58354"},
+            {room: "502", group: 3, no: "20", name: "ภวิทธิ์ พิพัฒน์ธนวงศ์", id: "58370"},
+            {room: "502", group: 3, no: "22", name: "ฐานัส ศรีดามา", id: "58373"},
+            {room: "502", group: 3, no: "23", name: "ณยศ นุชฉัยยา", id: "58374"},
+            {room: "502", group: 3, no: "25", name: "กรณ์ กองแก้ว", id: "58378"},
+            {room: "502", group: 3, no: "27", name: "เดวิด ปาร์ค", id: "58382"},
+            {room: "502", group: 3, no: "31", name: "วรเชฏฐ์ เหมือนดาว", id: "58396"}
         ];
 
         const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
         const resultArea = document.getElementById('resultArea');
         const emptyState = document.getElementById('emptyState');
         const emptyMsg = document.getElementById('emptyMsg');
         const teamList = document.getElementById('teamList');
 
-        searchInput.addEventListener('input', (e) => {
-            const val = e.target.value.trim().toLowerCase();
+        function performSearch() {
+            const val = searchInput.value.trim().toLowerCase();
             
             if (val.length < 1) {
                 resultArea.classList.add('hidden');
@@ -193,6 +193,16 @@
                 resultArea.classList.add('hidden');
                 emptyState.classList.remove('hidden');
                 emptyMsg.textContent = "ไม่พบข้อมูล กรุณาตรวจสอบข้อมูลอีกครั้ง";
+            }
+        }
+
+        // Search on button click
+        searchBtn.addEventListener('click', performSearch);
+
+        // Search on Enter key press
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
             }
         });
 
