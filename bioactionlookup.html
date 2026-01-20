@@ -56,12 +56,14 @@
                             <p class="text-indigo-200 text-xs font-bold tracking-widest uppercase">ข้อมูลนักเรียน</p>
                             <h2 id="resName" class="text-3xl font-black mt-1 leading-tight"></h2>
                             <p id="resSub" class="text-indigo-100 mt-2 opacity-80"></p>
+                            <span id="resStatus" class="hidden"></span>
                         </div>
                         <div class="text-right">
                             <span id="resRoom" class="bg-white text-indigo-700 px-4 py-1 rounded-full font-black text-sm"></span>
                             <div class="mt-4">
                                 <p class="text-[10px] uppercase font-bold text-indigo-200">Group</p>
                                 <p id="resGroup" class="text-6xl font-black"></p>
+                                <p id="resTopic" class="mt-2 text-sm text-indigo-100 font-semibold leading-snug"></p>
                             </div>
                         </div>
                     </div>
@@ -85,65 +87,27 @@
         </div>
     </div>
 
-    <script>
-        // รวมข้อมูลดิบและปรับปรุงโครงสร้างให้ค้นหาง่ายขึ้น
-        const database = [
-            // 501 - Group 1
-            { r: "501", g: 1, n: "4", name: "สุรินทัศน์ ทิราชีพ", id: "58286" },
-            { r: "501", g: 1, n: "9", name: "ชิตวัน เธียรเอี่ยมอนันต์", id: "58318" },
-            { r: "501", g: 1, n: "10", name: "ธัชต์กรณ์ อรุณแสงสุรีย์", id: "58321" },
-            { r: "501", g: 1, n: "11", name: "ธนัท ก้องเกียรติกมล", id: "58322" },
-            { r: "501", g: 1, n: "12", name: "ปราชญ์ วัฒนสุทธิพงศ์", id: "58323" },
-            { r: "501", g: 1, n: "13", name: "อิทธิเชษฐ์ ลักษ์อารีย์", id: "58328" },
-            { r: "501", g: 1, n: "14", name: "ชยกร สุวรรณเทน", id: "58329" },
-            { r: "501", g: 1, n: "15", name: "กฤชณัท หวู", id: "58330" },
-            { r: "501", g: 1, n: "18", name: "รุจิภาส หมั่นอาษา", id: "58342" },
-            { r: "501", g: 1, n: "24", name: "ธน ธนดีเจริญโชค", id: "58361" },
-            { r: "501", g: 1, n: "27", name: "ภูสิษฐ์ ทองเสมอ", id: "58376" },
-            { r: "501", g: 1, n: "30", name: "เบญจมินทร์ อัลเทนราท", id: "58394" },
-            // 501 - Group 2
-            { r: "501", g: 2, n: "5", name: "ชิษณุพงษ์ รัตนรังษิวัฒน์", id: "58301" },
-            { r: "501", g: 2, n: "7", name: "สุวิจักขณ์ โพธิ์กลั่น", id: "58305" },
-            { r: "501", g: 2, n: "8", name: "ชยพล นนทสูติ", id: "58315" },
-            { r: "501", g: 2, n: "16", name: "ตรัย กิวานนท์", id: "58333" },
-            { r: "501", g: 2, n: "17", name: "วิฑัญญู อร่ามแสงจันทร์", id: "58337" },
-            { r: "501", g: 2, n: "19", name: "ธนัตถ์พล ตวงทอง", id: "58344" },
-            { r: "501", g: 2, n: "20", name: "สรวิชญ์ เกียรติไพบูลย์", id: "58349" },
-            { r: "501", g: 2, n: "25", name: "วิรวัฒน์ วิภาสสุชานันท์", id: "58364" },
-            { r: "501", g: 2, n: "31", name: "ปุญญพัฒน์ ศิริทิพย์วานิช", id: "58398" },
-            { r: "501", g: 2, n: "32", name: "ธนกร บัวทองธนะการ", id: "58403" },
-            { r: "501", g: 2, n: "33", name: "ทวีรังสันต์ ภาณุเดชทิพย์", id: "58405" },
-            { r: "501", g: 2, n: "34", name: "ชนสรณ์ สววรค์คำธรณ์", id: "58407" },
-            // 501 - Group 3
-            { r: "501", g: 3, n: "1", name: "วศิน เหลืองสุวาลัย", id: "57648" },
-            { r: "501", g: 3, n: "2", name: "ปานวิทย์ ดาวกระจาย", id: "58283" },
-            { r: "501", g: 3, n: "3", name: "ภูริภัทร ภาณุพิชิต", id: "58285" },
-            { r: "501", g: 3, n: "6", name: "พงษภัทร วาณิชย์ไพศาล", id: "58304" },
-            { r: "501", g: 3, n: "21", name: "ธฤต เรืองสังข์", id: "58351" },
-            { r: "501", g: 3, n: "22", name: "คุณเจต พรหมหิตาทร", id: "58352" },
-            { r: "501", g: 3, n: "23", name: "กวิน สุขเจริญคณา", id: "58360" },
-            { r: "501", g: 3, n: "26", name: "พศุตม์ วานิกานุกูล", id: "58372" },
-            { r: "501", g: 3, n: "28", name: "ณชพล คูโณปการ", id: "58380" },
-            { r: "501", g: 3, n: "29", name: "ภัทระ ศรีทองสุข", id: "58386" },
-            // 502 (Sample entries - complete as needed)
-            { r: "502", g: 1, n: "5", name: "นายณัฐยุทธ์ เจริญพงษ์สกุล", id: "58290" },
-            { r: "502", g: 1, n: "7", name: "นายวณัฏฐ์ จิวสุวรรณ", id: "58298" },
-            { r: "502", g: 1, n: "11", name: "นายกานต์ วงศ์ศิริสีหรา", id: "58313" },
-            { r: "502", g: 1, n: "14", name: "นายปาณัช โชติวิทยารัตน์", id: "58338" },
-            { r: "502", g: 1, n: "16", name: "นายชินกิจ จิตบุญทวีสุข", id: "58353" },
-            { r: "502", g: 1, n: "19", name: "นายเสาเอก ข้อนสวัสดิ์", id: "58357" },
-            { r: "502", g: 1, n: "24", name: "นายคณัชนันต์ ธนาพิบูลพงศา", id: "58375" },
-            { r: "502", g: 1, n: "29", name: "นายชนุตร์ ทิพย์สถาพรชัย", id: "58391" },
-            { r: "502", g: 1, n: "30", name: "นายวรดร ธรรมโชติ", id: "58395" },
-            { r: "502", g: 1, n: "33", name: "นายธีริทธิ์ บูชากรณ์", id: "58409" }
-            // Note: 502 entries simplified for brevity but logic is universal
-        ];
+    <script type="module">
+        import { database, groupTopics } from './bioaction-data.js';
+
+        const statusStyles = {
+            head: {
+                label: 'Head of Project',
+                classes: 'bg-amber-100 text-amber-800 border-amber-200'
+            },
+            lucky: {
+                label: 'Lucky draw person',
+                classes: 'bg-emerald-100 text-emerald-800 border-emerald-200'
+            }
+        };
 
         const searchInput = document.getElementById('searchInput');
         const searchButton = document.getElementById('searchButton');
         const initialState = document.getElementById('initialState');
         const resultBox = document.getElementById('resultBox');
         const errorState = document.getElementById('errorState');
+        const resStatus = document.getElementById('resStatus');
+        const resTopic = document.getElementById('resTopic');
 
         const runSearch = () => {
             const rawVal = searchInput.value.trim().toLowerCase();
@@ -154,24 +118,20 @@
 
             let found = null;
 
-            // 1. ตรวจสอบรูปแบบ ห้อง/เลขที่ หรือ ห้อง-เลขที่ (เช่น 501/4, 501-4)
             if (rawVal.match(/^[0-9]{3}[/-][0-9]+$/)) {
                 const separator = rawVal.includes('/') ? '/' : '-';
                 const [roomPart, noPart] = rawVal.split(separator);
                 found = database.find(s => s.r === roomPart && s.n === noPart);
             }
 
-            // 2. ถ้ายังไม่เจอ ค้นหาจาก เลขประจำตัว (ID) ตรงๆ
             if (!found && rawVal.match(/^[0-9]{5}$/)) {
                 found = database.find(s => s.id === rawVal);
             }
 
-            // 3. ถ้ายังไม่เจอ ค้นหาจาก ชื่อ หรือ นามสกุล (Partial Match)
             if (!found && rawVal.length >= 2) {
                 found = database.find(s => s.name.toLowerCase().includes(rawVal));
             }
 
-            // 4. ค้นหาจาก เลขที่ อย่างเดียว (กรณีเป็นตัวเลขสั้นๆ)
             if (!found && rawVal.match(/^[0-9]{1,2}$/)) {
                 found = database.find(s => s.n === rawVal);
             }
@@ -198,6 +158,29 @@
             if (state === 'result') resultBox.classList.remove('hidden');
         }
 
+        function renderStatusBadge(element, status, baseClasses) {
+            const meta = statusStyles[status];
+            if (!meta) {
+                element.className = 'hidden';
+                element.textContent = '';
+                return;
+            }
+
+            element.textContent = meta.label;
+            element.className = `${baseClasses} ${meta.classes}`;
+        }
+
+        function buildStatusPill(status) {
+            const meta = statusStyles[status];
+            if (!meta) return '';
+            return `<span class="px-2 py-1 rounded-full border text-[10px] font-bold ${meta.classes}">${meta.label}</span>`;
+        }
+
+        function getTopic(room, group) {
+            const key = `${room}-${group}`;
+            return groupTopics[key] || 'ยังไม่มีหัวข้อโครงงาน';
+        }
+
         function displayResult(student) {
             updateUI('result');
             
@@ -205,8 +188,9 @@
             document.getElementById('resSub').textContent = `เลขประจำตัว ${student.id} | เลขที่ ${student.n}`;
             document.getElementById('resRoom').textContent = `ห้อง ${student.r}`;
             document.getElementById('resGroup').textContent = student.g;
+            resTopic.textContent = getTopic(student.r, student.g);
+            renderStatusBadge(resStatus, student.status, 'mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-bold');
 
-            // หาเพื่อนร่วมกลุ่ม
             const members = database.filter(s => s.r === student.r && s.g === student.g);
             members.sort((a, b) => parseInt(a.n) - parseInt(b.n));
 
@@ -219,7 +203,9 @@
                 item.className = `flex justify-between p-3 rounded-xl border text-sm transition-all ${
                     isCurrent ? 'bg-indigo-50 border-indigo-200 ring-2 ring-indigo-100 scale-[1.02]' : 'bg-white border-slate-100 text-slate-600'
                 }`;
-                
+
+                const statusPill = buildStatusPill(m.status);
+
                 item.innerHTML = `
                     <div class="flex items-center">
                         <span class="w-6 h-6 flex items-center justify-center rounded-lg bg-slate-100 text-slate-400 font-bold mr-3 text-xs">
@@ -227,7 +213,10 @@
                         </span>
                         <span class="${isCurrent ? 'font-bold text-indigo-700' : ''}">${m.name}</span>
                     </div>
-                    ${isCurrent ? '<span class="text-[10px] font-black text-indigo-400 self-center uppercase tracking-tighter">You</span>' : ''}
+                    <div class="flex items-center gap-2">
+                        ${statusPill}
+                        ${isCurrent ? '<span class="text-[10px] font-black text-indigo-400 self-center uppercase tracking-tighter">You</span>' : ''}
+                    </div>
                 `;
                 grid.appendChild(item);
             });
