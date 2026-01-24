@@ -127,10 +127,6 @@
 						<h2 class="text-lg font-semibold">Results</h2>
 						<p id="subtext" class="text-xs text-slate-400 mt-1">—</p>
 					</div>
-					<div class="text-xs text-slate-400">
-						<span class="uppercase tracking-[0.16em]">Tip</span>
-						<span class="ml-2">Cards on mobile, table on desktop</span>
-					</div>
 				</div>
 
 				<div id="loading" class="hidden">
@@ -256,11 +252,38 @@
 
 			function buildPdfLinks(item) {
 				const links = [];
-				if (item.pdf) links.push({ label: 'PDF', href: item.pdf });
-				if (item.pdf2) links.push({ label: 'Answers', href: item.pdf2 });
+				if (item.pdf) links.push({ label: item.pdfLabel || 'PDF', href: item.pdf });
+				if (item.pdf2) links.push({ label: item.pdf2Label || 'Answers', href: item.pdf2 });
+				// Support pdf3, pdf4, ... with optional pdfNLabel
+				for (const [key, value] of Object.entries(item || {})) {
+					const match = /^pdf(\d+)$/.exec(key);
+					if (!match) continue;
+					const n = Number(match[1]);
+					if (!Number.isFinite(n) || n <= 2) continue;
+					const href = String(value || '').trim();
+					if (!href) continue;
+					const labelKey = `pdf${n}Label`;
+					const label = item[labelKey] || `PDF ${n}`;
+					links.push({ label, href });
+				}
 				// Back-compat fields
 				if (item.url) links.push({ label: links.length ? 'Link' : 'PDF', href: item.url });
 				if (item.url2) links.push({ label: links.length ? 'Link 2' : 'PDF 2', href: item.url2 });
+				
+				// New: arbitrary links array
+				if (Array.isArray(item.links)) {
+					item.links.forEach(l => {
+						if (typeof l === 'string') {
+							links.push({ label: 'PDF', href: l });
+						} else if (l && typeof l === 'object') {
+							const href = l.url || l.href;
+							if (href) {
+								links.push({ label: l.label || l.name || 'PDF', href: href });
+							}
+						}
+					});
+				}
+
 				const seen = new Set();
 				return links.filter(l => {
 					const h = String(l.href || '').trim();
@@ -534,14 +557,18 @@
 					tagColorMap = (json.tagColors && typeof json.tagColors === 'object') ? json.tagColors : {};
 
 					allItems = allItems.map(it => ({
+						...it,
 						date: it.date || it.examDate || '',
 						subject: it.subject || it.course || '',
 						topic: it.topic || it.title || '',
 						pdf: it.pdf || '',
+						pdfLabel: it.pdfLabel || '',
 						pdf2: it.pdf2 || '',
+						pdf2Label: it.pdf2Label || '',
 						url: it.url || '',
 						url2: it.url2 || '',
-						tag: it.tag || ''
+						tag: it.tag || '',
+						links: Array.isArray(it.links) ? it.links : []
 					}));
 				} finally {
 					loading.classList.add('hidden');

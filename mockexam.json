@@ -3,17 +3,82 @@
     "English": "#33e1ff",
     "Math": "#a78bfa",
     "Science": "#34d399",
-    "TGAT": "#fbbf24",
-    "TPAT": "#fb7185"
+    "TGAT": "#B027F5",
+    "TPAT": "#fb7185",
+    "Chemistry": "#F5B027"
   },
   "items": [
     {
       "date": "2023-01-17",
       "subject": "TGAT",
-      "topic": "ข้อสอบจริง TGAT1 ปี 2566",
-      "pdf": "https://drive.google.com/file/d/1SwoB-7rSK74gLaXoYmHuJOYaCZlAur45/view?usp=drivesdk",
-      "pdf2": "https://drive.google.com/file/d/15uBQI5Fvkdf51f-awIjB9Csgd6PefC1r/view?usp=drivesdk",
-      "tag": "TGAT"
+      "topic": "ข้อสอบจริง TGAT ปี 2566",
+      "tag": "TGAT",
+      "links": [
+        {
+          "label": "TGAT1",
+          "url": "https://mockexam-tcas70.s3.ap-southeast-7.amazonaws.com/%5B2566%5D+TGAT1.pdf"
+        },
+        {
+          "label": "เฉลย TGAT1",
+          "url": "https://mockexam-tcas70.s3.ap-southeast-7.amazonaws.com/%5B2566-KEY%5D+TGAT1.png"
+        },
+        {
+          "label": "TGAT2",
+          "url": "https://mockexam-tcas70.s3.ap-southeast-7.amazonaws.com/%5B2566%5D+TGAT2.pdf"
+        },
+        {
+          "label": "TGAT3",
+          "url": "https://mockexam-tcas70.s3.ap-southeast-7.amazonaws.com/%5B2566%5D+TGAT3.pdf"
+        },
+        {
+          "label": "เฉลย TGAT2, 3",
+          "url": "https://mockexam-tcas70.s3.ap-southeast-7.amazonaws.com/%5B2566-KEY%5D+TGAT2%2C3.png"
+        }
+      ]
+    },
+    {
+      "date": "2012-01-08",
+      "subject": "เคมี",
+      "topic": "ข้อสอบจริงเคมี 9 วิชาสามัญ ปี 2555",
+      "tag": "Chemistry",
+      "links": [
+        {
+          "label": "ข้อสอบ",
+          "url": "https://mockexam-tcas70.s3.ap-southeast-7.amazonaws.com/%5B2555%5D+Chemistry+A-level.pdf"
+        },
+        {
+          "label": "เฉลย",
+          "url": "https://mockexam-tcas70.s3.ap-southeast-7.amazonaws.com/%5B2555-KEY%5D+Chemistry+A-level.pdf"
+        }
+      ]
+    },
+    {
+      "date": "2013-01-05",
+      "subject": "เคมี",
+      "topic": "ข้อสอบจริงเคมี 9 วิชาสามัญ ปี 2556",
+      "tag": "Chemistry",
+      "links": [
+        {
+          "label": "ข้อสอบ",
+          "url": "https://mockexam-tcas70.s3.ap-southeast-7.amazonaws.com/%5B2556%5D+Chemistry+A-level+NIETS.pdf"
+        },
+        {
+          "label": "เฉลย",
+          "url": "https://mockexam-tcas70.s3.ap-southeast-7.amazonaws.com/%5B2556-KEY%5D+Chemistry+A-level.pdf"
+        }
+      ]
+    },
+    {
+      "date": "2014-01-01",
+      "subject": "เคมี",
+      "topic": "ข้อสอบจริงเคมี 9 วิชาสามัญ ปี 2557",
+      "tag": "Chemistry",
+      "links": [
+        {
+          "label": "ข้อสอบและเฉลย",
+          "url": "https://mockexam-tcas70.s3.ap-southeast-7.amazonaws.com/%5B2557%5D+Chemistry+A-level+%2B+Key.pdf"
+        }
+      ]
     }
   ]
 }
