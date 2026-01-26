@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Credits - Thanakorn Buathongtanakarn</title>
+
+	<!-- Tailwind CSS -->
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script>
+		tailwind.config = {
+			darkMode: 'class',
+			theme: {
+				extend: {
+					colors: {
+						primary: '#3b82f6',
+					},
+				}
+			}
+		}
+	</script>
+
+	<!-- Geeky Font (JetBrains Mono) -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+	<style>
+		body {
+			font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+		}
+
+		.glass-nav {
+			background: rgba(255, 255, 255, 0.8);
+			backdrop-filter: blur(10px);
+		}
+		.dark .glass-nav {
+			background: rgba(30, 30, 30, 0.8);
+		}
+
+		.geek-glow {
+			box-shadow:
+				0 10px 30px rgba(0, 0, 0, 0.10),
+				0 0 0 1px rgba(59, 130, 246, 0.35),
+				0 0 24px rgba(59, 130, 246, 0.15);
+		}
+	</style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+	<!-- Navigation -->
+	<nav class="fixed w-full z-50 glass-nav shadow-sm transition-colors duration-300">
+		<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="flex justify-between items-center h-16">
+				<div class="flex items-center gap-3">
+					<a href="./index.html" class="inline-flex items-center gap-2 font-bold text-primary hover:opacity-90 transition">
+						<span class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-primary/10 border border-primary/20">
+							<i class="fas fa-terminal"></i>
+						</span>
+						<span id="nav-name">Thanakorn B.</span>
+					</a>
+				</div>
+
+				<div class="flex items-center gap-3">
+					<a href="./index.html" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+						<span class="text-primary">&lt;</span>
+						Back to Portfolio
+					</a>
+					<a href="https://tree.thanakorn.site" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+						Linktree
+						<i class="fas fa-external-link-alt text-xs opacity-70"></i>
+					</a>
+
+					<button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors focus:outline-none" aria-label="Toggle Dark Mode">
+						<i class="fas fa-moon"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<main class="pt-24 pb-16">
+		<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+			<!-- Header -->
+			<section class="mb-10">
+				<div class="geek-glow rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-900/60 backdrop-blur p-8">
+					<p class="text-sm font-mono text-gray-500 dark:text-gray-400 mb-3">$ cat CREDITS.md</p>
+					<h1 class="text-3xl md:text-5xl font-extrabold tracking-tight">Credits</h1>
+					<p class="mt-4 text-gray-600 dark:text-gray-400 leading-relaxed">
+						Thank you to the creators, maintainers, and communities behind the tools and resources that power this website.
+					</p>
+					<div class="mt-6 flex flex-wrap gap-3">
+						<a href="#stack" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-white hover:bg-blue-600 transition">Tech Stack</a>
+						<a href="#assets" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition">Assets</a>
+						<a href="#thanks" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition">Special Thanks</a>
+					</div>
+				</div>
+			</section>
+
+			<!-- Content Grid -->
+			<section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+				<!-- Left: Main credits -->
+				<div class="lg:col-span-2 space-y-6">
+					<section id="stack" class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-6">
+						<h2 class="text-xl md:text-2xl font-bold mb-4">Tech Stack</h2>
+						<ul class="space-y-3 text-sm md:text-base text-gray-700 dark:text-gray-300">
+							<li class="flex gap-3">
+								<span class="text-primary">•</span>
+								<span><span class="font-semibold">HTML + CSS + JavaScript</span> — core site implementation.</span>
+							</li>
+							<li class="flex gap-3">
+								<span class="text-primary">•</span>
+								<span><span class="font-semibold">Tailwind CSS (CDN)</span> — utility-first styling for layouts and components.</span>
+							</li>
+							<li class="flex gap-3">
+								<span class="text-primary">•</span>
+								<span><span class="font-semibold">Font Awesome</span> — icons used across the site.</span>
+							</li>
+							<li class="flex gap-3">
+								<span class="text-primary">•</span>
+								<span><span class="font-semibold">Google Fonts (JetBrains Mono)</span> — typography for the “geeky” feel.</span>
+							</li>
+							<li class="flex gap-3">
+								<span class="text-primary">•</span>
+								<span><span class="font-semibold">GitHub Pages</span> — hosting and deployment.</span>
+							</li>
+						</ul>
+
+						<div class="mt-6 flex flex-wrap gap-3">
+							<a class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition" href="https://tailwindcss.com" target="_blank" rel="noopener">
+								Tailwind CSS <i class="fas fa-external-link-alt text-xs opacity-70"></i>
+							</a>
+							<a class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition" href="https://fontawesome.com" target="_blank" rel="noopener">
+								Font Awesome <i class="fas fa-external-link-alt text-xs opacity-70"></i>
+							</a>
+							<a class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition" href="https://fonts.google.com/specimen/JetBrains+Mono" target="_blank" rel="noopener">
+								JetBrains Mono <i class="fas fa-external-link-alt text-xs opacity-70"></i>
+							</a>
+						</div>
+					</section>
+
+					<section id="assets" class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-6">
+						<h2 class="text-xl md:text-2xl font-bold mb-4">Assets & Content</h2>
+						<div class="space-y-4 text-gray-700 dark:text-gray-300">
+							<div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+								<p class="font-semibold">Photos & Personal Content</p>
+								<p class="text-sm mt-1 text-gray-600 dark:text-gray-400">Unless otherwise stated, photos and text are created by Thanakorn Buathongtanakarn.</p>
+							</div>
+							<div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+								<p class="font-semibold">Third-party Assets</p>
+								<p class="text-sm mt-1 text-gray-600 dark:text-gray-400">
+                                    <p class="text-sm mt-1 text-gray-600 dark:text-gray-400">Favicon from Freepik.com</p>
+								</p>
+							</div>
+						</div>
+					</section>
+
+					<section id="thanks" class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-6">
+						<h2 class="text-xl md:text-2xl font-bold mb-4">Special Thanks</h2>
+						<ul class="space-y-3 text-sm md:text-base text-gray-700 dark:text-gray-300">
+							<li class="flex gap-3"><span class="text-primary">•</span><span>Open-source maintainers and contributors.</span></li>
+							<li class="flex gap-3"><span class="text-primary">•</span><span>Teachers, mentors, and friends who supported my learning journey.</span></li>
+							<li class="flex gap-3"><span class="text-primary">•</span><span>Everyone who tested the site and sent feedback.</span></li>
+						</ul>
+					</section>
+				</div>
+
+				<!-- Right: Sidebar card -->
+				<aside class="space-y-6">
+					<div class="geek-glow rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-900/60 backdrop-blur p-6">
+						<h3 class="text-lg font-bold mb-3">Contact</h3>
+						<p class="text-sm text-gray-600 dark:text-gray-400 mb-4">See something missing or needs attribution updates?</p>
+						<div class="flex flex-col gap-3">
+							<a id="email-link" href="mailto:scientan@gmail.com" class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-primary text-white hover:bg-blue-600 transition">
+								<i class="fas fa-envelope"></i> Email me
+							</a>
+							<a href="./index.html#contact" class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+								<i class="fas fa-paper-plane"></i> Contact section
+							</a>
+						</div>
+					</div>
+
+					<div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-6">
+						<h3 class="text-lg font-bold mb-3">Changelog</h3>
+						<p class="text-sm text-gray-600 dark:text-gray-400">Keep this page current when you add new libraries or assets.</p>
+						<div class="mt-4 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+							<p class="text-xs text-gray-500 dark:text-gray-400">Last updated</p>
+							<p id="last-updated" class="font-semibold">2026-01-24</p>
+						</div>
+					</div>
+				</aside>
+			</section>
+		</div>
+	</main>
+
+	<footer class="bg-gray-100 dark:bg-gray-900 py-8 text-center text-gray-500 dark:text-gray-500">
+		<p>&copy; 2026 <span class="font-semibold">Thanakorn Buathongtanakarn</span>. Credits page.</p>
+	</footer>
+
+	<script>
+		// Theme toggle (mirrors site/index.html behavior)
+		const html = document.documentElement;
+		const themeToggleBtn = document.getElementById('theme-toggle');
+
+		function setTheme(theme) {
+			if (theme === 'dark') {
+				html.classList.add('dark');
+			} else {
+				html.classList.remove('dark');
+			}
+			const icon = themeToggleBtn ? themeToggleBtn.querySelector('i') : null;
+			if (icon) {
+				icon.classList.toggle('fa-sun', theme === 'dark');
+				icon.classList.toggle('fa-moon', theme !== 'dark');
+			}
+		}
+
+		const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+		const initialTheme = (localStorage.theme === 'dark' || (!('theme' in localStorage) && prefersDark)) ? 'dark' : 'light';
+		setTheme(initialTheme);
+
+		if (themeToggleBtn) {
+			themeToggleBtn.addEventListener('click', () => {
+				const next = html.classList.contains('dark') ? 'light' : 'dark';
+				localStorage.theme = next;
+				setTheme(next);
+			});
+		}
+
+		// Optional: load name/email from site/data.json if available
+		fetch('./data.json')
+			.then(r => r.ok ? r.json() : null)
+			.then(data => {
+				if (!data) return;
+				const name = data?.personalInfo?.name;
+				const email = data?.social?.emailAddress;
+				if (name) {
+					const navName = document.getElementById('nav-name');
+					if (navName) navName.textContent = name;
+					document.title = `Credits - ${name}`;
+				}
+				if (email) {
+					const a = document.getElementById('email-link');
+					if (a) a.href = `mailto:${email}`;
+				}
+			})
+			.catch(() => {});
+	</script>
+</body>
+</html>

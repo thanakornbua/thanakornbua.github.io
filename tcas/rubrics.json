@@ -1,0 +1,12 @@
+{
+    "Rubrics": {
+        "University": "Chulalongkorn University",
+        "Faculties": [
+            {
+                "name": "Medicine",
+                "TCASRound": [1, 2, 3],
+                "RequiredTestsR1": ["English Proficienc"],
+            }
+    }
+
+}

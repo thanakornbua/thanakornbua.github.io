@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+	<title>Announcements - School</title>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Kanit:wght@500;700&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="styles.css" />
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script>
+		tailwind.config = {
+			theme: {
+				extend: {
+					fontFamily: {
+						sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+						display: ['Kanit', 'Inter', 'ui-sans-serif'],
+					},
+					colors: {
+						neonPink: '#ff3fa4',
+						neonBlue: '#33e1ff',
+					},
+					boxShadow: {
+						glow: '0 0 30px rgba(255,63,164,0.35)',
+						glowBlue: '0 0 30px rgba(51,225,255,0.35)'
+					}
+				}
+			}
+		}
+	</script>
+	<script src="sidebar-loader.js" defer></script>
+
+	<style>
+		.chip { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.10); }
+		.chip-active { border-color: #33e1ff; box-shadow: 0 0 0 1px rgba(51,225,255,0.25); }
+	</style>
+</head>
+
+<body class="min-h-screen bg-slate-950 text-white">
+	<div id="app" class="relative min-h-screen">
+		<main class="relative max-w-6xl mx-auto px-4 md:px-8 py-8">
+			<header class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
+				<div>
+					<p class="text-xs uppercase tracking-[0.2em] text-slate-400">School</p>
+					<h1 class="text-3xl md:text-4xl font-[Kanit] font-bold">Announcements</h1>
+					<p class="text-slate-300 text-sm md:text-base max-w-2xl mt-2">Updates, reminders, and important notices.</p>
+				</div>
+				<div class="glass rounded-2xl border border-slate-800/80 p-4 space-y-3">
+					<div class="space-y-1">
+						<label for="search" class="block text-xs font-semibold text-slate-300">Search</label>
+						<input id="search" type="search" placeholder="Search title/body…"
+							class="w-full glass border border-slate-700/70 rounded-lg px-3 py-2 bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-neonBlue" />
+					</div>
+					<div class="flex items-center justify-between gap-3">
+						<div class="space-y-1 min-w-0 flex-1">
+							<label for="category" class="block text-xs font-semibold text-slate-300">Category</label>
+							<select id="category" class="w-full glass border border-slate-700/70 rounded-lg px-3 py-2 bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-neonPink">
+								<option value="">All</option>
+							</select>
+						</div>
+						<div class="pt-6">
+							<button id="clear" type="button" class="px-3 py-2 rounded-lg border border-slate-700/70 text-xs text-white hover:border-neonBlue transition">Clear</button>
+						</div>
+					</div>
+					<p id="updated" class="text-[10px] text-slate-500">—</p>
+				</div>
+			</header>
+
+			<section class="glass rounded-3xl p-6 md:p-8 border border-slate-800/80">
+				<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-5">
+					<div>
+						<h2 class="text-xl md:text-2xl font-semibold">Latest</h2>
+						<p id="result-meta" class="text-slate-400 text-sm mt-1">Loading…</p>
+					</div>
+					<div id="chips" class="flex flex-wrap gap-2"></div>
+				</div>
+
+				<div id="list" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
+
+				<div id="empty" class="hidden text-center py-16 text-slate-400">
+					No announcements match your filters.
+				</div>
+				<div id="error" class="hidden text-center py-16 text-red-300">
+					Failed to load announcement.json
+				</div>
+			</section>
+		</main>
+	</div>
+
+	<script>
+		(function () {
+			const searchEl = document.getElementById('search');
+			const categoryEl = document.getElementById('category');
+			const clearEl = document.getElementById('clear');
+			const updatedEl = document.getElementById('updated');
+			const resultMetaEl = document.getElementById('result-meta');
+			const chipsEl = document.getElementById('chips');
+			const listEl = document.getElementById('list');
+			const emptyEl = document.getElementById('empty');
+			const errorEl = document.getElementById('error');
+
+			let allAnnouncements = [];
+			let updatedAt = '';
+
+			function escapeHtml(s) {
+				return String(s ?? '')
+					.replace(/&/g, '&amp;')
+					.replace(/</g, '&lt;')
+					.replace(/>/g, '&gt;')
+					.replace(/"/g, '&quot;')
+					.replace(/'/g, '&#039;');
+			}
+
+			function toDateValue(value) {
+				const s = String(value || '').trim();
+				if (!s) return null;
+				const d = new Date(s.length === 10 ? s + 'T00:00:00' : s);
+				return isNaN(d.getTime()) ? null : d;
+			}
+
+			function formatDate(value) {
+				const d = toDateValue(value);
+				if (!d) return '';
+				return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+			}
+
+			function normalizeText(a) {
+				const title = String(a.title || '');
+				const body = String(a.body || '');
+				const category = String(a.category || '');
+				const tags = Array.isArray(a.tags) ? a.tags.join(' ') : '';
+				return (title + ' ' + body + ' ' + category + ' ' + tags).toLowerCase();
+			}
+
+			function getCategories(items) {
+				const set = new Set();
+				items.forEach(a => {
+					const c = String(a.category || '').trim();
+					if (c) set.add(c);
+				});
+				return Array.from(set).sort((a, b) => a.localeCompare(b));
+			}
+
+			function sortAnnouncements(items) {
+				return items.slice().sort((a, b) => {
+					const ap = !!a.pinned;
+					const bp = !!b.pinned;
+					if (ap !== bp) return ap ? -1 : 1;
+
+					const ad = toDateValue(a.date)?.getTime() ?? 0;
+					const bd = toDateValue(b.date)?.getTime() ?? 0;
+					if (ad !== bd) return bd - ad;
+
+					return String(a.title || '').localeCompare(String(b.title || ''));
+				});
+			}
+
+			function renderCard(a) {
+				const title = escapeHtml(a.title || 'Untitled');
+				const body = escapeHtml(a.body || '');
+				const category = escapeHtml(a.category || 'General');
+				const dateStr = escapeHtml(formatDate(a.date) || '');
+				const pinned = !!a.pinned;
+
+				const tags = Array.isArray(a.tags) ? a.tags.filter(Boolean).slice(0, 6) : [];
+				const tagHtml = tags.length
+					? `<div class="flex flex-wrap gap-2 mt-3">${tags.map(t => `<span class="chip px-2 py-1 rounded-full text-[10px] text-slate-200">#${escapeHtml(t)}</span>`).join('')}</div>`
+					: '';
+
+				const links = Array.isArray(a.links) ? a.links.filter(l => l && l.url) : [];
+				const linksHtml = links.length
+					? `<div class="flex flex-wrap gap-2 mt-4">${links.map(l => {
+							const label = escapeHtml(l.label || 'Link');
+							const url = escapeHtml(l.url);
+							return `<a href="${url}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg border border-slate-700/70 hover:border-neonBlue transition text-xs text-white">↗ ${label}</a>`;
+						}).join('')}</div>`
+					: '';
+
+				return `
+					<article class="glass rounded-2xl border border-slate-800/80 p-5">
+						<div class="flex items-start justify-between gap-3">
+							<div class="min-w-0">
+								<h3 class="text-lg font-semibold leading-snug ${pinned ? 'text-neonBlue' : ''}">${pinned ? '📌 ' : ''}${title}</h3>
+								<p class="text-xs text-slate-400 mt-1">${dateStr}${dateStr && category ? ' • ' : ''}${category}</p>
+							</div>
+							<span class="chip px-2 py-1 rounded-full text-[10px] text-slate-200 whitespace-nowrap">${escapeHtml(String(a.id || '')) || 'note'}</span>
+						</div>
+						${body ? `<p class="text-slate-200/90 text-sm mt-4 leading-relaxed">${body}</p>` : ''}
+						${tagHtml}
+						${linksHtml}
+					</article>
+				`;
+			}
+
+			function setChipActive(value) {
+				const buttons = chipsEl.querySelectorAll('button[data-chip]');
+				buttons.forEach(btn => {
+					const v = btn.getAttribute('data-chip') || '';
+					btn.classList.toggle('chip-active', v === value);
+				});
+			}
+
+			function buildChips(categories) {
+				chipsEl.innerHTML = '';
+				const allBtn = document.createElement('button');
+				allBtn.type = 'button';
+				allBtn.className = 'chip px-3 py-2 rounded-full text-xs text-white hover:border-neonBlue transition';
+				allBtn.textContent = 'All';
+				allBtn.setAttribute('data-chip', '');
+				allBtn.addEventListener('click', () => {
+					categoryEl.value = '';
+					render();
+				});
+				chipsEl.appendChild(allBtn);
+
+				categories.forEach(c => {
+					const btn = document.createElement('button');
+					btn.type = 'button';
+					btn.className = 'chip px-3 py-2 rounded-full text-xs text-white hover:border-neonBlue transition';
+					btn.textContent = c;
+					btn.setAttribute('data-chip', c);
+					btn.addEventListener('click', () => {
+						categoryEl.value = c;
+						render();
+					});
+					chipsEl.appendChild(btn);
+				});
+			}
+
+			function populateCategorySelect(categories) {
+				// keep first option (All)
+				while (categoryEl.options.length > 1) categoryEl.remove(1);
+				categories.forEach(c => {
+					const opt = document.createElement('option');
+					opt.value = c;
+					opt.textContent = c;
+					categoryEl.appendChild(opt);
+				});
+			}
+
+			function render() {
+				const q = String(searchEl.value || '').trim().toLowerCase();
+				const category = String(categoryEl.value || '').trim();
+
+				const filtered = sortAnnouncements(allAnnouncements).filter(a => {
+					if (category && String(a.category || '') !== category) return false;
+					if (!q) return true;
+					return normalizeText(a).includes(q);
+				});
+
+				setChipActive(category);
+
+				listEl.innerHTML = filtered.map(renderCard).join('');
+				const total = allAnnouncements.length;
+				const shown = filtered.length;
+				resultMetaEl.textContent = `${shown} of ${total} announcement${total === 1 ? '' : 's'}`;
+
+				emptyEl.classList.toggle('hidden', shown !== 0);
+				errorEl.classList.add('hidden');
+			}
+
+			function setUpdatedLabel(value) {
+				updatedEl.textContent = value ? `Updated: ${value}` : 'Updated: —';
+			}
+
+			async function load() {
+				try {
+					const res = await fetch('announcement.json', { cache: 'no-store' });
+					if (!res.ok) throw new Error('HTTP ' + res.status);
+					const data = await res.json();
+
+					const items = Array.isArray(data) ? data : (data.announcements || []);
+					updatedAt = (data && data.updatedAt) ? String(data.updatedAt) : '';
+					allAnnouncements = Array.isArray(items) ? items : [];
+
+					const categories = getCategories(allAnnouncements);
+					populateCategorySelect(categories);
+					buildChips(categories);
+					setUpdatedLabel(updatedAt);
+					render();
+				} catch (e) {
+					console.error('Failed to load announcement.json', e);
+					listEl.innerHTML = '';
+					emptyEl.classList.add('hidden');
+					errorEl.classList.remove('hidden');
+					resultMetaEl.textContent = '—';
+					setUpdatedLabel('—');
+				}
+			}
+
+			searchEl.addEventListener('input', render);
+			categoryEl.addEventListener('change', render);
+			clearEl.addEventListener('click', () => {
+				searchEl.value = '';
+				categoryEl.value = '';
+				render();
+			});
+
+			load();
+		})();
+	</script>
+</body>
+</html>

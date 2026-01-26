@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Retrieve file</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="app.css" />
+    <script>
+      (() => {
+        const key = 'theme';
+        let stored = null;
+        try {
+          stored = localStorage.getItem(key);
+        } catch (err) {
+          stored = null;
+        }
+        const preferDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = stored || (preferDark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+  </head>
+  <body class="page">
+    <div class="backdrop" aria-hidden="true">
+      <div class="orb one"></div>
+      <div class="orb two"></div>
+      <div class="orb three"></div>
+      <div class="gridOverlay"></div>
+    </div>
+
+    <div class="container content">
+      <header class="header">
+        <div class="brand">
+          <h1>Retrieve file</h1>
+          <p>Search by date or Presentation Code</p>
+        </div>
+        <div class="nav">
+          <a href="index.html" class="btn">Home</a>
+          <a href="presentation.html" class="btn">Presentation</a>
+          <button id="themeToggle" type="button" class="btn" aria-label="Toggle theme">
+            <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4" width="16" height="16">
+              <path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" />
+              <path fill-rule="evenodd" d="M12 1.25a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V2a.75.75 0 0 1 .75-.75ZM3.49 3.49a.75.75 0 0 1 1.06 0l1.06 1.06a.75.75 0 1 1-1.06 1.06L3.49 4.55a.75.75 0 0 1 0-1.06ZM21.25 12a.75.75 0 0 1-.75.75H19a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 .75.75ZM5 12a.75.75 0 0 1-.75.75H2.75a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 5 12Zm14.45-8.51a.75.75 0 0 1 1.06 1.06l-1.06 1.06a.75.75 0 0 1-1.06-1.06l1.06-1.06ZM12 19.25a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V20a.75.75 0 0 1 .75-.75ZM4.55 18.39a.75.75 0 0 1 1.06 0l1.06 1.06a.75.75 0 1 1-1.06 1.06l-1.06-1.06a.75.75 0 0 1 0-1.06Zm13.78 0a.75.75 0 0 1 1.06 1.06l-1.06 1.06a.75.75 0 0 1-1.06-1.06l1.06-1.06Z" clip-rule="evenodd" />
+            </svg>
+            <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4" width="16" height="16">
+              <path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6.75a9 9 0 0 0 9 9 8.97 8.97 0 0 0 4.213-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-3.97 2.196-7.428 5.528-9.282Z" clip-rule="evenodd" />
+            </svg>
+            <span id="themeLabel">Theme</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="grid">
+        <section class="card span-5">
+          <h2>Lookup</h2>
+          <p>Enter a date or a Presentation Code to find PDFs.</p>
+          <div class="formRow" style="margin-top:12px;">
+            <div class="field">
+              <label for="date">Presentation date</label>
+              <input id="date" type="date" />
+              <div class="small">Optional when searching by code.</div>
+            </div>
+            <div class="field">
+              <label for="code">Presentation Code</label>
+              <input id="code" type="text" placeholder="e.g. MATH-01" />
+              <div class="small">Codes are matched case-insensitively.</div>
+            </div>
+            <div class="field" style="min-width:160px;">
+              <button id="submit" type="button" class="btn accent">Find files</button>
+            </div>
+          </div>
+
+          <div id="status" class="notice hidden"></div>
+        </section>
+
+        <section class="card span-7">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <h2>Results</h2>
+            <button id="clear" type="button" class="btn ghost">Clear</button>
+          </div>
+          <div id="results" class="list"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+      (() => {
+        const btn = document.getElementById('themeToggle');
+        if (!btn) return;
+        const iconSun = document.getElementById('iconSun');
+        const iconMoon = document.getElementById('iconMoon');
+        const label = document.getElementById('themeLabel');
+        const storageKey = 'theme';
+        const prefersDarkMedia = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+
+        const readStored = () => {
+          try {
+            return localStorage.getItem(storageKey);
+          } catch (err) {
+            return null;
+          }
+        };
+        const writeStored = (value) => {
+          try {
+            localStorage.setItem(storageKey, value);
+          } catch (err) {
+            // ignore write errors
+          }
+        };
+
+        const apply = (theme, options = {}) => {
+          const next = theme === 'dark' ? 'dark' : 'light';
+          document.documentElement.dataset.theme = next;
+          if (options.persist !== false) {
+            writeStored(next);
+          }
+          const isDark = next === 'dark';
+          if (iconSun) iconSun.style.display = isDark ? 'inline-block' : 'none';
+          if (iconMoon) iconMoon.style.display = isDark ? 'none' : 'inline-block';
+          if (label) label.textContent = isDark ? 'Dark' : 'Light';
+          btn.setAttribute('aria-pressed', String(isDark));
+        };
+
+        const initial = readStored() || (prefersDarkMedia && prefersDarkMedia.matches ? 'dark' : 'light');
+        apply(initial, { persist: false });
+
+        btn.addEventListener('click', () => {
+          const isDark = document.documentElement.dataset.theme === 'dark';
+          apply(isDark ? 'light' : 'dark');
+        });
+
+        if (prefersDarkMedia) {
+          prefersDarkMedia.addEventListener('change', (event) => {
+            if (readStored()) return;
+            apply(event.matches ? 'dark' : 'light', { persist: false });
+          });
+        }
+      })();
+
+      const dateEl = document.getElementById('date');
+      const codeEl = document.getElementById('code');
+      const submitEl = document.getElementById('submit');
+      const statusEl = document.getElementById('status');
+      const resultsEl = document.getElementById('results');
+      const clearEl = document.getElementById('clear');
+
+      function setStatus(message, kind = 'info') {
+        statusEl.classList.toggle('hidden', !message);
+        statusEl.textContent = message || '';
+        statusEl.classList.toggle('warn', kind === 'warn');
+      }
+
+      function clearResults() {
+        resultsEl.innerHTML = '';
+      }
+
+      function renderEntry(dateKey, entry) {
+        const fileUrl = resolveFileUrl(entry.file);
+        const name = entry.title || entry.id || entry.file;
+        const card = document.createElement('div');
+        card.className = 'item';
+        card.appendChild(el('h3', {}, name));
+        card.appendChild(el('div', { class: 'meta' }, `Date: ${dateKey}${entry.code ? ` • Code: ${entry.code}` : ''}`));
+        const actions = document.createElement('div');
+        actions.className = 'actions';
+        actions.appendChild(el('a', { class: 'btn accent', href: fileUrl, download: '' }, 'Download PDF'));
+        actions.appendChild(el('a', { class: 'btn', href: `presentation.html?date=${encodeURIComponent(dateKey)}&open=${encodeURIComponent(entry.id)}` }, 'Open in viewer'));
+        card.appendChild(actions);
+        resultsEl.appendChild(card);
+      }
+
+      async function runLookup() {
+        clearResults();
+        setStatus('Loading index…');
+        let index;
+        try {
+          index = await loadPresentationsIndex();
+        } catch (err) {
+          setStatus(err.message || String(err), 'warn');
+          return;
+        }
+
+        const dateKey = normalizeDateKey(dateEl.value);
+        const code = String(codeEl.value || '').trim();
+
+        if (!dateKey && !code) {
+          setStatus('Enter a date or a Presentation Code.', 'warn');
+          return;
+        }
+
+        if (code) {
+          const found = findByCode(index, code);
+          if (!found) {
+            setStatus('No file found for this code.', 'warn');
+            return;
+          }
+          setStatus(`Found 1 file for code ${code}.`);
+          renderEntry(found.dateKey, found.entry);
+          return;
+        }
+
+        const entries = index.dates[dateKey] || [];
+        if (!entries.length) {
+          setStatus('No files found for that date.', 'warn');
+          return;
+        }
+
+        setStatus(`Found ${entries.length} file(s).`);
+        entries.forEach((entry) => renderEntry(dateKey, entry));
+      }
+
+      submitEl.addEventListener('click', runLookup);
+      clearEl.addEventListener('click', () => {
+        clearResults();
+        setStatus('');
+      });
+    </script>
+  </body>
+</html>

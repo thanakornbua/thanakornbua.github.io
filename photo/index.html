@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="color-scheme" content="dark" />
+		<title id="pageTitle">Photography Portfolio</title>
+		<meta name="description" content="A clean, responsive photography portfolio with filters and a lightbox." />
+
+		<link rel="icon" href="../site/assets/favicon/favicon.ico" />
+		<link rel="stylesheet" href="./styles.css" />
+	</head>
+	<body>
+		<a class="skip-link" href="#portfolio">Skip to portfolio</a>
+
+		<header class="header">
+			<div class="container header__inner">
+				<a class="brand" href="#top" aria-label="Go to top">
+					<span class="brand__mark" aria-hidden="true"></span>
+					<span class="brand__text">
+						<strong id="brandName">My Portfolio</strong>
+						<span>Photography</span>
+					</span>
+				</a>
+
+				<nav class="nav" aria-label="Primary">
+					<a href="#portfolio">Portfolio</a>
+					<a href="#about">About</a>
+					<a href="#contact">Contact</a>
+					<a id="siteLink" href="../site/">Main site</a>
+				</nav>
+			</div>
+		</header>
+
+		<main id="top">
+			<section class="hero">
+				<div class="container hero__grid">
+					<div class="hero__card hero__left">
+						<div class="kicker"><span class="kicker__dot" aria-hidden="true"></span>New: gallery filters + lightbox</div>
+						<h1>
+							<span id="heroName">Photographer</span>
+							<span style="display:block; opacity:.85; font-weight:700; margin-top:6px;">Selected work & collections</span>
+						</h1>
+						<p>
+							A minimal, fast photography portfolio designed for GitHub Pages.
+							Update <strong>photo/gallery.json</strong> to add your real photos.
+							<span id="heroLocation" style="display:block; margin-top:8px;"></span>
+						</p>
+
+						<div class="hero__actions">
+							<a class="button button--primary" href="#portfolio">View portfolio</a>
+							<a class="button button--ghost" id="instagramLink" href="#" rel="noreferrer" target="_blank">Instagram</a>
+						</div>
+					</div>
+
+					<div class="hero__right">
+						<div class="hero__preview"></div>
+						<div class="preview__img" aria-hidden="true">
+							<img id="previewImg" src="../site/assets/tan.jpg" alt="Preview" />
+							<div class="preview__badge"><span class="badge__pill" aria-hidden="true"></span><span id="previewLabel">Featured</span></div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="section" id="portfolio">
+				<div class="container">
+					<div class="section__header">
+						<div>
+							<h2>Portfolio</h2>
+							<p>Filter by collection or search by title, location, or tags.</p>
+						</div>
+					</div>
+
+					<div class="toolbar" role="region" aria-label="Gallery controls">
+						<div class="chips" id="chips" aria-label="Collections"></div>
+						<div class="search">
+							<input id="searchInput" type="search" placeholder="Search…" autocomplete="off" aria-label="Search photos" />
+						</div>
+					</div>
+
+					<div id="empty" class="empty" hidden>
+						No photos match your filter/search. Try another tag or clear the search.
+					</div>
+
+					<div id="grid" class="grid" aria-label="Photo grid"></div>
+				</div>
+			</section>
+
+			<section class="section" id="about">
+				<div class="container">
+					<div class="section__header">
+						<div>
+							<h2>About</h2>
+							<p>Update this content in <strong>photo/index.html</strong> and <strong>photo/gallery.json</strong>.</p>
+						</div>
+					</div>
+
+					<div class="about">
+						<div class="panel">
+							<h3>Statement</h3>
+							<p>
+								I photograph portraits, street scenes, and travel stories with a clean, modern aesthetic.
+								This page is fully static (no backend) and works on GitHub Pages.
+							</p>
+
+							<div class="columns">
+								<div class="kv">
+									<div>
+										<strong>Style</strong>
+										<span>Natural light • Minimal color</span>
+									</div>
+								</div>
+								<div class="kv">
+									<div>
+										<strong>Available</strong>
+										<span>Collabs • Portrait sessions</span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel" id="contact">
+							<h3>Contact</h3>
+							<p>
+								Email: <a id="emailLink" href="mailto:your@email.com">your@email.com</a>
+								<br />
+								Tip: put your real details in <strong>photo/gallery.json</strong>.
+							</p>
+
+							<div class="columns">
+								<a class="button" href="#portfolio">Back to portfolio</a>
+								<a class="button button--ghost" href="../site/">Main site</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<footer class="footer">
+			<div class="container footer__inner">
+				<div>© <span id="year"></span> <span id="brandNameFooter">Portfolio</span></div>
+				<div>
+					<a href="#top">Top</a> ·
+					<a href="../site/">Home</a>
+				</div>
+			</div>
+		</footer>
+
+		<!-- Lightbox -->
+		<div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-label="Photo viewer">
+			<div class="lightbox__topbar" aria-hidden="false">
+				<button class="icon-btn" id="lbPrev" type="button" aria-label="Previous">←</button>
+				<button class="icon-btn" id="lbNext" type="button" aria-label="Next">→</button>
+				<button class="icon-btn" id="lbClose" type="button" aria-label="Close">✕</button>
+			</div>
+
+			<div class="lightbox__dialog" role="document" aria-describedby="lbDesc">
+				<div class="lightbox__media">
+					<img id="lbImg" src="" alt="" />
+				</div>
+				<aside class="lightbox__side">
+					<h3 class="lightbox__title" id="lbTitle">—</h3>
+					<p class="lightbox__desc" id="lbDesc"></p>
+
+					<div class="lightbox__meta" aria-label="Photo details">
+						<div class="meta-row"><span>Location</span><strong id="lbLocation">—</strong></div>
+						<div class="meta-row"><span>Date</span><strong id="lbDate">—</strong></div>
+						<div class="meta-row"><span>Tags</span><strong id="lbTags">—</strong></div>
+						<div class="meta-row"><span>Count</span><strong id="lbCounter">—</strong></div>
+					</div>
+
+					<div class="lightbox__actions">
+						<a class="button" id="lbOpen" href="#" target="_blank" rel="noreferrer">Open original</a>
+					</div>
+				</aside>
+			</div>
+		</div>
+
+		<script>
+			document.getElementById('year').textContent = new Date().getFullYear();
+			document.getElementById('brandNameFooter').textContent = document.getElementById('brandName').textContent;
+		</script>
+		<script src="./script.js" defer></script>
+	</body>
+</html>

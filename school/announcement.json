@@ -1,0 +1,27 @@
+{
+  "updatedAt": "2026-01-24",
+  "announcements": [
+    {
+      "id": "welcome",
+      "title": "Welcome to Announcements",
+      "date": "2026-01-24",
+      "category": "General",
+      "pinned": true,
+      "body": "This page pulls announcements from announcement databse. Contact Thanakorn for adding new announcements.",
+      "links": [
+        { "label": "Timetable", "url": "timetable.html" }
+      ]
+    },
+    {
+      "id": "bioaction1",
+      "title": "ประกาศรายชื่อกลุ่มแสดงละครวิชาชีววิทยา",
+      "date": "2026-01-18",
+      "category": "Biology",
+      "pinned": false,
+      "body": "Biology action กลุ่มแสดงละครวิชาชีววิทยา ประจำภาคเรียนที่ 2/2565 รายชื่อตามลิงก์ด้านล่างนี้",
+      "links": [
+        { "label": "Bioaction Lookup", "url": "bioactionlookup.html" }
+      ]
+    }
+  ]
+}

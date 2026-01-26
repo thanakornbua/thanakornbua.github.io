@@ -1,0 +1,66 @@
+{
+  "title": "Linktree",
+  "description": "Quick access to everything hosted on this site.",
+  "links": [
+    {
+      "label": "Portfolio",
+      "description": "Landing page for the site",
+      "url": "thanakorn.site",
+      "tag": "Home"
+    },
+    {
+      "label": "Linktree",
+      "description": "All site links in one place",
+      "url": "tree.thanakorn.site",
+      "tag": "Here"
+    },
+    {
+      "label": "Admission Lookup",
+      "description": "TCAS admission results lookup",
+      "url": "tcas.thanakorn.site/admission.html",
+      "tag": "Open"
+    },
+    {
+      "label": "Bioaction Lookup",
+      "description": "Search bioaction data",
+      "url": "school.thanakorn.site/bioactionlookup.html",
+      "tag": "Open"
+    },
+    {
+      "label": "Mock Exam",
+      "description": "Practice and timed exam mode",
+      "url": "tcas.thanakorn.site/mockexam.html",
+      "tag": "Open"
+    },
+    {
+      "label": "Timer",
+      "description": "Study and exam timer",
+      "url": "tcas.thanakorn.site/timer.html",
+      "tag": "Open"
+    },
+    {
+      "label": "Timetable",
+      "description": "School Schedule",
+      "url": "school.thanakorn.site/timetable.html",
+      "tag": "Open"
+    },
+    {
+      "label": "Visualizer",
+      "description": "Data visualizations and presentations",
+      "url": "visual.thanakorn.site",
+      "tag": "See"
+    },
+    {
+      "label": "Photo Gallery",
+      "description": "Photography portfolio",
+      "url": "photo.thanakorn.site",
+      "tag": "View"
+    },
+    {
+      "label": "Credits",
+      "description": "The core site contributors and resources",
+      "url": "thanakorn.site/credits",
+      "tag": "Info"
+    }
+  ]
+}

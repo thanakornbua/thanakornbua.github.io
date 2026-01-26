@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Site Links</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<style>
+			:root {
+				color-scheme: light dark;
+				--bg: #f5f6ff;
+				--card: #ffffff;
+				--text: #0f172a;
+				--muted: #64748b;
+				--accent: #6366f1;
+				--accent-strong: #4f46e5;
+				--border: rgba(15, 23, 42, 0.08);
+				--shadow: 0 22px 50px rgba(15, 23, 42, 0.12);
+			}
+
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--bg: #0b1120;
+					--card: #111827;
+					--text: #e2e8f0;
+					--muted: #94a3b8;
+					--accent: #818cf8;
+					--accent-strong: #6366f1;
+					--border: rgba(148, 163, 184, 0.2);
+					--shadow: 0 22px 50px rgba(2, 6, 23, 0.6);
+				}
+			}
+
+			:root[data-theme="light"] {
+				--bg: #f5f6ff;
+				--card: #ffffff;
+				--text: #0f172a;
+				--muted: #64748b;
+				--accent: #6366f1;
+				--accent-strong: #4f46e5;
+				--border: rgba(15, 23, 42, 0.08);
+				--shadow: 0 22px 50px rgba(15, 23, 42, 0.12);
+			}
+
+			:root[data-theme="dark"] {
+				--bg: #0b1120;
+				--card: #111827;
+				--text: #e2e8f0;
+				--muted: #94a3b8;
+				--accent: #818cf8;
+				--accent-strong: #6366f1;
+				--border: rgba(148, 163, 184, 0.2);
+				--shadow: 0 22px 50px rgba(2, 6, 23, 0.6);
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			body {
+				margin: 0;
+				min-height: 100vh;
+				font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+				background: radial-gradient(circle at top, rgba(99, 102, 241, 0.2), transparent 55%),
+					var(--bg);
+				color: var(--text);
+				display: grid;
+				place-items: center;
+				padding: 36px 20px 48px;
+			}
+
+			.card {
+				width: min(720px, 100%);
+				background: var(--card);
+				border-radius: 28px;
+				padding: clamp(28px, 6vw, 52px);
+				border: 1px solid var(--border);
+				box-shadow: var(--shadow);
+			}
+
+			header {
+				text-align: center;
+				margin-bottom: 28px;
+			}
+
+			.theme-toggle {
+				position: absolute;
+				top: 20px;
+				right: 20px;
+				border: 1px solid var(--border);
+				background: var(--card);
+				color: var(--text);
+				border-radius: 999px;
+				padding: 8px 14px;
+				font-size: 0.85rem;
+				font-weight: 600;
+				cursor: pointer;
+				box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+				transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+			}
+
+			.theme-toggle:hover {
+				transform: translateY(-1px);
+				border-color: rgba(99, 102, 241, 0.5);
+				box-shadow: 0 12px 24px rgba(99, 102, 241, 0.12);
+			}
+
+			.avatar {
+				width: 88px;
+				height: 88px;
+				border-radius: 24px;
+				background: linear-gradient(135deg, rgba(99, 102, 241, 0.8), rgba(16, 185, 129, 0.7));
+				display: grid;
+				place-items: center;
+				color: #fff;
+				font-weight: 700;
+				font-size: 1.4rem;
+				margin: 0 auto 16px;
+				box-shadow: 0 16px 30px rgba(99, 102, 241, 0.35);
+			}
+
+			h1 {
+				margin: 0 0 8px;
+				font-size: clamp(1.75rem, 3vw, 2.4rem);
+			}
+
+			p {
+				margin: 0;
+				color: var(--muted);
+				line-height: 1.6;
+			}
+
+			.links {
+				display: grid;
+				gap: 12px;
+				margin-top: 28px;
+			}
+
+			.link-button {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 12px;
+				padding: 14px 18px;
+				border-radius: 16px;
+				background: transparent;
+				border: 1px solid var(--border);
+				text-decoration: none;
+				color: inherit;
+				transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+			}
+
+			.link-button:hover {
+				border-color: rgba(99, 102, 241, 0.5);
+				transform: translateY(-1px);
+				box-shadow: 0 12px 24px rgba(99, 102, 241, 0.12);
+			}
+
+			.link-title {
+				font-weight: 600;
+			}
+
+			.link-meta {
+				font-size: 0.85rem;
+				color: var(--muted);
+			}
+
+			.pill {
+				padding: 6px 12px;
+				border-radius: 999px;
+				background: rgba(99, 102, 241, 0.12);
+				color: var(--accent-strong);
+				font-weight: 600;
+				font-size: 0.8rem;
+			}
+
+			.footer {
+				margin-top: 32px;
+				text-align: center;
+				font-size: 0.85rem;
+				color: var(--muted);
+			}
+		</style>
+	</head>
+	<body class="min-h-screen bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100">
+		<button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">
+			Use dark mode
+		</button>
+		<main class="card">
+			<header>
+				<div class="avatar" aria-hidden="true">TB</div>
+				<h1 id="page-title">Site Links</h1>
+				<p id="page-description">Quick access to everything hosted on thanakorn.site.</p>
+			</header>
+			<section class="links" id="links" aria-live="polite"></section>
+		</main>
+
+		<script>
+			const normalizeUrl = (url) => {
+				const raw = String(url || "").trim();
+				if (!raw) return "";
+				// Allow absolute + special schemes
+				if (/^(https?:\/\/|mailto:|tel:|sms:)/i.test(raw)) return raw;
+				// Allow site-relative paths
+				if (raw.startsWith("/") || raw.startsWith("#")) return raw;
+				// Treat bare domains/paths as https
+				return `https://${raw}`;
+			};
+
+			const shouldSkipRedirect = () => {
+				try {
+					const qs = new URLSearchParams(window.location.search);
+					return qs.has('noRedirect') || qs.has('links') || qs.get('mode') === 'list';
+				} catch {
+					return false;
+				}
+			};
+
+			const maybeRedirect = (data) => {
+				if (!data) return false;
+				if (shouldSkipRedirect()) return false;
+
+				const targetName = String(data.redirectTo || "").trim();
+				if (!targetName) return false;
+				if (!Array.isArray(data.links)) return false;
+
+				const match = data.links.find((l) => String(l.label || "").trim().toLowerCase() === targetName.toLowerCase());
+				if (!match || !match.url) {
+					pageDescription.textContent = `Redirect target "${targetName}" not found. Add ?noRedirect=1 to view links.`;
+					return false;
+				}
+
+				const targetUrl = normalizeUrl(match.url);
+				if (!targetUrl) return false;
+
+				pageTitle.textContent = data.title || pageTitle.textContent;
+				pageDescription.textContent = `Redirecting to ${match.label}… (add ?noRedirect=1 to view links)`;
+				// Use assign() for broad compatibility; we still avoid a double history entry by not rendering first.
+				setTimeout(() => window.location.assign(targetUrl), 50);
+				return true;
+			};
+
+			const linkContainer = document.getElementById("links");
+			const pageTitle = document.getElementById("page-title");
+			const pageDescription = document.getElementById("page-description");
+			const footerText = document.getElementById("footer-text");
+			const themeToggle = document.getElementById("theme-toggle");
+			const root = document.documentElement;
+			const storedTheme = localStorage.getItem("theme");
+			const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+			let currentTheme = storedTheme || (prefersDark ? "dark" : "light");
+
+			const applyTheme = (theme) => {
+				currentTheme = theme;
+				root.setAttribute("data-theme", theme);
+				root.style.colorScheme = theme;
+				themeToggle.textContent = theme === "dark" ? "Use light mode" : "Use dark mode";
+				themeToggle.setAttribute("aria-pressed", theme === "dark");
+			};
+
+			applyTheme(currentTheme);
+
+			themeToggle.addEventListener("click", () => {
+				const nextTheme = currentTheme === "dark" ? "light" : "dark";
+				localStorage.setItem("theme", nextTheme);
+				applyTheme(nextTheme);
+			});
+
+			const renderLinks = (data) => {
+				if (!data || !Array.isArray(data.links)) {
+					return;
+				}
+
+				if (data.title) {
+					pageTitle.textContent = data.title;
+					document.title = data.title;
+				}
+
+				if (data.description) {
+					pageDescription.textContent = data.description;
+				}
+
+				if (data.footer) {
+					footerText.textContent = data.footer;
+				}
+
+				linkContainer.innerHTML = "";
+
+				data.links.forEach((link) => {
+					const anchor = document.createElement("a");
+					anchor.className = "link-button";
+					anchor.href = normalizeUrl(link.url);
+					anchor.target = link.newTab ? "_blank" : "_self";
+					if (link.newTab) {
+						anchor.rel = "noreferrer";
+					}
+
+					const textWrapper = document.createElement("div");
+
+					const title = document.createElement("div");
+					title.className = "link-title";
+					title.textContent = link.label;
+
+					const meta = document.createElement("div");
+					meta.className = "link-meta";
+					meta.textContent = link.description || normalizeUrl(link.url) || link.url;
+
+					textWrapper.appendChild(title);
+					textWrapper.appendChild(meta);
+
+					const pill = document.createElement("span");
+					pill.className = "pill";
+					pill.textContent = link.tag || "Open";
+
+					anchor.appendChild(textWrapper);
+					anchor.appendChild(pill);
+					linkContainer.appendChild(anchor);
+				});
+			};
+
+			fetch("./links.json")
+				.then((response) => {
+					if (!response.ok) {
+						throw new Error("Failed to load links.json");
+					}
+					return response.json();
+				})
+				.then((data) => {
+					// Redirect ASAP (unless bypassed) so it feels instant.
+					if (!maybeRedirect(data)) {
+						renderLinks(data);
+					}
+				})
+				.catch(() => {
+					linkContainer.innerHTML = "";
+					const errorMessage = document.createElement("p");
+					errorMessage.className = "link-meta";
+					errorMessage.textContent = "Unable to load links. If you're opening this as a local file, serve it via a local web server (fetch is blocked on file://).";
+					linkContainer.appendChild(errorMessage);
+				});
+		</script>
+	</body>
+</html>

@@ -3,12 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-  <title>Timetable Viewer - TCAS70</title>
+  <title>Timetable Viewer - School</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Kanit:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+            display: ['Kanit', 'Inter', 'ui-sans-serif'],
+          },
+          colors: {
+            neonPink: '#ff3fa4',
+            neonBlue: '#33e1ff',
+          },
+          boxShadow: {
+            glow: '0 0 30px rgba(255,63,164,0.35)',
+            glowBlue: '0 0 30px rgba(51,225,255,0.35)'
+          }
+        }
+      }
+    }
+  </script>
   <script src="sidebar-loader.js" defer></script>
 </head>
 <body class="min-h-screen bg-slate-950 text-white">

@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Visual - PDF Presentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="app.css" />
+    <script>
+      (() => {
+        const key = 'theme';
+        let stored = null;
+        try {
+          stored = localStorage.getItem(key);
+        } catch (err) {
+          stored = null;
+        }
+        const preferDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = stored || (preferDark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+  </head>
+  <body class="page">
+    <div class="backdrop" aria-hidden="true">
+      <div class="orb one"></div>
+      <div class="orb two"></div>
+      <div class="orb three"></div>
+      <div class="gridOverlay"></div>
+    </div>
+
+    <div class="container content">
+      <header class="header">
+        <div class="brand">
+          <h1>thanakorn.visual</h1>
+          <p>Presentation suite for PDF sessions</p>
+        </div>
+        <div class="nav">
+          <a class="btn" href="../">Back to site</a>
+          <button id="themeToggle" type="button" class="btn" aria-label="Toggle theme">
+            <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4" width="16" height="16">
+              <path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" />
+              <path fill-rule="evenodd" d="M12 1.25a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V2a.75.75 0 0 1 .75-.75ZM3.49 3.49a.75.75 0 0 1 1.06 0l1.06 1.06a.75.75 0 1 1-1.06 1.06L3.49 4.55a.75.75 0 0 1 0-1.06ZM21.25 12a.75.75 0 0 1-.75.75H19a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 .75.75ZM5 12a.75.75 0 0 1-.75.75H2.75a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 5 12Zm14.45-8.51a.75.75 0 0 1 1.06 1.06l-1.06 1.06a.75.75 0 0 1-1.06-1.06l1.06-1.06ZM12 19.25a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V20a.75.75 0 0 1 .75-.75ZM4.55 18.39a.75.75 0 0 1 1.06 0l1.06 1.06a.75.75 0 1 1-1.06 1.06l-1.06-1.06a.75.75 0 0 1 0-1.06Zm13.78 0a.75.75 0 0 1 1.06 1.06l-1.06 1.06a.75.75 0 0 1-1.06-1.06l1.06-1.06Z" clip-rule="evenodd" />
+            </svg>
+            <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4" width="16" height="16">
+              <path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6.75a9 9 0 0 0 9 9 8.97 8.97 0 0 0 4.213-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-3.97 2.196-7.428 5.528-9.282Z" clip-rule="evenodd" />
+            </svg>
+            <span id="themeLabel">Theme</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="landingWrap">
+        <div class="landingGrid">
+          <article class="windowCard">
+            <div class="windowTop">
+              <div class="winDots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="windowTitle">Presentation Mode</div>
+            </div>
+            <div class="windowBanner windowBanner--presentation"></div>
+            <div class="windowBody">
+              <h2>Present PDFs</h2>
+              <p>Pick a date, browse files, then present with thumbnails, shortcuts, fullscreen, and a presenter view.</p>
+              <div class="actions">
+                <a class="btn primary" href="presentation.html">Open Presentation</a>
+                <a class="btn" href="presentation.html?date=2026-01-25">Try sample date</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="windowCard">
+            <div class="windowTop">
+              <div class="winDots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="windowTitle">Retrieve Mode</div>
+            </div>
+            <div class="windowBanner windowBanner--retrieve"></div>
+            <div class="windowBody">
+              <h2>Retrieve files</h2>
+              <p>Search by date or Presentation Code to download PDFs or open them in the viewer.</p>
+              <div class="actions">
+                <a class="btn accent" href="rerieve.html">Open Retrieve</a>
+                <a class="btn" href="rerieve.html">Search by code</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      (() => {
+        const btn = document.getElementById('themeToggle');
+        if (!btn) return;
+        const iconSun = document.getElementById('iconSun');
+        const iconMoon = document.getElementById('iconMoon');
+        const label = document.getElementById('themeLabel');
+        const storageKey = 'theme';
+        const prefersDarkMedia = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+
+        const readStored = () => {
+          try {
+            return localStorage.getItem(storageKey);
+          } catch (err) {
+            return null;
+          }
+        };
+        const writeStored = (value) => {
+          try {
+            localStorage.setItem(storageKey, value);
+          } catch (err) {
+            // ignore write errors
+          }
+        };
+
+        const apply = (theme, options = {}) => {
+          const next = theme === 'dark' ? 'dark' : 'light';
+          document.documentElement.dataset.theme = next;
+          if (options.persist !== false) {
+            writeStored(next);
+          }
+          const isDark = next === 'dark';
+          if (iconSun) iconSun.style.display = isDark ? 'inline-block' : 'none';
+          if (iconMoon) iconMoon.style.display = isDark ? 'none' : 'inline-block';
+          if (label) label.textContent = isDark ? 'Dark' : 'Light';
+          btn.setAttribute('aria-pressed', String(isDark));
+        };
+
+        const initial = readStored() || (prefersDarkMedia && prefersDarkMedia.matches ? 'dark' : 'light');
+        apply(initial, { persist: false });
+
+        btn.addEventListener('click', () => {
+          const isDark = document.documentElement.dataset.theme === 'dark';
+          apply(isDark ? 'light' : 'dark');
+        });
+
+        if (prefersDarkMedia) {
+          prefersDarkMedia.addEventListener('change', (event) => {
+            if (readStored()) return;
+            apply(event.matches ? 'dark' : 'light', { persist: false });
+          });
+        }
+      })();
+    </script>
+  </body>
+</html><!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Visual - PDF Presentation</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+		<script>
+			(() => {
+				const key = 'theme';
+				let stored = null;
+				try {
+					stored = localStorage.getItem(key);
+				} catch (err) {
+					stored = null;
+				}
+				const preferDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+				const theme = stored || (preferDark ? 'dark' : 'light');
+				document.documentElement.classList.toggle('dark', theme === 'dark');
+				document.documentElement.dataset.theme = theme;
+			})();
+		</script>
+		<script>
+			window.tailwind = window.tailwind || {};
+			window.tailwind.config = {
+				darkMode: 'class',
+				theme: {
+					extend: {
+						fontFamily: {
+							mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace']
+						}
+					}
+				}
+			};
+		</script>
+		<script src="https://cdn.tailwindcss.com"></script>
+	</head>
+	<body class="min-h-screen font-mono relative overflow-x-hidden bg-gradient-to-br from-slate-50 via-slate-50 to-violet-50 text-slate-900 transition-colors duration-300 dark:from-[#05060a] dark:via-[#05060a] dark:to-[#0a1020] dark:text-slate-100">
+		<div aria-hidden="true" class="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+			<div class="absolute -top-28 left-1/2 h-[34rem] w-[34rem] -translate-x-1/2 rounded-full bg-violet-400/30 blur-3xl dark:bg-violet-500/15"></div>
+			<div class="absolute top-32 -left-28 h-[30rem] w-[30rem] rounded-full bg-cyan-300/30 blur-3xl dark:bg-cyan-400/10"></div>
+			<div class="absolute -bottom-36 right-0 h-[34rem] w-[34rem] rounded-full bg-fuchsia-300/20 blur-3xl dark:bg-fuchsia-500/10"></div>
+			<div class="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(148,163,184,.35)_1px,transparent_0)] [background-size:28px_28px] opacity-25 dark:opacity-10"></div>
+		</div>
+
+				</main>
+			</div>
+		</div>
+		<script>
+			(() => {
+				const btn = document.getElementById('themeToggle');
+				if (!btn) return;
+				const iconSun = document.getElementById('iconSun');
+				const iconMoon = document.getElementById('iconMoon');
+				const label = document.getElementById('themeLabel');
+				const storageKey = 'theme';
+				const prefersDarkMedia = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+
+				const readStored = () => {
+					try {
+						return localStorage.getItem(storageKey);
+					} catch (err) {
+						return null;
+					}
+				};
+				const writeStored = (value) => {
+					try {
+						localStorage.setItem(storageKey, value);
+					} catch (err) {
+						// ignore write errors
+					}
+				};
+
+				const apply = (theme, options = {}) => {
+					const next = theme === 'dark' ? 'dark' : 'light';
+					document.documentElement.classList.toggle('dark', next === 'dark');
+					document.documentElement.dataset.theme = next;
+					if (options.persist !== false) {
+						writeStored(next);
+					}
+					const isDark = next === 'dark';
+					if (iconSun) iconSun.classList.toggle('hidden', !isDark);
+					if (iconMoon) iconMoon.classList.toggle('hidden', isDark);
+					if (label) label.textContent = isDark ? 'Dark' : 'Light';
+					btn.setAttribute('aria-pressed', String(isDark));
+				};
+
+				const initial = readStored() || (prefersDarkMedia && prefersDarkMedia.matches ? 'dark' : 'light');
+				apply(initial, { persist: false });
+
+				btn.addEventListener('click', () => {
+					const isDark = document.documentElement.classList.contains('dark');
+					apply(isDark ? 'light' : 'dark');
+				});
+
+				if (prefersDarkMedia) {
+					prefersDarkMedia.addEventListener('change', (event) => {
+						if (readStored()) return;
+						apply(event.matches ? 'dark' : 'light', { persist: false });
+					});
+				}
+			})();
+		</script>
+	</body>
+</html>

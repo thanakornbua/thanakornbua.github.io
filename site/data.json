@@ -1,0 +1,65 @@
+{   "navbar": {
+    "name": "Thanakorn B."
+    },
+    "personalInfo": {
+        "name": "Thanakorn Buathongtanakarn",
+        "role": "Student, Developer & Photographer",
+        "profileImage": "./assets/tan.jpg",
+        "cv": "./assets/2026-Jan-Thanakorn Buathongtanakarn-CV.pdf",
+        "bio": "I’m a student developer interested in building things that solve real-world problems. Beyond code, I explore research and photography, using both analysis and visual storytelling to understand systems, people, and impact."
+    },
+    "skills": [
+        { "name": "HTML5", "icon": "fab fa-html5" },
+        { "name": "CSS3", "icon": "fab fa-css3-alt" },
+        { "name": "JavaScript", "icon": "fab fa-js" },
+        { "name": "React", "icon": "fab fa-react" },
+        { "name": "Node.js", "icon": "fab fa-node-js" },
+        { "name": "Python", "icon": "fab fa-python" }
+    ],
+    "projects": [
+        {
+            "title": "ฺBone Fracture and Anomalies Detection",
+            "image": "./assets/bone-fracture-detection.png",
+            "description": "An AI-powered tool designed to automatically detect and classify bone fractures in X-ray images.Built using Python, TensorFlow, YOLOv7 and ResNet50 for deep learning classification.",
+            "github": "https://github.com/thanakornbua/bone-fracture-detection" 
+        },
+        {
+            "title": "HER2 Attention Classifier",
+            "image": "./assets/her2-attention-classifier.png",
+            "description": "Deep learning framework for predicting HER2 receptor status in breast cancer from H&E whole-slide images using attention-based CNNs.",
+            "github": "https://github.com/thanakornbua/her2-attention-classifier"
+        }
+    ],
+    "competitions": [
+        {
+            "title": "Young Scientist Competition - 2026",
+            "award": "Silver",
+            "organization": "Thammasat U. & NSTDA",
+            "year": 2026,
+            "description": "Created a proof of concepts for a Deep Learning with Multiple Instance Learning to predict HER2 status in breast cancer from H&E whole-slide images.",
+            "link": "#"
+        },
+        {
+            "title": "TESET 2025",
+            "award": "Gold",
+            "organization": "Thailand Academic Contest, TLC",
+            "year": 2025,
+            "description": "Competitive English test assessing reading, writing, listening, and speaking skills for non-native speakers.",
+            "link": "https://www.facebook.com/thailandacademiccontest"
+        },
+        {
+            "title": "The Outsmarter, MEDSWU 2024",
+            "award": "Hon. Mention, 3rd Place",
+            "organization": "Faculty of Medicine, Srinakharinwirot University",
+            "year": 2024,
+            "description": "General knowledge quiz competition in medicine and health science in MEDSWU EduFest.",
+            "link": "https://www.facebook.com/share/17d9qipHCy/"
+        }
+    ],
+    "social": {
+        "github": "https://github.com/thanakornbua",
+        "linkedin": "https://www.linkedin.com/in/thanakorn-buathongtanakarn-44a10218b/",
+        "email": "https://mail.google.com/mail/?view=cm&fs=1&to=scientan@gmail.com",
+        "emailAddress": "scientan@gmail.com"
+    }
+}

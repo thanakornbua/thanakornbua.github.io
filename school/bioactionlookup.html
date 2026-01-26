@@ -16,6 +16,17 @@
 <body class="min-h-screen p-4 md:p-8">
 
     <div class="max-w-xl mx-auto">
+        <!-- Back Button -->
+        <div class="flex items-center justify-start mb-6">
+            <button id="backBtn" type="button"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/80 border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-[1px] transition-all text-slate-700"
+                aria-label="Return to previous page">
+                <span class="text-lg" aria-hidden="true">←</span>
+                <span class="font-bold text-sm">ย้อนกลับ</span>
+                <span class="text-xs text-slate-400">Back</span>
+            </button>
+        </div>
+
         <!-- Header -->
         <div class="text-center mb-10">
             <h1 class="text-3xl font-extrabold text-slate-900">🔬 Biology Group Lookup</h1>
@@ -89,6 +100,18 @@
 
     <script type="module">
         import { database, groupTopics } from './bioaction-data.js';
+
+        const backBtn = document.getElementById('backBtn');
+        if (backBtn) {
+            backBtn.addEventListener('click', () => {
+                // Prefer real browser back, fallback to timetable.
+                if (window.history.length > 1) {
+                    window.history.back();
+                } else {
+                    window.location.href = 'timetable.html';
+                }
+            });
+        }
 
         const statusStyles = {
             head: {

@@ -1,0 +1,116 @@
+{
+  "profile": {
+    "name": "Thanakorn Buathongtanakarn",
+    "title": "Photography Portfolio",
+    "location": "Thailand",
+    "email": "your@email.com",
+    "instagram": "https://instagram.com/yourhandle",
+    "website": "../site/"
+  },
+  "collections": [
+    "All",
+    "Portrait",
+    "Street",
+    "Nature",
+    "Travel",
+    "Minimal"
+  ],
+  "items": [
+    {
+      "id": "p1",
+      "title": "Portrait Study",
+      "src": "../site/assets/tan.jpg",
+      "alt": "Portrait photo",
+      "description": "Soft light portrait with clean background.",
+      "tags": ["Portrait", "Minimal"],
+      "location": "Bangkok",
+      "date": "2026-01",
+      "featured": true,
+      "ratio": "wide"
+    },
+    {
+      "id": "p2",
+      "title": "Street Moment",
+      "src": "../site/assets/download.jpg",
+      "alt": "Street-style placeholder image",
+      "description": "A quick candid moment in the city.",
+      "tags": ["Street", "Travel"],
+      "location": "City",
+      "date": "2026-01",
+      "featured": false,
+      "ratio": "tall"
+    },
+    {
+      "id": "p3",
+      "title": "Nature Detail",
+      "src": "../site/assets/bone-fracture-detection.png",
+      "alt": "Placeholder image (replace with a nature photo)",
+      "description": "Placeholder image — replace with a real nature photo.",
+      "tags": ["Nature"],
+      "location": "",
+      "date": "2026-01",
+      "featured": false,
+      "ratio": "square"
+    },
+    {
+      "id": "p4",
+      "title": "Minimal Frame",
+      "src": "../site/assets/her2-attention-classifier.png",
+      "alt": "Placeholder image (replace with a minimal composition photo)",
+      "description": "Placeholder image — replace with a minimal composition photo.",
+      "tags": ["Minimal"],
+      "location": "",
+      "date": "2026-01",
+      "featured": false,
+      "ratio": "square"
+    },
+    {
+      "id": "p5",
+      "title": "Travel Snapshot",
+      "src": "../site/assets/list_14763755.png",
+      "alt": "Placeholder image (replace with a travel photo)",
+      "description": "Placeholder image — replace with a real travel photo.",
+      "tags": ["Travel"],
+      "location": "",
+      "date": "2026-01",
+      "featured": false,
+      "ratio": "wide"
+    },
+    {
+      "id": "p6",
+      "title": "Evening Portrait",
+      "src": "../site/assets/tan.jpg",
+      "alt": "Portrait photo",
+      "description": "Another portrait slot (duplicate placeholder).",
+      "tags": ["Portrait"],
+      "location": "",
+      "date": "2026-01",
+      "featured": false,
+      "ratio": "square"
+    },
+    {
+      "id": "p7",
+      "title": "Street Geometry",
+      "src": "../site/assets/download.jpg",
+      "alt": "Street-style placeholder image",
+      "description": "Urban shapes and strong lines.",
+      "tags": ["Street", "Minimal"],
+      "location": "",
+      "date": "2026-01",
+      "featured": false,
+      "ratio": "wide"
+    },
+    {
+      "id": "p8",
+      "title": "Green Scene",
+      "src": "../site/assets/bone-fracture-detection.png",
+      "alt": "Placeholder image (replace with a nature photo)",
+      "description": "Placeholder image — replace with a nature photo.",
+      "tags": ["Nature", "Travel"],
+      "location": "",
+      "date": "2026-01",
+      "featured": false,
+      "ratio": "tall"
+    }
+  ]
+}

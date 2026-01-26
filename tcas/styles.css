@@ -1,0 +1,485 @@
+/* Platform-specific font rendering */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Touch optimization for mobile devices */
+html {
+  -webkit-tap-highlight-color: rgba(255, 63, 164, 0.2);
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+}
+
+/* Smooth scrolling for all platforms */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', 'Kanit', sans-serif;
+  background: linear-gradient(135deg, #05070f, #0b1221);
+  color: #e8edf7;
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* iOS Safari safe area support */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Fullscreen reading mode */
+:fullscreen {
+  background: #0c0d12;
+  width: 100%;
+  height: 100%;
+}
+
+div.fullscreen {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+div.fullscreen::backdrop {
+  background: #000000;
+}
+
+/* Fullscreen countdown section */
+@supports selector(:fullscreen) {
+  div:fullscreen {
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: #0c0d12 !important;
+  }
+}
+.glass {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.timeline-dot::before {
+  content: '';
+  position: absolute;
+  left: -0.9rem;
+  top: 0.55rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: #1f2937;
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: none;
+}
+
+/* Timeline vertical line spanning the list height */
+.timeline-list {
+  position: relative;
+  padding-left: 1.25rem;
+}
+
+.timeline-list::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255,255,255,0.12);
+}
+@media print {
+  body { background: #ffffff !important; color: #000 !important; filter: none !important; }
+  .no-print { display: none !important; }
+  .glass { background: #fff !important; border: 1px solid #ccc !important; box-shadow: none !important; }
+  .timeline-dot::before { background: #111; box-shadow: none; }
+}
+
+/* Sidebar transitions */
+.sidebar-slide-enter-active,
+.sidebar-slide-leave-active {
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+.sidebar-slide-enter-from,
+.sidebar-slide-leave-to {
+  transform: translateX(-12%);
+  opacity: 0;
+}
+
+.sidebar-fab-enter-active,
+.sidebar-fab-leave-active {
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+.sidebar-fab-enter-from,
+.sidebar-fab-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+/* React sidebar helpers - iOS Compatible */
+.sidebar {
+  position: fixed;
+  z-index: 40;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 0.3s;
+  opacity: 0;
+  visibility: hidden;
+  /* iOS Safari hardware acceleration */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+
+/* Mobile: Sidebar slides from top */
+@media (max-width: 768px) {
+  .sidebar {
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: auto;
+    max-height: 30vh;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem;
+    transform: translateY(-100%);
+    -webkit-transform: translateY(-100%);
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+  }
+  
+  .sidebar.open {
+    transform: translateY(0);
+    -webkit-transform: translateY(0);
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .sidebar nav {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+  
+  .sidebar nav a {
+    flex: 1;
+    font-size: 0.75rem;
+  }
+}
+
+/* Tablet & Desktop: Sidebar slides from left */
+@media (min-width: 769px) {
+  .sidebar {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 5rem;
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+    -webkit-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+  }
+  
+  .sidebar.open { 
+    transform: translateX(0);
+    -webkit-transform: translateX(0);
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    width: 16rem;
+  }
+}
+
+.sidebar-fab { 
+  position: fixed; 
+  top: 16px; 
+  left: 16px; 
+  z-index: 50;
+  /* iOS tap improvement */
+  -webkit-tap-highlight-color: rgba(255, 63, 164, 0.3);
+  cursor: pointer;
+}
+
+/* Countdown digits letter spacing */
+.countdown-digits { letter-spacing: 0.02em; }
+
+/* Mobile & Tablet Responsive Enhancements */
+@media (max-width: 768px) {
+  /* Better touch targets for mobile */
+  button, a, select, input {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Larger tap areas */
+  .timeline-dot {
+    padding: 12px 8px;
+  }
+  
+  /* Better sidebar on mobile - top sliding */
+  .sidebar {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    /* Force hardware acceleration on iOS */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    /* Prevent iOS Safari scroll issues */
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    /* Adjust padding for horizontal layout */
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Make buttons more responsive on iOS */
+  button {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(255, 63, 164, 0.3);
+  }
+}
+
+/* Tablet specific (iPad, Android tablets) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* Optimize layout for tablet screens */
+  .glass {
+    padding: clamp(1rem, 3vw, 2rem);
+  }
+}
+
+/* High DPI displays (Retina, 4K) */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  body {
+    font-weight: 400;
+  }
+  
+  .glass {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  body {
+    /* iOS viewport height fix */
+    min-height: -webkit-fill-available;
+  }
+  
+  /* Better iOS button styling */
+  button, input, select {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  
+  /* iOS sidebar fix - ensure proper rendering */
+  @media (max-width: 768px) {
+    .sidebar {
+      /* Use 3D transforms for better iOS performance - top sliding */
+      -webkit-transform: translate3d(0, -100%, 0);
+      transform: translate3d(0, -100%, 0);
+      will-change: transform;
+    }
+    
+    .sidebar.open {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+    }
+  }
+  
+  @media (min-width: 769px) {
+    .sidebar {
+      /* Use 3D transforms for better iOS performance - left sliding */
+      -webkit-transform: translate3d(-100%, 0, 0);
+      transform: translate3d(-100%, 0, 0);
+      will-change: transform;
+    }
+    
+    .sidebar.open {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+    }
+  }
+  
+  /* Prevent iOS click delay */
+  button, a {
+    -webkit-tap-highlight-color: rgba(255, 63, 164, 0.2);
+    touch-action: manipulation;
+  }
+}
+
+/* Android Chrome specific */
+@media screen and (max-width: 768px) {
+  /* Prevent zoom on input focus */
+  input, select, textarea {
+    font-size: 16px;
+  }
+}
+
+/* Windows high contrast mode support */
+@media (prefers-contrast: high) {
+  .glass {
+    border-width: 2px;
+  }
+  
+  .timeline-dot::before {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Reduced motion support (accessibility) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Dark mode preference (system-level) */
+@media (prefers-color-scheme: dark) {
+  /* Already dark by default, but ensures consistency */
+  body {
+    color-scheme: dark;
+  }
+}
+
+/* Landscape orientation on mobile */
+@media (max-width: 896px) and (orientation: landscape) {
+  .countdown-digits {
+    font-size: clamp(2rem, 8vw, 5rem);
+  }
+  
+  /* Adjust heights for landscape */
+  .sidebar {
+    width: 60px;
+  }
+}
+
+/* Touch-friendly hover states */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects on touch devices */
+  button:hover, a:hover {
+    opacity: 1;
+  }
+  
+  /* Add active states instead */
+  button:active, a:active {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+}
+
+/* Mouse/trackpad devices (desktop) */
+@media (hover: hover) and (pointer: fine) {
+  /* Enhanced hover effects for mouse users */
+  button:hover {
+    transition: all 0.2s ease;
+  }
+}
+
+/* Flexible images for all screens */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Timetable status chips */
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background: rgba(15, 23, 42, 0.85);
+  color: #e5e7eb;
+  white-space: nowrap;
+}
+
+.status-chip--scheduled {
+  border-color: rgba(148, 163, 184, 0.7);
+  background: rgba(15, 23, 42, 0.9);
+}
+
+.status-chip--ongoing {
+  border-color: rgba(56, 189, 248, 0.85);
+  background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.3), rgba(15, 23, 42, 0.95));
+  color: #f9fafb;
+}
+
+.status-chip--passed {
+  border-color: rgba(107, 114, 128, 0.9);
+  background: rgba(17, 24, 39, 0.9);
+  color: #9ca3af;
+}
+
+.status-chip--swapped {
+  border-color: rgba(248, 113, 113, 0.95);
+  background: radial-gradient(circle at 0 0, rgba(248, 113, 113, 0.35), rgba(15, 23, 42, 0.96));
+  color: #fee2e2;
+}
+
+.status-chip--activities {
+  border-color: rgba(34, 197, 94, 0.95);
+  background: radial-gradient(circle at 0 0, rgba(34, 197, 94, 0.30), rgba(15, 23, 42, 0.96));
+  color: #dcfce7;
+}
+
+.status-chip--override {
+  border-color: rgba(244, 114, 182, 0.95);
+  background: radial-gradient(circle at 0 0, rgba(244, 114, 182, 0.35), rgba(15, 23, 42, 0.96));
+  color: #fdf2ff;
+}
+
+.status-chip--quiz-period {
+  border-color: rgba(168, 85, 247, 0.95);
+  background: radial-gradient(circle at 0 0, rgba(168, 85, 247, 0.35), rgba(15, 23, 42, 0.96));
+  color: #f3e8ff;
+}
+
+@media print {
+  .status-chip {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border-color: rgba(0, 0, 0, 0.25) !important;
+  }
+}
+
+/* Better select styling across platforms */
+select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23fff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+/* Performance optimizations */
+.glass, .sidebar, .countdown-digits {
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  /* iOS performance boost */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  perspective: 1000;
+}

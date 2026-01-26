@@ -2,22 +2,22 @@
   "name": "TCAS70 Dashboard",
   "short_name": "TCAS70",
   "description": "TCAS70 Countdown Timer and Dashboard for tracking important dates and deadlines",
-  "start_url": "/index.html",
+  "start_url": "/tcas/index.html",
   "display": "standalone",
   "background_color": "#0b1221",
   "theme_color": "#0b1221",
   "orientation": "any",
-  "scope": "/",
+  "scope": "/tcas/",
   "icons": [
     {
-      "src": "https://via.placeholder.com/192x192?text=TCAS70",
-      "sizes": "192x192",
+      "src": "favicon/icon.png",
+      "sizes": "any",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://via.placeholder.com/512x512?text=TCAS70",
-      "sizes": "512x512",
+      "src": "favicon/icon.png",
+      "sizes": "any",
       "type": "image/png",
       "purpose": "any maskable"
     }
@@ -42,11 +42,11 @@
       "name": "Dashboard",
       "short_name": "Dashboard",
       "description": "View TCAS70 Dashboard",
-      "url": "/index.html",
+      "url": "/tcas/index.html",
       "icons": [
         {
-          "src": "https://via.placeholder.com/96x96?text=D",
-          "sizes": "96x96"
+          "src": "favicon/icon.png",
+          "sizes": "any"
         }
       ]
     },
@@ -54,11 +54,11 @@
       "name": "Timer",
       "short_name": "Timer",
       "description": "Open Custom Timer",
-      "url": "/timer.html",
+      "url": "/tcas/timer.html",
       "icons": [
         {
-          "src": "https://via.placeholder.com/96x96?text=T",
-          "sizes": "96x96"
+          "src": "favicon/icon.png",
+          "sizes": "any"
         }
       ]
     }
